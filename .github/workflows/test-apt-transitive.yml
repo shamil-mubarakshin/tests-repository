@@ -1,0 +1,29 @@
+name: Test Apt Transitive errors
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Update Image
+      run: sudo apt-get update -y
+
+    - name: Install build-essential
+      run: sudo apt install -y build-essential
+      
+    - name: Install build-dependencies
+      run: sudo apt install -y libcurl4-openssl-dev libsqlite3-dev pkg-config git curl ldc
