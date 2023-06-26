@@ -25,3 +25,14 @@ jobs:
         
     - name: Print env vars
       run: Get-ChildItem env:\
+      
+    - name: Test versions
+      run: |
+          $imageVersionComponents = $env:ImageVersion.Split('.')
+          $imageMajorVersion = $imageVersionComponents[0]
+          $imageMinorVersion = $imageVersionComponents[1]
+          if ("$imageMajorVersion.$imageMinorVersion" -ne '20230619.1') {
+            throw "Current runner $imageMajorVersion.$imageMinorVersion image version doesn't match ${{ github.event.client_payload.imageVersion }}."
+          }else{
+            Write-Host "Versions match"
+          }
