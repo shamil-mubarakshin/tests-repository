@@ -1,0 +1,38 @@
+name: View env vars
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-2022, windows-2019]
+    runs-on: ${{ matrix.os }}
+    steps:
+#     - name: Check out code from GitHub
+#       uses: actions/checkout@v3
+#       with:
+#         submodules: recursive
+#         fetch-depth: 0
+      
+    - name: Find versions
+      run: |
+          $browsers = @{
+            edge = @{
+                Name="Microsoft Edge";
+                File="msedge.exe"
+            }
+          }
+          $browserName = $browsers.edge.Name
+          $browserFile = $browsers.edge.File
+          $registryKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\$browserFile"
+          $browserVersion = (Get-Item (Get-ItemProperty $registryKey)."(Default)").VersionInfo.FileVersion
+          $browserVersion
