@@ -36,3 +36,8 @@ jobs:
           $registryKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\$browserFile"
           $browserVersion = (Get-Item (Get-ItemProperty $registryKey)."(Default)").VersionInfo.FileVersion
           $browserVersion
+          
+          start-sleep 60
+          $browserVersion = (Get-Item (Get-ItemProperty $registryKey)."(Default)").VersionInfo.FileVersion
+          $browserVersion
+          
