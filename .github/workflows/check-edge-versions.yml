@@ -17,11 +17,9 @@ jobs:
         os: [windows-2022, windows-2019]
     runs-on: ${{ matrix.os }}
     steps:
-#     - name: Check out code from GitHub
-#       uses: actions/checkout@v3
-#       with:
-#         submodules: recursive
-#         fetch-depth: 0
+    - name: Rename MSEdgeUpdate
+      run: |
+          rename-item -Path "C:\Program Files (x86)\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -NewName dis_MicrosoftEdgeUpdate.exe
       
     - name: Find versions
       run: |
