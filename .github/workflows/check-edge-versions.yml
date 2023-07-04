@@ -1,4 +1,4 @@
-name: View env vars
+name: check-edge-versions
 on:
   push:
     branches: [ "master" ]
