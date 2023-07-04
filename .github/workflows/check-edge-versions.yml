@@ -48,5 +48,7 @@ jobs:
     - name: Get Edge Version
       run: |
           microsoft-edge --version
+          start-sleep 60
+          microsoft-edge --version
       
           
