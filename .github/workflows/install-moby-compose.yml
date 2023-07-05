@@ -19,10 +19,14 @@ jobs:
           systemctl is-enabled --quiet docker.service || systemctl enable docker.service
           
           sleep 10
+          echo "info"
           docker info
+          echo "compose"
           docker compose
+          echo "version"
           docker compose --version
           
     - name: docker images
       run: |        
+          docker compose version
           docker image list
