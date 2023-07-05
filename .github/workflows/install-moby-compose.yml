@@ -9,12 +9,12 @@ jobs:
     steps:
     - name: Remove moby
       run: |
-          apt-get remove -y moby-compose
+          sudo apt-get remove -y moby-compose
           apt-get update
  
     - name: install dependencies
       run: |
-          apt-get install -y moby-compose=2.18.1+azure-1
+          sudo apt-get install -y moby-compose=2.18.1
           systemctl is-active --quiet docker.service || systemctl start docker.service
           systemctl is-enabled --quiet docker.service || systemctl enable docker.service
           
