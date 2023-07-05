@@ -1,0 +1,23 @@
+name: install-moby-compose
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-osx:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Remove moby
+      run: |
+          apt-get remove -y moby-compose
+          apt-get update
+ 
+    - name: install dependencies
+      run: |
+          apt-get install -y moby-compose=2.18.1+azure-1
+          systemctl is-active --quiet docker.service || systemctl start docker.service
+          systemctl is-enabled --quiet docker.service || systemctl enable docker.service
+          
+          sleep 10
+          docker info
+          docker image list
