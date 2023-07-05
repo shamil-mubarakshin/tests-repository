@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-osx:
+  moby-compose:
     runs-on: ubuntu-20.04
     steps:
-    - name: Remove moby
-      run: |
-          sudo apt-get remove -y moby-compose
-          apt-get update
+#     - name: Remove moby
+#       run: |
+#           sudo apt-get remove -y moby-compose
+#           apt-get update
  
-    - name: install dependencies
+    - name: install moby
       run: |
           sudo apt-get install -y moby-compose=2.18.1
           systemctl is-active --quiet docker.service || systemctl start docker.service
