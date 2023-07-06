@@ -35,6 +35,7 @@ jobs:
 
     - name: compose smoke test
       run: |
+          cd apache-php
           docker compose up -d
           docker ps
           curl localhost:80
