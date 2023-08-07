@@ -1,0 +1,55 @@
+name: Trigger Remote Workflow
+
+on:
+  workflow_call:
+    inputs:
+      repo_owner:
+        type: string
+        description: Repo Owner
+        required: true
+      repo_name:
+        type: string
+        description: Repo Name
+        required: true
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: actions/runner-images
+
+      - name: Run script
+        env:
+          BEARER_TOKEN: ${{secrets.BEARER_TOKEN}}
+        run: |
+          $headers = @{
+            Authorization="Bearer $env:BEARER_TOKEN"
+          }
+          $apiRepoUrl = "https://api.github.com/repos/${{ inputs.repo_owner }}/${{ inputs.repo_name }}"
+          $dispatchUrl = $apiRepoUrl
+          $EventType = "repository_dispatch"
+          if ($EventType -and !$BodyString) {
+            $body = @{"event_type" = $EventType}
+            $condition = {$_.name -match $WorkflowName}
+            if ($EventPayload) {
+              $body += $EventPayload
+            }
+            $BodyString = $body | ConvertTo-Json
+          }
+          # if ($WorkflowID -and !$BodyString) {
+          #   $dispatchUrl += "/actions/workflows/$WorkflowID"
+          #   $BodyString = @{"ref" = "$BranchName"} | ConvertTo-Json
+          #   $condition = {$_.workflow_id -match $WorkflowID}
+          # }
+          try {
+            Invoke-WebRequest -Uri "$dispatchUrl/dispatches" -Method Post -Headers $headers -Body $BodyString | Out-Null
+          } catch {
+            throw "$($_.exception[0].message)"
+          }
