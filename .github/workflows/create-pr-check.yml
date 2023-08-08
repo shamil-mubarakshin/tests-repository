@@ -7,6 +7,12 @@ on:
 jobs:
   trigger-workflow:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      checks: write
+      pull-requests: write
+      # repository-projects: read
+      # statuses: read|write|none
       
     steps:
       - name: Checkout repository
