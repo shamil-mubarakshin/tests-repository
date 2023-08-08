@@ -36,7 +36,7 @@ jobs:
           $dispatchUrl = $apiRepoUrl
           $EventType = "trigger-workflow"
           if ($EventType -and !$BodyString) {
-            $body = @{ "event_type" = $EventType;"client_payload" = @{"repo_name" = "${{ github.action_repository }}} "}
+            $body = @{ "event_type" = $EventType;"client_payload" = @{"repo_name" = "${{ github.action_repository }}"} }
             $condition = {$_.name -match $WorkflowName}
             if ($EventPayload) {
               $body += $EventPayload
