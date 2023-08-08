@@ -36,7 +36,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           debug: true
-          github-token: ${{secrets.github.token}}
+          github-token: ${{github.token}}
           script: | 
             const response = await github.rest.checks.create({
               owner: "shamil-mubarakshin",
