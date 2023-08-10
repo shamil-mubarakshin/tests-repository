@@ -25,8 +25,12 @@ jobs:
       run: |
         # make sure there is a `\t` between URL and `priority:*` attributes
         printf 'http://azure.archive.ubuntu.com/ubuntu	priority:1\n' | sudo tee /etc/apt/mirrors.txt
-        curl http://mirrors.ubuntu.com/mirrors.txt | sudo tee --append /etc/apt/mirrors.txt
+        printf 'http://archive.ubuntu.com/ubuntu priority:2\n' | sudo tee /etc/apt/mirrors.txt
+        printf 'http://security.ubuntu.com/ubuntu priority:3\n' | sudo tee /etc/apt/mirrors.txt
+        
         sudo sed -i 's/http:\/\/azure.archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/mirrors.txt/' /etc/apt/sources.list
+        sudo sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/mirrors.txt/' /etc/apt/sources.list
+        sudo sed -i 's/http:\/\/security.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/mirrors.txt/' /etc/apt/sources.list
         sudo cat /etc/apt/sources.list
     
     - name: Apt Get Update
