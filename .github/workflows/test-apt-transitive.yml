@@ -19,11 +19,25 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Update Image
-      run: sudo apt-get update -y
+    - name: Set apt mirror
+      # GitHub Actions apt proxy is super unstable
+      # see https://github.com/actions/runner-images/issues/7048
+      run: |
+        # make sure there is a `\t` between URL and `priority:*` attributes
+        printf 'http://azure.archive.ubuntu.com/ubuntu	priority:1\n' | sudo tee /etc/apt/mirrors.txt
+        curl http://mirrors.ubuntu.com/mirrors.txt | sudo tee --append /etc/apt/mirrors.txt
+        sudo sed -i 's/http:\/\/azure.archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/mirrors.txt/' /etc/apt/sources.list
+        sudo cat /etc/apt/sources.list
+    
+    - name: Apt Get Update
+      run: |
+        sudo apt-get update
 
-    - name: Install build-essential
-      run: sudo apt install -y build-essential
+#     - name: Update Image
+#       run: sudo apt-get update -y
+
+#     - name: Install build-essential
+#       run: sudo apt install -y build-essential
       
-    - name: Install build-dependencies
-      run: sudo apt install -y libcurl4-openssl-dev libsqlite3-dev pkg-config git curl ldc
+#     - name: Install build-dependencies
+#       run: sudo apt install -y libcurl4-openssl-dev libsqlite3-dev pkg-config git curl ldc
