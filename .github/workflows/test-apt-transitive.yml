@@ -10,7 +10,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Check out code from GitHub
@@ -36,6 +36,7 @@ jobs:
     - name: Apt Get Update
       run: |
         sudo apt-get update
+        sudo apt-get install -y --no-install-recommends unzip gcc make
 
 #     - name: Update Image
 #       run: sudo apt-get update -y
