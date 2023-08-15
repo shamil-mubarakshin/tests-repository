@@ -1,6 +1,8 @@
 name: View env vars
 on:
   workflow_dispatch:
+  pull_request_target:
+    types: labeled
 
 defaults:
   run:
@@ -24,6 +26,11 @@ jobs:
       
     - name: Print actions trigger
       run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
+
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
       
 #     - name: Test versions
 #       run: |
