@@ -23,7 +23,7 @@ jobs:
       - name: Install additional kernel modules needed for OPI like VRF
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends --yes linux-modules-extra-$(uname -r) || true
+          sudo apt-get install linux-modules-extra-$(uname -r)
 
       - name: Load additional kernel modules needed for OPI like VRF
         run: sudo modprobe -v vrf
