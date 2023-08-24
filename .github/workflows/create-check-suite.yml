@@ -1,0 +1,54 @@
+name: Create Check Suite
+
+on:
+  workflow_dispatch
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      checks: write
+      pull-requests: write
+      # repository-projects: read
+      # statuses: read|write|none
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: actions/runner-images
+          
+      - name: Create Check Suite with CURL
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN"\
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/shamil-mubarakshin/tests-repository/check-suites \
+            -d '{"head_sha":"21a1b275256f6807c0fc58853dd7b010ca32535c"}'
+
+      # - name: Create Check Run with Octokit action
+      #   id: create-status-check
+      #   uses: actions/github-script@v6
+      #   with:
+      #     debug: true
+      #     github-token: ${{github.token}}
+      #     script: | 
+      #       const response = await github.rest.checks.create({
+      #         owner: "shamil-mubarakshin",
+      #         repo: "tests-repository",
+      #         head_sha: "${{ github.event.client_payload.head_sha }}",
+      #         name: "Test Run",
+      #         status: "in_progress"
+      #       });
+            
+      #       return response.data.id;
+
+      - name: Run script
+        run: |
+          sleep 15s
