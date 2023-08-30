@@ -27,7 +27,7 @@ jobs:
       - name: Fetch step status
         shell: pwsh
         run: |
-          ${{ steps }}
+          ${{ toJson(steps) }}
 
   # report:
   #   runs-on: ubuntu-22.04
