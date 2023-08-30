@@ -29,10 +29,9 @@ jobs:
       - name: Fetch step status
         id: fetch-status
         shell: pwsh
-        env: 
-          STEPS_CONTEXT: ${{ toJson(steps) }}
         run: |
-          $env:STEPS_CONTEXT
+          $output = ${{ toJson(steps) }}
+          $output.gettype()
 
   # report:
   #   runs-on: ubuntu-22.04
