@@ -1,0 +1,29 @@
+name: test-groups-and-outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: check group IDs
+      run: |
+        echo "test docker group on u20"
+        sudo find / -gid 998 -ls
+        echo "test docker group on u22"
+        sudo find / -gid 999 -ls
+    
+    # - name: Apt Get Update
+    #   run: |
+    #     sudo apt remove unzip gcc make
+    #     sudo apt-get update
+    #     sudo apt-get install -y --no-install-recommends unzip gcc make
