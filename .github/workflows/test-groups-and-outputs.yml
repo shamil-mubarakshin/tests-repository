@@ -5,25 +5,28 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
-
     steps:
-    - name: Check out code from GitHub
-      uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        fetch-depth: 0
+      - name: Check out code from GitHub
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+  
+      - name: run ls -la
+        run: |
+          ls -la
+      
+      # - name: Apt Get Update
+      #   run: |
+      #     sudo apt remove unzip gcc make
+      #     sudo apt-get update
+      #     sudo apt-get install -y --no-install-recommends unzip gcc make
+  
+      - name: Fetch step status
+        run: |
+          echo "${{ steps }}"
 
-    - name: check group IDs
-      run: |
-        # echo "test docker group on u20"
-        # sudo find / -o -gid 998 -ls 2>/dev/null
-        echo "test docker group on u22"
-        sudo find / -gid 999 -ls 2>/dev/null
-    
-    # - name: Apt Get Update
-    #   run: |
-    #     sudo apt remove unzip gcc make
-    #     sudo apt-get update
-    #     sudo apt-get install -y --no-install-recommends unzip gcc make
+  # report:
+  #   runs-on: ubuntu-22.04
+  
