@@ -30,7 +30,8 @@ jobs:
         id: fetch-status
         shell: pwsh
         run: |
-          $output = "${{ toJson(steps) }}"
+          $output = '${{ toJson(steps) }}'
+          $output
           $output.gettype()
 
   # report:
