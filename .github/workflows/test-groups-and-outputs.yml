@@ -27,7 +27,7 @@ jobs:
       - name: Fetch step status
         shell: pwsh
         run: |
-          ${{ toJson(steps) }}
+          ${{ toJson(steps) }} | Convertfrom-json
 
   # report:
   #   runs-on: ubuntu-22.04
