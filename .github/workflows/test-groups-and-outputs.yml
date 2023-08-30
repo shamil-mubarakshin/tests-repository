@@ -1,6 +1,7 @@
 name: test-groups-and-outputs
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
@@ -24,8 +25,9 @@ jobs:
       #     sudo apt-get install -y --no-install-recommends unzip gcc make
   
       - name: Fetch step status
+        shell: pwsh
         run: |
-          echo "${{ steps }}"
+          ${{ steps }}
 
   # report:
   #   runs-on: ubuntu-22.04
