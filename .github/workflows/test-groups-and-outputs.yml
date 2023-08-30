@@ -18,9 +18,9 @@ jobs:
     - name: check group IDs
       run: |
         echo "test docker group on u20"
-        sudo find / -gid 998 -ls
+        sudo find / -o -gid 998 -ls 2>/dev/null
         echo "test docker group on u22"
-        sudo find / -gid 999 -ls
+        sudo find / -o -gid 999 -ls 2>/dev/null
     
     # - name: Apt Get Update
     #   run: |
