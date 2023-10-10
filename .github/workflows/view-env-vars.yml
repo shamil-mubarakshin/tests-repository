@@ -31,6 +31,9 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
       run: echo "$GITHUB_CONTEXT"
+
+    - name: Test unique id
+      run: $actionUniqueId = "${{ github.run_id }}${{ github.run_number }}${{ github.run_attempt }}"[-9..-1] -join ""; write-host $actionUniqueId
       
 #     - name: Test versions
 #       run: |
