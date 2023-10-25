@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['macos-11', 'macos-12', 'macos-13', 'ubuntu-latest']
+        os: ['macos-11', 'macos-12', 'macos-13']
         try: ['0', '1', '2']
 
     steps:
@@ -25,14 +25,13 @@ jobs:
         shell: bash
         run: |
           echo "====view dns info===="
-          scutil --dns 2>/dev/null
+          scutil --dns
           echo "resolv.conf"
           sudo cat /etc/resolv.conf
           echo "====view ip info===="
-          ifconfig 2>/dev/null
+          ifconfig
           echo "====view hosts file===="
-          sudo cat /etc/hosts 2>/dev/null
-          sudo cat /private/etc/hosts 2>/dev/null
+          sudo cat /etc/hosts          
           
       - name: nslookup1
         shell: bash
@@ -42,10 +41,20 @@ jobs:
               echo "nslookup $host: $(nslookup "$host" 2>&1 | grep -E '(Name:|\*\*)' || true)"
           done
 
+      - name: dscacheutil1
+        shell: bash
+        run: |
+          echo "====dscacheutil hostname===="
+          dscacheutil -q host -a name $(hostname)
+          echo "====dscacheutil hostname -f===="
+          dscacheutil -q host -a name $(hostname -f)
+          echo "====dscacheutil hostname -s===="
+          dscacheutil -q host -a name $(hostname -s)
+
       - name: test-workaround
         shell: bash
         run: |
-          echo -e "$(ipconfig getifaddr en0 2>/dev/null) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts 
+          echo -e "$(ipconfig getifaddr en0) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts 
 
       - name: nslookup2
         shell: bash
@@ -55,3 +64,12 @@ jobs:
               echo "nslookup $host: $(nslookup "$host" 2>&1 | grep -E '(Name:|\*\*)' || true)"
           done
 
+      - name: dscacheutil2
+        shell: bash
+        run: |
+          echo "====dscacheutil hostname===="
+          dscacheutil -q host -a name $(hostname)
+          echo "====dscacheutil hostname -f===="
+          dscacheutil -q host -a name $(hostname -f)
+          echo "====dscacheutil hostname -s===="
+          dscacheutil -q host -a name $(hostname -s)
