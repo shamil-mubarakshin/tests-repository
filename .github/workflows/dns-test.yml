@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['macos-11', 'macos-12', 'macos-13']
+        os: ['macos-11', 'macos-12', 'macos-13', 'ubuntu-latest']
         try: ['0', '1', '2']
 
     steps:
@@ -25,12 +25,14 @@ jobs:
         shell: bash
         run: |
           echo "====view dns info===="
-          scutil --dns
+          scutil --dns 2>/dev/null
+          echo "resolv.conf"
+          sudo cat /etc/resolv.conf
           echo "====view ip info===="
-          ifconfig
+          ifconfig 2>/dev/null
           echo "====view hosts file===="
-          sudo cat /etc/hosts
-          sudo cat /private/etc/hosts
+          sudo cat /etc/hosts 2>/dev/null
+          sudo cat /private/etc/hosts 2>/dev/null
           
       - name: nslookup1
         shell: bash
@@ -43,7 +45,7 @@ jobs:
       - name: test-workaround
         shell: bash
         run: |
-          echo -e "$(ipconfig getifaddr en0) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
+          echo -e "$(ipconfig getifaddr en0 2>/dev/null) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts 
 
       - name: nslookup2
         shell: bash
