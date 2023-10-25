@@ -1,0 +1,74 @@
+name: dns test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-11', 'macos-12', 'macos-13', 'macos-13-xlarge']
+        try: ['0', '1', '2']
+
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v2
+
+      # - name: Configure Python
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.7
+
+      # - name: Install
+      #   run: |
+      #     pip install -r requirements.txt
+      # - name: hostname
+      #   run: |
+      #     echo -e "List the different names/addresses associsated with this host:\n\n"
+      #     echo "hostname   : $(hostname $opt 2>/dev/null || echo '*error*')"
+      #     for opt in '-A' '-d' '-f'; do
+      #         echo "hostname $opt: $(hostname $opt 2>/dev/null || echo '*error*')"
+      #     done
+      - name: ipinfo
+        shell: bash
+        run: |
+          echo "====view dns info===="
+          scutil --dns
+          echo "====view ip info===="
+          ifconfig       
+      - name: nslookup
+        shell: bash
+        run: |
+          echo -e "Expecting nslookup to return $(hostname -f)\n\n"
+          for host in "$(hostname)" "$(hostname -f)"; do
+              echo "nslookup $host: $(nslookup "$host" 2>&1 | grep -E '(Name:|\*\*)' || true)"
+          done
+      # - name: python.socket
+      #   shell: python
+      #   run: |
+      #     print(
+      #       'Linux: Expecting gethostname to return the same as "hostname"'
+      #       ' and the other interfaces to return the same as "hostname -f"'
+      #       '\n\n'
+      #       'Mac OS: Expect *ipv6.arpa addresses due to a longstanding'
+      #       '  Python bug\n\n'
+      #     )
+      #     import socket
+      #     for expr in (
+      #         'socket.gethostname()',
+      #         'socket.getfqdn()',
+      #         'socket.getfqdn(socket.gethostname())',
+      #         'socket.getfqdn(socket.getfqdn())',
+      #         'socket.gethostbyname_ex(socket.gethostname())[0]',
+      #         'socket.gethostbyname_ex(socket.getfqdn())[0]'
+      #     ):
+      #         try:
+      #             result = eval(expr)
+      #         except Exception as exc:
+      #             result = str(exc)
+      #         print(f'{expr:50}: {result}')
+      # - name: TCP Connection Test
+      #   run: |
+      #     python dns_test.py
