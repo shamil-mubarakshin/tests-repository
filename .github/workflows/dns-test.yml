@@ -54,8 +54,8 @@ jobs:
       - name: ping1
         shell: bash
         run: |
-          ping -c 1 $(hostname -f)
-          ping -c 1 $(hostname -s)
+          ping -c 1 $(hostname -f) 2>/dev/null
+          ping -c 1 $(hostname -s) 2>/dev/null
 
       - name: test-workaround
         shell: bash
@@ -83,5 +83,5 @@ jobs:
       - name: ping2
         shell: bash
         run: |
-          ping -c 1 $(hostname -f)
-          ping -c 1 $(hostname -s)
+          ping -c 1 $(hostname -f) 2>/dev/null
+          ping -c 1 $(hostname -s) 2>/dev/null
