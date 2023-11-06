@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.11.1'
 
-      - name: hostname
+      - name: install pyarrow
         run: |
           pip install pyarrow==10.0.01
    
