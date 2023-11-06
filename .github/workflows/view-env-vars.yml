@@ -22,15 +22,21 @@ jobs:
         fetch-depth: 0
         
     - name: Print env vars
-      run: Get-ChildItem env:\
+      run: 
+        Get-ChildItem env:\
+        echo
       
     - name: Print actions trigger
       run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
 
-    - name: Dump GitHub context
+    - name: Dump GitHub context and PATH
+      shell: bash
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: echo "$GITHUB_CONTEXT"
+      run: |
+        echo "$GITHUB_CONTEXT"
+        echo "========================"
+        echo "$PATH"
 
     - name: Test unique id
       run: $actionUniqueId = "${{ github.run_id }}${{ github.run_number }}${{ github.run_attempt }}"[-9..-1] -join ""; write-host $actionUniqueId
