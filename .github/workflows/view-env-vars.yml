@@ -24,7 +24,6 @@ jobs:
     - name: Print env vars
       run: 
         Get-ChildItem env:\
-        echo
       
     - name: Print actions trigger
       run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
