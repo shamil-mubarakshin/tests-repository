@@ -1,0 +1,23 @@
+name: test-python-cmake
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-12']
+        try: ['0', '1', '2']
+
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: hostname
+        run: |
+          pip install pyarrow==10.0.01
+   
