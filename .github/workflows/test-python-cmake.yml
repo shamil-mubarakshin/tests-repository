@@ -9,15 +9,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        python-version: [3.11.1]
         os: ['macos-12']
         try: ['0', '1', '2']
 
     steps:
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          python-version: '3.11.1'
+          fetch-depth: 0
 
+      - name: setup venv
+        run: python3 -m venv venv && venv/bin/pip install --upgrade pip
+      
       - name: install pyarrow
-        run: |
-          pip install pyarrow==10.0.01
-   
+        run: venv/bin/pip install pyarrow==10.0.1
