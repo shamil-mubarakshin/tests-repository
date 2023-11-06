@@ -1,7 +1,6 @@
 name: test-groups-and-outputs
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
