@@ -1,0 +1,34 @@
+name: databricks
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-2019]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+        
+    - run: |
+        Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer\"
+        $InstallPath = "C:\Program Files\Microsoft Visual Studio\2019\Enterprise"
+        $componentsToAdd= @(
+          "Microsoft.Net.Component.4.8.1.SDK"
+          "Microsoft.Net.Component.4.8.1.TargetingPack"
+          "Microsoft.Net.ComponentGroup.4.8.1.DeveloperTools"
+        )
+        [string]$workloadArgs = $componentsToAdd | ForEach-Object {" --add " +  $_}
+        $Arguments = ('/c', "vs_installer.exe", 'modify', '--installPath', "`"$InstallPath`"",$workloadArgs, '--quiet', '--norestart', '--nocache')
+        # should be run twice
+        $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+        $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
