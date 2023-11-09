@@ -18,6 +18,10 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
+    - name: List packages
+      run: |
+        Install-Module VSSetup -Scope CurrentUser -Force
+        (Get-VSSetupInstance | Select-VSSetupInstance -Product *).packages
         
     - run: |
         Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer\"
@@ -32,3 +36,7 @@ jobs:
         # should be run twice
         $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
         $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+        
+    - name: List packages
+      run: |
+        (Get-VSSetupInstance | Select-VSSetupInstance -Product *).packages
