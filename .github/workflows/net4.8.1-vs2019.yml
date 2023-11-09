@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-2019]
+        os: [windows-2019, windows-2022]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Check out code from GitHub
@@ -23,7 +23,9 @@ jobs:
         Install-Module VSSetup -Scope CurrentUser -Force
         (Get-VSSetupInstance | Select-VSSetupInstance -Product *).packages
         
-    - run: |
+    - name: Install workloads
+      if: ${{ matrix.os=='windows-2019' }} 
+      run: |
         Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer\"
         $InstallPath = "C:\Program Files\Microsoft Visual Studio\2019\Enterprise"
         $componentsToAdd= @(
