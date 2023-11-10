@@ -21,8 +21,8 @@ jobs:
         
     - name: List packages
       run: |
-        brew unlink ghc
-        brew unlink cabal-install
+        brew unlink ghc > /dev/null 2>&1
+        brew unlink cabal-install > /dev/null 2>&1
   
     - name: random cmd
       run: |
