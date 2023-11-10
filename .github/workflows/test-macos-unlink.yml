@@ -1,0 +1,29 @@
+name: test-macos-unlink
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-11, macos-12]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+        
+    - name: List packages
+      run: |
+        brew unlink ghc
+        brew unlink cabal-install
+  
+    - name: random cmd
+      run: |
+        echo "abc"
