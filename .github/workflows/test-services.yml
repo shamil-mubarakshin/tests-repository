@@ -1,0 +1,23 @@
+name: test-services
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-2019, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: List some services
+      run: |
+        gsv 'wuauserv', 'DiagTrack', 'dmwappushservice', 'PcaSvc', 'SysMain', 'gupdate', 'gupdatem', 'StorSvc' | ft name, status, starttype
