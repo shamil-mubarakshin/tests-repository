@@ -10,7 +10,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Check out code from GitHub
@@ -19,25 +19,26 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Set apt mirror
-      # GitHub Actions apt proxy is super unstable
-      # see https://github.com/actions/runner-images/issues/7048
-      run: |
-        # make sure there is a `\t` between URL and `priority:*` attributes
-        printf 'http://azure.archive.ubuntu.com/ubuntu\tpriority:1\n' | sudo tee /etc/apt/apt-mirrors.txt
-        printf 'http://archive.ubuntu.com/ubuntu\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors.txt
-        printf 'http://security.ubuntu.com/ubuntu\tpriority:3\n' | sudo tee /etc/apt/apt-mirrors.txt
+    # - name: Set apt mirror
+    #   # GitHub Actions apt proxy is super unstable
+    #   # see https://github.com/actions/runner-images/issues/7048
+    #   run: |
+    #     # make sure there is a `\t` between URL and `priority:*` attributes
+    #     printf 'http://azure.archive.ubuntu.com/ubuntu\tpriority:1\n' | sudo tee /etc/apt/apt-mirrors.txt
+    #     printf 'http://archive.ubuntu.com/ubuntu\tpriority:2\n' | sudo tee /etc/apt/apt-mirrors.txt
+    #     printf 'http://security.ubuntu.com/ubuntu\tpriority:3\n' | sudo tee /etc/apt/apt-mirrors.txt
         
-        sudo sed -i 's/http:\/\/azure.archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/apt-mirrors.txt/' /etc/apt/sources.list
-        sudo sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/apt-mirrors.txt/' /etc/apt/sources.list
-        sudo sed -i 's/http:\/\/security.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/apt-mirrors.txt/' /etc/apt/sources.list
-        sudo cat /etc/apt/sources.list
+    #     sudo sed -i 's/http:\/\/azure.archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/apt-mirrors.txt/' /etc/apt/sources.list
+    #     sudo sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/apt-mirrors.txt/' /etc/apt/sources.list
+    #     sudo sed -i 's/http:\/\/security.ubuntu.com\/ubuntu\//mirror+file:\/etc\/apt\/apt-mirrors.txt/' /etc/apt/sources.list
+    #     sudo cat /etc/apt/sources.list
     
     - name: Apt Get Update
       run: |
-        sudo apt remove unzip gcc make
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends unzip gcc make
+        # sudo apt remove unzip gcc make
+        # sudo apt-get update
+        sudo apt-get install openssl libssl-dev xorg-dev
+        # sudo apt-get install -y --no-install-recommends unzip gcc make
 
 #     - name: Update Image
 #       run: sudo apt-get update -y
