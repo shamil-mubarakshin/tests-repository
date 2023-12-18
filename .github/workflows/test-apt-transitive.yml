@@ -36,7 +36,7 @@ jobs:
     - name: Apt Get Update
       run: |
         # sudo apt remove unzip gcc make
-        # sudo apt-get update
+        sudo apt-get update
         sudo apt-get install openssl libssl-dev xorg-dev
         # sudo apt-get install -y --no-install-recommends unzip gcc make
 
