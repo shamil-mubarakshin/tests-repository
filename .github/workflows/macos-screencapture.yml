@@ -1,0 +1,21 @@
+name: macos-screencapture
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-12']
+        try: ['0', '1', '2']
+
+    steps:
+      - run: screencapture -T0 -V 10 foo${{ matrix.try }}.mov
+      - uses: actions/upload-artifact@v3
+        with:
+          name: latest
+          path: foo${{ matrix.try }}.mov
+ 
