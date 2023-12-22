@@ -1,0 +1,38 @@
+name: test-macos-brew
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-11, macos-12, macos-13]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: display node version
+      run: node --version
+    # - name: List packages
+    #   run: |
+    #     brew unlink ghc > /dev/null 2>&1
+    #     brew unlink cabal-install > /dev/null 2>&1
+    - name: install node 20
+      run: |
+        brew install node@20
+        brew link node@20 --force --overwrite
+
+    - name: display node version
+      run: node --version
+      
+    # - name: random cmd
+    #   run: |
+    #     echo "abc"
