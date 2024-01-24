@@ -16,7 +16,7 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
-    - name: Install platform-tools:
+    - name: Install platform-tools
       run: |
         SDKMANAGER=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
         echo "y" | ${SDKMANAGER} "platform-tools"
