@@ -27,4 +27,4 @@ jobs:
       shell: bash
       run: |
         SDKMANAGER=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
-        ${SDKMANAGER} --list_installed
+        ${SDKMANAGER} --list
