@@ -17,7 +17,13 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: list android componnets
+    - name: List Installed Android components
+      shell: bash
+      run: |
+        SDKMANAGER=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
+        ${SDKMANAGER} --list_installed
+        
+    - name: List Android components
       shell: bash
       run: |
         SDKMANAGER=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
