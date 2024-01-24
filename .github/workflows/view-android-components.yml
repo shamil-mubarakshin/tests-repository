@@ -17,6 +17,9 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
     - name: List Installed Android components
       shell: bash
       run: |
