@@ -16,10 +16,16 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
+
+    - name: Check Diskspace before
+      run: |
+        disk_space=$(df / -Pm | awk 'NR==2{print $4}')
+        echo "Before: $disk_space MB"
+        
     - name: Install platform-tools
       run: |
         SDKMANAGER=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
-        echo "y" | ${SDKMANAGER} "tools"
+        echo "y" | ${SDKMANAGER} "tools" "platform-tools"
         
     # - name: Set up JDK 17
     #   uses: actions/setup-java@v3
@@ -30,6 +36,11 @@ jobs:
     # - name: Setup Android SDK
     #   uses: android-actions/setup-android@v3
 
+    - name: Check Diskspace after
+      run: |
+        disk_space=$(df / -Pm | awk 'NR==2{print $4}')
+        echo "After: $disk_space MB"
+        
     - name: List Installed Android components
       shell: bash
       run: |
