@@ -25,7 +25,7 @@ jobs:
     - name: Install platform-tools
       run: |
         SDKMANAGER=${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
-        echo "y" | ${SDKMANAGER} "emulator"
+        echo "y" | ${SDKMANAGER} "tools"
         
     # - name: Set up JDK 17
     #   uses: actions/setup-java@v3
