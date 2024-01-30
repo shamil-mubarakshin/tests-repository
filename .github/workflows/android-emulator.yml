@@ -26,14 +26,14 @@ jobs:
           #$ANDROID_HOME/platform-tools/adb shell settings put global transition_animation_scale 0
           #$ANDROID_HOME/platform-tools/adb shell settings put global animator_duration_scale 0
 
-          sleep 45
+          sleep 120
           screencapture emulator-${{ matrix.os }}-${{ matrix.try }}.jpg
           $ANDROID_HOME/platform-tools/adb exec-out screencap -p > emulator-${{ matrix.os }}-${{ matrix.try }}.png
       - uses: actions/upload-artifact@v3
         with:
-          name: latest
+          name: Android-Emulator-Screenshots
           path: emulator-${{ matrix.os }}-${{ matrix.try }}.jpg
       - uses: actions/upload-artifact@v3
         with:
-          name: latest
+          name: Android-Emulator-Screenshots
           path: emulator-${{ matrix.os }}-${{ matrix.try }}.png
