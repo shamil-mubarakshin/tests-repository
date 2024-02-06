@@ -16,7 +16,7 @@ jobs:
       - run: system_profiler SPHardwareDataType
       - run: |
           echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install 'system-images;android-30;google_apis;x86'
-          for (( i=0; i<3; i++ )); do
+          for (( i=0; i<2; i++ )); do
               # create and start emulator with specific SDK
               emulator_name='emulator'$i
               echo -e $(date) "$debugTag Create AVD $emulator_name "
@@ -32,7 +32,7 @@ jobs:
               if [[ "`uname -m`" == "arm64" ]]; then
                 $ANDROID_HOME/emulator/emulator -avd $emulator_name -cores 2 -memory 2048 -accel on -noaudio -no-snapshot -no-boot-anim &
               else
-                nohup $ANDROID_HOME/emulator/emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -gpu swiftshader_indirect -noaudio -no-snapshot -no-boot-anim > /dev/null 2>&1 &
+                nohup $ANDROID_HOME/emulator/emulator -avd $emulator_name -memory 2048 -skin 1080x1920 -no-snapshot -netdelay none -netspeed full -no-audio -no-boot-anim -accel auto -gpu guest -qemu -lcd-density 420 > /dev/null 2>&1 &
               fi
               echo -e $(date) "$debugTag Wait for AVD boot finished "
           
