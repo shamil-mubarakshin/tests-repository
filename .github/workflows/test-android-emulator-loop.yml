@@ -1,0 +1,69 @@
+name: test-android-emulator-loop
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-12']
+        try: ['0', '1', '2']
+
+    steps:
+      - run: system_profiler SPHardwareDataType
+      - run: |
+          for (( i=0; i<3; i++ )); do
+              # create and start emulator with specific SDK
+              emulator_name='emulator'$i
+              echo -e $(date) "$debugTag Create AVD $emulator_name "
+              if [[ "`uname -m`" == "arm64" ]]; then
+                avdmanager create avd -n $emulator_name -k "system-images;android-30;google_apis;arm64-v8a" -d pixel_6 --force
+              else
+                avdmanager create avd -n $emulator_name -k "system-images;android-30;google_apis;x86" -d pixel_6 --force
+              fi
+              echo -e $(date) "$debugTag Check hardware acceleration "
+              emulator -accel-check
+              echo -e $(date) "$debugTag Boot AVD $emulator_name "
+              # wait for AVD boot finished
+              if [[ "`uname -m`" == "arm64" ]]; then
+                emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -noaudio -no-snapshot -no-boot-anim &
+              else
+                emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -gpu swiftshader_indirect -noaudio -no-snapshot -no-boot-anim &
+              fi
+              echo -e $(date) "$debugTag Wait for AVD boot finished "
+          
+              threshold=600
+              until false
+              do
+                sleep 30
+                adb shell 'if [[ -z $(getprop sys.boot_completed) ]]; then exit 1; fi;'
+                result=$?
+          
+                if [ $result -eq 0 ]; then
+                  echo -e $(date) "$debugTag Emulator started $result"
+                  echo ""
+                  break
+                fi
+          
+                if [ $threshold -le 0 ]; then
+                  exit 1
+                fi
+                echo -e $(date) "$debugTag Emulator starting $threshold"
+                ((threshold-=30))
+              done
+          
+              echo -e $(date) "$debugTag Emulator started"
+              echo ""
+            done
+            sleep 30
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Android-Emulator-Screenshots
+      #     path: emulator-${{ matrix.os }}-${{ matrix.try }}.jpg
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Android-Emulator-Screenshots
+      #     path: emulator-${{ matrix.os }}-${{ matrix.try }}.png
