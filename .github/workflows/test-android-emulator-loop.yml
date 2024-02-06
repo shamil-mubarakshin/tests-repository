@@ -21,9 +21,9 @@ jobs:
               emulator_name='emulator'$i
               echo -e $(date) "$debugTag Create AVD $emulator_name "
               if [[ "`uname -m`" == "arm64" ]]; then
-                $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n $emulator_name -k "system-images;android-30;google_apis;arm64-v8a" -d pixel_6 --force
+                #$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n $emulator_name -k "system-images;android-30;google_apis;arm64-v8a" -d pixel_6 --force
               else
-                $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n $emulator_name -k "system-images;android-30;google_apis;x86" -d pixel_6 --force
+                $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n $emulator_name -k "system-images;android-30;google_apis;x86_64" -d pixel_6 --force
               fi
               echo -e $(date) "$debugTag Check hardware acceleration "
               #$ANDROID_HOME/emulator/emulator -accel-check
