@@ -41,7 +41,7 @@ jobs:
               until false
               do
                 sleep 30
-                $ANDROID_HOME/platform-tools/adb shell 'if [[ -z $(getprop sys.boot_completed) ]]; then exit 1; fi;'
+                $ANDROID_HOME/platform-tools/adb wait-for-device shell 'if [[ -z $(getprop sys.boot_completed) ]]; then exit 1; fi;'
                 result=$?
           
                 if [ $result -eq 0 ]; then
