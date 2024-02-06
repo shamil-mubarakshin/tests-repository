@@ -32,7 +32,7 @@ jobs:
               if [[ "`uname -m`" == "arm64" ]]; then
                 $ANDROID_HOME/emulator/emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -noaudio -no-snapshot -no-boot-anim &
               else
-                $ANDROID_HOME/emulator/emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -gpu swiftshader_indirect -noaudio -no-snapshot -no-boot-anim &
+                nohup $ANDROID_HOME/emulator/emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -gpu swiftshader_indirect -noaudio -no-snapshot -no-boot-anim > /dev/null 2>&1 &
               fi
               echo -e $(date) "$debugTag Wait for AVD boot finished "
           
