@@ -39,7 +39,13 @@ jobs:
               $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done'
               
               echo -e $(date) "$debugTag Emulator started"
-              echo ""
+              
+              echo -e $(date) "Access emulator with adb"
+              "$ANDROID_HOME/platform-tools/adb" shell ls  2>/dev/null > ls.log
+              
+              echo -e $(date) "Stop emulator "
+              adb devices | grep emulator | cut -f1 | while read line; do adb -s $line emu kill; done
+              sleep 30
             done
             sleep 30
       # - uses: actions/upload-artifact@v3
