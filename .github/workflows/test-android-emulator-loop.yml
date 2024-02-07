@@ -36,29 +36,8 @@ jobs:
                 nohup $ANDROID_HOME/emulator/emulator -avd $emulator_name -cores 2 -memory 5120 -accel on -gpu swiftshader_indirect -noaudio -no-snapshot -no-boot-anim &
               fi
               echo -e $(date) "$debugTag Wait for AVD boot finished "
-
-              sleep 300
-              threshold=600
-              until false
-              do
-                sleep 30
-                $ANDROID_HOME/platform-tools/adb shell 'if [[ -z $(getprop sys.boot_completed) ]]; then exit 1; fi;'
-                result=$?
-          
-                if [ $result -eq 0 ]; then
-                  echo -e $(date) "$debugTag Emulator started $result"
-                  echo ""
-                  break
-                fi
-          
-                if [ $threshold -le 0 ]; then
-                  echo "exiting 1"
-                  exit 1
-                fi
-                echo -e $(date) "$debugTag Emulator starting $threshold"
-                ((threshold-=30))
-              done
-          
+              $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done'
+              
               echo -e $(date) "$debugTag Emulator started"
               echo ""
             done
