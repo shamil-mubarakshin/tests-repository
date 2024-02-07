@@ -37,7 +37,7 @@ jobs:
               fi
               echo -e $(date) "$debugTag Wait for AVD boot finished "
 
-              sleep 120
+              sleep 180
               threshold=600
               until false
               do
