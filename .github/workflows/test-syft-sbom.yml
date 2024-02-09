@@ -1,0 +1,49 @@
+name: 'Test syft for SBOM report'
+
+on:
+  # push:
+  #   branches:
+  #   - dev
+  #   - master
+  # pull_request:
+  #   branches:
+  #   - dev
+  #   - master
+  workflow_dispatch:
+  
+defaults:
+  run:
+    shell: pwsh
+  
+jobs:
+  syft-test:
+    name: Check syft
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019, windows-2022, ubuntu-20.04, ubuntu-22.04, macos-11, macos-12, macos-13]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install SYFT tool on Ubuntu or macOS
+        if: ${{ runner.os != 'Windows' }}
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin v0.100.0
+      - name: Install SYFT tool on Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b D:/syft v0.100.0
+      - name: Run SYFT on Windows
+        if: ${{ runner.os == 'Windows' }}
+        run: D:/syft/syft dir:C:/ -vv -o spdx-json=sbom.json
+      - name: Run SYFT on Ubuntu
+        if: ${{ runner.os == 'Linux' }}
+        run: syft dir:/ -vv -o spdx-json=sbom.json
+      - name: Run SYFT on macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: sudo syft dir:/ -vv -o spdx-json=sbom.json --exclude ./Users --exclude ./System/Volumes --exclude ./private
+        shell: bash
+      - name: List dir
+        run: ls -lh
+        shell: bash
+      - uses: actions/upload-artifact@v3
+        with:
+          name: SBOMs
+          path: sbom.json
