@@ -37,13 +37,19 @@ jobs:
         echo "========================"
         echo "$PATH"
 
+    - name: Check /etc/environment
+      if: ${{ runner.os == 'Linux' }}
+      shell: bash
+      run: |
+        cat /etc/environment
+
     - name: Test unique id
       run: $actionUniqueId = "${{ github.run_id }}${{ github.run_number }}${{ github.run_attempt }}"[-9..-1] -join ""; write-host $actionUniqueId
 
-    - name: ll
-      shell: bash
-      run: |
-        ll
+    # - name: ll
+    #   shell: bash
+    #   run: |
+    #     ll
       
 #     - name: Test versions
 #       run: |
