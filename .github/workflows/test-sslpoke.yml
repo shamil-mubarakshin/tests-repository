@@ -37,7 +37,7 @@ jobs:
           source ~/.bashrc.d/hadoop.bashrc
 
           wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
-          java SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
+          java -Djavax.net.debug=ssl SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
           
           orb mindlab -c "pytest --live -k 'spark and gs:'"
           
