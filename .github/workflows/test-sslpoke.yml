@@ -1,0 +1,20 @@
+name: test-sslpoke
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-20.04', 'ubuntu-latest']
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: test
+        run: |
+          wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
+          $JAVA_HOME/bin/java SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
+        shell: bash
