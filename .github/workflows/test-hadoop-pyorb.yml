@@ -1,0 +1,100 @@
+name: test-hadoop-pyorb
+
+on:
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: The Python version to use
+        type: number
+        required: false
+        default: 3.8
+      requirements:
+        description: The path to the requirements file
+        type: string
+        required: false
+        default: requirements/dev.txt
+      fetch-depth:
+        description: Number of commits to fetch
+        type: string
+        required: false
+        default: '1'
+      pytest-options:
+        description: The pytest command-line arguments to use
+        type: string
+        required: false
+      playbook-roles:
+        description: The Logikal playbook roles to run (comma-separated list)
+        type: string
+        required: false
+        default: 'hadoop'
+      playbook-vars:
+        description: The Logikal playbook variables to set (string-encoded JSON)
+        type: string
+        required: false
+        default: '{}'
+      upload-artifacts:
+        description: Whether the upload artifacts when tests fail
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-20.04']
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDS }}'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Run playbooks
+        uses: logikal-io/run-logikal-playbook@v1
+        if: inputs.playbook-roles != ''
+        with:
+          roles: ${{ inputs.playbook-roles }}
+          vars: ${{ inputs.playbook-vars }}
+
+      - uses: logikal-io/make-orb@v1
+        with:
+          requirements: ${{ inputs.requirements }}
+
+      - name: Run pytest
+        run: orb --command 'pytest ${{ inputs.pytest-options }}'
+
+      # - name: test
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y git python3-pip python3-venv
+      #     sudo rm -rf /var/lib/apt/lists/*
+      #     sudo pip3 install --no-cache-dir --upgrade pip pyorbs
+      #     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+      #     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      #     sudo apt-get update && sudo apt-get install google-cloud-cli
+      #     cd ~
+      #     git clone https://github.com/logikal-io/ansible-public-playbooks.git
+      #     cd ansible-public-playbooks
+      #     orb --make ansible --no-cache
+      #     echo "BECOME" | orb ansible -c './run-roles -r hadoop'
+      #     cd ~
+      #     git clone https://github.com/logikal-io/mindlab.git
+      #     cd mindlab
+      #     git checkout update-dependencies
+      #     orb --make mindlab --no-cache
+      #     source ~/.bashrc.d/hadoop.bashrc
+      #     printenv
+      #     wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
+      #     java -Djavax.net.debug=ssl SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
+          
+          orb mindlab -c "pytest --live -k 'spark and gs:'"
+          
+        shell: bash
