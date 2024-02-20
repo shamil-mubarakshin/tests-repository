@@ -49,6 +49,8 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
+        with:
+          repository: 'logikal-io/mindlab'
 
       - uses: 'google-github-actions/auth@v2'
         with:
