@@ -27,7 +27,7 @@ jobs:
           git clone https://github.com/logikal-io/ansible-public-playbooks.git
           cd ansible-public-playbooks
           sudo orb --make ansible --no-cache
-          sudo orb ansible -c './run-roles -r hadoop'
+          echo "BECOME" | sudo orb ansible -c './run-roles -r hadoop'
 
           cd ~
           git clone https://github.com/logikal-io/mindlab.git
