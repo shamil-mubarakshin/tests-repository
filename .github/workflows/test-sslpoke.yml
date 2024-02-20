@@ -12,9 +12,11 @@ jobs:
         os: ['ubuntu-20.04']
 
     steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
       - uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCP_CREDS }}' # Replace with the name of your GitHub Actions secret
+          credentials_json: '${{ secrets.GCP_CREDS }}'
       # - name: test
       #   run: |
       #     wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
