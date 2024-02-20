@@ -26,15 +26,15 @@ jobs:
           cd ~
           git clone https://github.com/logikal-io/ansible-public-playbooks.git
           cd ansible-public-playbooks
-          orb --make ansible --no-cache
-          orb ansible -c './run-roles -r hadoop'
+          sudo orb --make ansible --no-cache
+          sudo orb ansible -c './run-roles -r hadoop'
 
           cd ~
           git clone https://github.com/logikal-io/mindlab.git
           cd mindlab
           git checkout update-dependencies
-          orb --make mindlab --no-cache
-          source ~/.bashrc.d/hadoop.bashrc
+          sudo orb --make mindlab --no-cache
+          sudo source ~/.bashrc.d/hadoop.bashrc
 
           wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
           java -Djavax.net.debug=ssl SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
