@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-20.04', 'ubuntu-latest']
+        os: ['ubuntu-20.04']
 
     steps:
       # - name: test
@@ -38,7 +38,9 @@ jobs:
           cd mindlab
           git checkout update-dependencies
           sudo orb --make mindlab --no-cache
-          sudo source ~/.bashrc.d/hadoop.bashrc
+          source ~/.bashrc.d/hadoop.bashrc
+
+          printenv
 
           wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
           java -Djavax.net.debug=ssl SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
