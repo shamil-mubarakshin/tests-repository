@@ -3,6 +3,10 @@ name: test-hadoop-pyorb
 on:
   workflow_dispatch:
     inputs:
+      source-code-branch:
+        description: Branch name
+        type: string
+        required: false
       python-version:
         description: The Python version to use
         type: number
@@ -51,6 +55,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'logikal-io/mindlab'
+          ref: '${{ inputs.source-code-branch }}'
 
       - uses: 'google-github-actions/auth@v2'
         with:
