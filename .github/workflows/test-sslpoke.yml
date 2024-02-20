@@ -11,10 +11,34 @@ jobs:
       matrix:
         os: ['ubuntu-20.04', 'ubuntu-latest']
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # - name: test
+      #   run: |
+      #     wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
+      #     $JAVA_HOME/bin/java SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
+      #   shell: bash
       - name: test
         run: |
+          sudo apt-get update && sudo apt-get install -y git python3-pip python3-venv
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo pip3 install --no-cache-dir --upgrade pip pyorbs
+
+          cd ~
+          git clone https://github.com/logikal-io/ansible-public-playbooks.git
+          cd ansible-public-playbooks
+          orb --make ansible --no-cache
+          orb ansible -c './run-roles -r hadoop'
+
+          cd ~
+          git clone https://github.com/logikal-io/mindlab.git
+          cd mindlab
+          git checkout update-dependencies
+          orb --make mindlab --no-cache
+          source ~/.bashrc.d/hadoop.bashrc
+
           wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
-          $JAVA_HOME/bin/java SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
+          java SSLPoke pipelinesghubeus12.actions.githubusercontent.com 443
+          
+          orb mindlab -c "pytest --live -k 'spark and gs:'"
+          
         shell: bash
