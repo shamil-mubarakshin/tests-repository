@@ -30,14 +30,14 @@ jobs:
           cd ~
           git clone https://github.com/logikal-io/ansible-public-playbooks.git
           cd ansible-public-playbooks
-          sudo orb --make ansible --no-cache
-          echo "BECOME" | sudo orb ansible -c './run-roles -r hadoop'
+          orb --make ansible --no-cache
+          echo "BECOME" | orb ansible -c './run-roles -r hadoop'
 
           cd ~
           git clone https://github.com/logikal-io/mindlab.git
           cd mindlab
           git checkout update-dependencies
-          sudo orb --make mindlab --no-cache
+          orb --make mindlab --no-cache
           source ~/.bashrc.d/hadoop.bashrc
 
           printenv
