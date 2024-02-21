@@ -34,7 +34,12 @@ jobs:
           ifconfig
           echo "====view hosts file===="
           sudo cat /etc/hosts          
-          
+
+      - name: run host command 1
+        run: |
+          host localhost || true
+          host 127.0.0.1 || true
+
       - name: nslookup1
         shell: bash
         run: |
@@ -52,6 +57,10 @@ jobs:
           dscacheutil -q host -a name $(hostname -f)
           echo "====dscacheutil hostname -s===="
           dscacheutil -q host -a name $(hostname -s)
+          echo "====dscacheutil localhost===="
+          dscacheutil -q host -a name localhost
+          echo "====dscacheutil 127.0.0.1===="
+          dscacheutil -q host -a name 127.0.0.1
 
       - name: ping1
         shell: bash
@@ -59,12 +68,19 @@ jobs:
         run: |
           ping -c 1 $(hostname -f)
           ping -c 1 $(hostname -s)
+          ping -c 1 localhost
+          ping -c 1 127.0.01
 
       - name: test-workaround
         shell: bash
         run: |
           #echo -e "$(ipconfig getifaddr en0) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
           sudo networksetup -setdnsservers Ethernet 9.9.9.9
+
+      - name: run host command 2
+        run: |
+          host localhost || true
+          host 127.0.0.1 || true
 
       - name: nslookup2
         shell: bash
@@ -83,6 +99,10 @@ jobs:
           dscacheutil -q host -a name $(hostname -f)
           echo "====dscacheutil hostname -s===="
           dscacheutil -q host -a name $(hostname -s)
+          echo "====dscacheutil localhost===="
+          dscacheutil -q host -a name localhost
+          echo "====dscacheutil 127.0.0.1===="
+          dscacheutil -q host -a name 127.0.0.1
 
       - name: ping2
         shell: bash
@@ -90,3 +110,5 @@ jobs:
         run: |
           ping -c 1 $(hostname -f)
           ping -c 1 $(hostname -s)
+          ping -c 1 localhost
+          ping -c 1 127.0.01
