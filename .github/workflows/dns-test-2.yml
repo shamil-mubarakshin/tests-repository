@@ -1,0 +1,92 @@
+name: dns-test-2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-12', 'macos-latest', 'macos-13', 'macos-14']
+        try: ['0', '1', '2']
+
+    steps:
+      - run: system_profiler SPHardwareDataType
+      
+      - name: hostname
+        run: |
+          echo -e "List the different names/addresses associsated with this host:\n\n"
+          echo "hostname   : $(hostname $opt 2>/dev/null || echo '*error*')"
+          for opt in '-A' '-d' '-f'; do
+              echo "hostname $opt: $(hostname $opt 2>/dev/null || echo '*error*')"
+          done
+          
+      - name: ipinfo
+        shell: bash
+        run: |
+          echo "====view dns info===="
+          scutil --dns
+          echo "resolv.conf"
+          sudo cat /etc/resolv.conf
+          echo "====view ip info===="
+          ifconfig
+          echo "====view hosts file===="
+          sudo cat /etc/hosts          
+          
+      - name: nslookup1
+        shell: bash
+        run: |
+          echo -e "Expecting nslookup to return $(hostname -f)\n\n"
+          for host in "$(hostname)" "$(hostname -f)"; do
+              echo "nslookup $host: $(nslookup "$host" 2>&1 | grep -E '(Name:|\*\*)' || true)"
+          done
+
+      - name: dscacheutil1
+        shell: bash
+        run: |
+          echo "====dscacheutil hostname===="
+          dscacheutil -q host -a name $(hostname)
+          echo "====dscacheutil hostname -f===="
+          dscacheutil -q host -a name $(hostname -f)
+          echo "====dscacheutil hostname -s===="
+          dscacheutil -q host -a name $(hostname -s)
+
+      - name: ping1
+        shell: bash
+        continue-on-error: true
+        run: |
+          ping -c 1 $(hostname -f)
+          ping -c 1 $(hostname -s)
+
+      - name: test-workaround
+        shell: bash
+        run: |
+          #echo -e "$(ipconfig getifaddr en0) $(hostname -f) $(hostname -s)" | sudo tee -a /etc/hosts
+          sudo networksetup -setdnsservers Ethernet 9.9.9.9
+
+      - name: nslookup2
+        shell: bash
+        run: |
+          echo -e "Expecting nslookup to return $(hostname -f)\n\n"
+          for host in "$(hostname)" "$(hostname -f)"; do
+              echo "nslookup $host: $(nslookup "$host" 2>&1 | grep -E '(Name:|\*\*)' || true)"
+          done
+
+      - name: dscacheutil2
+        shell: bash
+        run: |
+          echo "====dscacheutil hostname===="
+          dscacheutil -q host -a name $(hostname)
+          echo "====dscacheutil hostname -f===="
+          dscacheutil -q host -a name $(hostname -f)
+          echo "====dscacheutil hostname -s===="
+          dscacheutil -q host -a name $(hostname -s)
+
+      - name: ping2
+        shell: bash
+        continue-on-error: true
+        run: |
+          ping -c 1 $(hostname -f)
+          ping -c 1 $(hostname -s)
