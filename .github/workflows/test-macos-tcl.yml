@@ -63,6 +63,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: nm-wu/nsf
+      - run: system_profiler SPHardwareDataType
       - name: Download Tcl tarball
         run: |
           curl -L -k -o tcl.tar.gz https://core.tcl-lang.org/tcl/tarball/tcl.tar.gz?uuid=${TCLTAG}
@@ -94,9 +95,9 @@ jobs:
       - name: Build + tests (production)
         if: ${{ !env.ACT }}
         run: |
-          # if [ "$RUNNER_OS" == "macOS" ]; then
-          #   # Make "localhost" DNS entry available; see https://github.com/actions/runner-images/issues/6383
-          #   sudo networksetup -setdnsservers Ethernet 9.9.9.9
-          #   echo `sudo lsof -PiTCP -sTCP:LISTEN`
-          # fi
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            # Make "localhost" DNS entry available; see https://github.com/actions/runner-images/issues/6383
+            sudo networksetup -setdnsservers Ethernet 9.9.9.9
+            echo `sudo lsof -PiTCP -sTCP:LISTEN`
+          fi
           make test
