@@ -1,0 +1,102 @@
+name: test-macos-tcl
+on: [workflow_dispatch]
+jobs:
+  nsf:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      CC: ${{ matrix.compiler }}
+    strategy:
+      fail-fast: false
+      matrix:
+        #tcltag: [core-8-branch, core-8-6-branch, core-8-5-branch, core-8-5-19, core-8-6-11, core-8-7-a3]
+        # cfgopt:
+        #   - ""
+        include:
+          - os: macos-latest
+            compiler: gcc-11
+            tcltag: core-8-6-branch
+            experimental: [true]
+            try: 1
+          - os: macos-latest
+            compiler: clang
+            tcltag: core-8-6-branch
+            experimental: [true]
+            try: 1
+          - os: macos-latest
+            compiler: gcc
+            tcltag: trunk
+            experimental: [true]
+            try: 1
+          - os: macos-latest
+            compiler: clang
+            tcltag: core-8-6-branch
+            experimental: [true]
+            try: 1
+          - os: macos-latest
+            compiler: gcc-11
+            tcltag: core-8-6-branch
+            experimental: [true]
+            try: 2
+          - os: macos-latest
+            compiler: clang
+            tcltag: core-8-6-branch
+            experimental: [true]
+            try: 2
+          - os: macos-latest
+            compiler: gcc
+            tcltag: trunk
+            experimental: [true]
+            try: 2
+          - os: macos-latest
+            compiler: clang
+            tcltag: core-8-6-branch
+            experimental: [true]
+            try: 2
+          
+        
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: nm-wu/nsf
+      - name: Download Tcl tarball
+        run: |
+          curl -L -k -o tcl.tar.gz https://core.tcl-lang.org/tcl/tarball/tcl.tar.gz?uuid=${TCLTAG}
+          tar -xzf tcl.tar.gz
+        env:
+          TCLTAG: ${{ matrix.tcltag }}
+      - name: Configure ${{ matrix.cfgopt }}
+        run: |
+          mkdir "${GITHUB_WORKSPACE}/build"
+          ./configure ${CFGOPT} --prefix=${GITHUB_WORKSPACE}/tcl/unix  --exec-prefix=${GITHUB_WORKSPACE}/tcl/unix || (cat config.log && exit 1)
+        working-directory: tcl/unix
+        env:
+          CFGOPT: ${{ matrix.cfgopt }}
+          TCLTAG: ${{ matrix.tcltag }}
+      - name: Build + install
+        run: |
+          make all
+          make install
+        working-directory: tcl/unix
+      - name: Configure ${{ matrix.cfgopt }}
+        run: |
+          ./configure ${CFGOPT} --prefix=${GITHUB_WORKSPACE}/build --with-tcl=${GITHUB_WORKSPACE}/tcl/unix/lib || (cat config.log && exit 1)
+        env:
+          CFGOPT: ${{ matrix.cfgopt }}
+      - name: Build + tests (debugging)
+        if: ${{ env.ACT }}
+        run: |
+          make test-nohttp
+      - name: Build + tests (production)
+        if: ${{ !env.ACT }}
+        run: |
+          # if [ "$RUNNER_OS" == "macOS" ]; then
+          #   # Make "localhost" DNS entry available; see https://github.com/actions/runner-images/issues/6383
+          #   sudo networksetup -setdnsservers Ethernet 9.9.9.9
+          #   echo `sudo lsof -PiTCP -sTCP:LISTEN`
+          # fi
+          make test
