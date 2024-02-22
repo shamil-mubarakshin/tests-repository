@@ -14,9 +14,13 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
+      # - uses: 'google-github-actions/auth@v2'
+      #   with:
+      #     credentials_json: '${{ secrets.GCP_CREDS }}'
       - uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCP_CREDS }}'
+          service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}' # my-service-account@my-project.iam.gserviceaccount.com
+          workload_identity_provider: '${{ secrets.GCP_WLD_IDENTITY_PROVIDER }}' # "projects/123456789/locations/global/workloadIdentityPools/github/providers/my-repo"
       # - name: test
       #   run: |
       #     wget https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
