@@ -57,9 +57,14 @@ jobs:
           repository: 'logikal-io/mindlab'
           ref: '${{ inputs.source-code-branch }}'
 
+      # - uses: 'google-github-actions/auth@v2'
+      #   with:
+      #     credentials_json: '${{ secrets.GCP_CREDS }}'
+
       - uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCP_CREDS }}'
+          service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}' # my-service-account@my-project.iam.gserviceaccount.com
+          workload_identity_provider: '${{ secrets.GCP_WLD_IDENTITY_PROVIDER }}' # "projects/123456789/locations/global/workloadIdentityPools/github/providers/my-repo"
 
       - uses: actions/setup-python@v5
         with:
