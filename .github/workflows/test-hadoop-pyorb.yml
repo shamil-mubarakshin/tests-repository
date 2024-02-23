@@ -66,15 +66,12 @@ jobs:
 
       - uses: 'google-github-actions/auth@v2'
         with:
-          #service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}' # my-service-account@my-project.iam.gserviceaccount.com
-          project_id: '${{ secrets.GCP_PROJECT }}'
+          service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}' # my-service-account@my-project.iam.gserviceaccount.com
           workload_identity_provider: '${{ secrets.GCP_WLD_IDENTITY_PROVIDER }}' # "projects/123456789/locations/global/workloadIdentityPools/github/providers/my-repo"
 
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python-version }}
-
-      - run: printenv
 
       - name: Run playbooks
         uses: logikal-io/run-logikal-playbook@v1
@@ -86,6 +83,8 @@ jobs:
       - uses: logikal-io/make-orb@v1
         with:
           requirements: ${{ inputs.requirements }}
+
+      - run: printenv
 
       - name: Run pytest
         run: orb --command 'pytest ${{ inputs.pytest-options }}'
