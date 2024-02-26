@@ -56,7 +56,7 @@ jobs:
         echo "Parsed URL: ${parsed_url}"
         echo -n | openssl s_client -connect ${parsed_url}:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /tmp/actions_cert.crt
         openssl x509 -in /tmp/actions_cert.crt -text
-        keytool -import -trustcacerts -keystore /etc/ssl/certs/adoptium/cacerts -storepass changeit -noprompt -alias actionscert -file /tmp/actions_cert.crt
+        sudo keytool -import -trustcacerts -keystore /etc/ssl/certs/adoptium/cacerts -storepass changeit -noprompt -alias actionscert -file /tmp/actions_cert.crt
 
     # - name: ll
     #   shell: bash
