@@ -1,0 +1,43 @@
+name: test-podman-qemu
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-main:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+    steps:
+    - name: install required packages
+      shell: bash
+      run: |
+        sudo rm -rf /{usr/{local/{lib/{android,heroku},.ghcup,share/{dotnet,powershell,miniconda,swift}},share/{dotnet,miniconda,swift}},opt/{hostedtoolcache,microsoft},imagegeneration}
+        sudo docker system prune -a -f
+        sudo apt-get update
+        sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends qemu-user-static
+        crun --version
+    - run: |
+        git clone https://github.com/gardenlinux/gardenlinux
+        cd gardenlinux
+        ./build base-amd64 base-arm64
+  build-branch:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+    steps:
+    - name: install required packages
+      shell: bash
+      run: |
+        sudo rm -rf /{usr/{local/{lib/{android,heroku},.ghcup,share/{dotnet,powershell,miniconda,swift}},share/{dotnet,miniconda,swift}},opt/{hostedtoolcache,microsoft},imagegeneration}
+        sudo docker system prune -a -f
+        sudo apt-get update
+        sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends qemu-user-static
+        crun --version
+    - run: |
+        git clone https://github.com/gardenlinux/gardenlinux
+        cd gardenlinux
+        git checkout fix-crun-permission-issue
+        ./build base-amd64 base-arm64
