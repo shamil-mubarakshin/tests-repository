@@ -1,0 +1,22 @@
+name: test-buildah
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-main:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+    steps:
+    - name: Add Dockerfile and Run
+      shell: bash
+      run: |
+        cat <<EOF >> Dockerfile
+        FROM alpine:latest
+        WORKDIR /usr/src/nonexistent
+        EOF
+        
+        buildah bud -f ./Dockerfile --format docker -t test .
+ 
