@@ -10,46 +10,56 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
     steps:
-    - name: patch crun
+    # - name: patch crun
+    #   shell: bash
+    #   run: |
+    #     curl -Lo ./crun https://github.com/containers/crun/releases/download/1.14.3/crun-1.14.3-linux-amd64
+    #     sudo install crun /usr/bin/crun
+    - name: Add Dockerfile and Run
       shell: bash
       run: |
-        curl -Lo ./crun https://github.com/containers/crun/releases/download/1.14.3/crun-1.14.3-linux-amd64
-        sudo install crun /usr/bin/crun
-    - name: install required packages
-      shell: bash
-      run: |
-        sudo rm -rf /{usr/{local/{lib/{android,heroku},.ghcup,share/{dotnet,powershell,miniconda,swift}},share/{dotnet,miniconda,swift}},opt/{hostedtoolcache,microsoft},imagegeneration}
-        sudo docker system prune -a -f
-        sudo apt-get update
-        sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends qemu-user-static
-        crun --version
-        which crun
-    - run: |
-        git clone https://github.com/gardenlinux/gardenlinux
-        cd gardenlinux
-        ./build base-amd64 base-arm64
-  build-branch:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
-    steps:
-    - name: patch crun
-      shell: bash
-      run: |
-        curl -Lo ./crun https://github.com/containers/crun/releases/download/1.14.3/crun-1.14.3-linux-amd64
-        sudo install crun /usr/bin/crun
-    - name: install required packages
-      shell: bash
-      run: |
-        sudo rm -rf /{usr/{local/{lib/{android,heroku},.ghcup,share/{dotnet,powershell,miniconda,swift}},share/{dotnet,miniconda,swift}},opt/{hostedtoolcache,microsoft},imagegeneration}
-        sudo docker system prune -a -f
-        sudo apt-get update
-        sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends qemu-user-static
-        crun --version
-        which crun
-    - run: |
-        git clone https://github.com/gardenlinux/gardenlinux
-        cd gardenlinux
-        git checkout fix-crun-permission-issue
-        ./build base-amd64 base-arm64
+        cat <<EOF >> Dockerfile
+        FROM alpine:latest
+        WORKDIR /usr/src/nonexistent
+        EOF
+        
+        buildah bud -f ./Dockerfile --format docker -t test .
+    # - name: install required packages
+    #   shell: bash
+    #   run: |
+    #     sudo rm -rf /{usr/{local/{lib/{android,heroku},.ghcup,share/{dotnet,powershell,miniconda,swift}},share/{dotnet,miniconda,swift}},opt/{hostedtoolcache,microsoft},imagegeneration}
+    #     sudo docker system prune -a -f
+    #     sudo apt-get update
+    #     sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends qemu-user-static
+    #     crun --version
+    #     which crun
+    # - run: |
+    #     git clone https://github.com/gardenlinux/gardenlinux
+    #     cd gardenlinux
+    #     ./build base-amd64 base-arm64
+        
+  # build-branch:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-20.04, ubuntu-22.04]
+  #   steps:
+  #   - name: patch crun
+  #     shell: bash
+  #     run: |
+  #       curl -Lo ./crun https://github.com/containers/crun/releases/download/1.14.3/crun-1.14.3-linux-amd64
+  #       sudo install crun /usr/bin/crun
+  #   - name: install required packages
+  #     shell: bash
+  #     run: |
+  #       sudo rm -rf /{usr/{local/{lib/{android,heroku},.ghcup,share/{dotnet,powershell,miniconda,swift}},share/{dotnet,miniconda,swift}},opt/{hostedtoolcache,microsoft},imagegeneration}
+  #       sudo docker system prune -a -f
+  #       sudo apt-get update
+  #       sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends qemu-user-static
+  #       crun --version
+  #       which crun
+  #   - run: |
+  #       git clone https://github.com/gardenlinux/gardenlinux
+  #       cd gardenlinux
+  #       git checkout fix-crun-permission-issue
+  #       ./build base-amd64 base-arm64
