@@ -20,10 +20,26 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
+
+    - name: Run TCPdump in background
+      run: |
+        echo "start_tcp_dump=true" >> "$GITHUB_ENV"
+        sudo tcpdump -i eth0 -w dump.pcap &
         
     - name: Install databricks
       run: |
         curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+    - name: Stop TCPdump
+      if: (success() || failure()) && env.start_tcp_dump == 'true'
+      run: sudo killall tcpdump
+
+    - name: Upload dump file
+      if: failure() && env.start_tcp_dump == 'true'
+      uses: actions/upload-artifact@v2
+      with:
+        name: dump.pcap
+        path: dump.pcap
 
     - name: Test databricks
       run: |
