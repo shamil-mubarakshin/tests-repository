@@ -22,6 +22,7 @@ jobs:
         fetch-depth: 0
 
     - name: Run TCPdump in background
+      if: runner.os == 'Linux'
       run: |
         echo "start_tcp_dump=true" >> "$GITHUB_ENV"
         sudo tcpdump -i eth0 -w dump.pcap &
@@ -31,11 +32,11 @@ jobs:
         curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
     - name: Stop TCPdump
-      if: (success() || failure()) && env.start_tcp_dump == 'true'
+      if: (success() || failure()) && env.start_tcp_dump == 'true' && runner.os == 'Linux'
       run: sudo killall tcpdump
 
     - name: Upload dump file
-      if: failure() && env.start_tcp_dump == 'true'
+      if: (success() || failure()) && env.start_tcp_dump == 'true' && runner.os == 'Linux'
       uses: actions/upload-artifact@v2
       with:
         name: dump.pcap
