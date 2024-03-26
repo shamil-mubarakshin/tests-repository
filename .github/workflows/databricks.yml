@@ -39,7 +39,7 @@ jobs:
       if: (success() || failure()) && env.start_tcp_dump == 'true' && runner.os == 'Linux'
       uses: actions/upload-artifact@v2
       with:
-        name: dump.pcap
+        name: ${{ github.run_id }}-${{ github.run_attempt }}.pcap
         path: dump.pcap
 
     - name: Test databricks
