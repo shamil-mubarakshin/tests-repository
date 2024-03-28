@@ -47,4 +47,11 @@ jobs:
               return [string]::Join($Delimiter, $selectedParts)
           }
           
+          "Run-Command composer --version"
+          Run-Command "composer --version"
+          
+          "Run-Command composer --version | Take-Part -Part 2" 
           Run-Command "composer --version" | Take-Part -Part 2
+          
+          "Run-Command composer --version | Select-Object -First 1 | Take-Part -Part 2" 
+          Run-Command "composer --version" | Select-Object -First 1 | Take-Part -Part 2
