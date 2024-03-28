@@ -19,3 +19,7 @@ jobs:
           sudo touch $clt_placeholder
           
           /usr/sbin/softwareupdate -l
+
+      - shell: pwsh
+        run: |
+          composer --version
