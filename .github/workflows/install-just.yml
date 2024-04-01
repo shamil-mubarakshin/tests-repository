@@ -1,0 +1,24 @@
+name: install-just
+on: [workflow_dispatch]
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - run: sudo snap install --edge --classic just
+    - uses: actions/checkout@v4
+    - run: just --help
+    - run: just test
+  macos:
+    runs-on: macos-latest
+    steps:
+    - run: brew install just
+    - uses: actions/checkout@v4
+    - run: just --help
+    - run: just test
+  windows:
+    runs-on: windows-latest
+    steps:
+    - run: choco install just
+    - uses: actions/checkout@v4
+    - run: just --help
+    - run: just test
