@@ -14,7 +14,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - run: xz version
+      - run: |
+          xz -V
+          which xz
       # - run: npm install
       # - run: |
       #     clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
