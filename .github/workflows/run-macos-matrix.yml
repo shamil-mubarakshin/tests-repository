@@ -17,6 +17,14 @@ jobs:
       - run: |
           xz -V
           which xz
+
+      - run: |
+          brew update
+          brew upgrade xz
+
+      - run: |
+          xz -V
+          which xz
       # - run: npm install
       # - run: |
       #     clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
