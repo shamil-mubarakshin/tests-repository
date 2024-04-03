@@ -8,50 +8,51 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13, macos-13, macos-14]
+        os: [macos-12, macos-13, macos-14, macos-latest]
       fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - run: |
-          clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
-          sudo touch $clt_placeholder
+      - run: npm install
+      # - run: |
+      #     clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+      #     sudo touch $clt_placeholder
           
-          /usr/sbin/softwareupdate -l
+      #     /usr/sbin/softwareupdate -l
 
-      - shell: pwsh
-        run: |
-          function Run-Command {
-              param (
-                  [Parameter(Mandatory=$true)]
-                  [string] $Command,
-                  [switch] $SuppressStderr
-              )
-              # Bash trick to suppress and show error output because some commands write to stderr (for example, "python --version")
-              $redirectOutputArguments = If ($SuppressStderr) { "2> /dev/null" } Else { "2>&1" }
-              $stdout = & bash -c "${Command} ${redirectOutputArguments}"
+      # - shell: pwsh
+      #   run: |
+      #     function Run-Command {
+      #         param (
+      #             [Parameter(Mandatory=$true)]
+      #             [string] $Command,
+      #             [switch] $SuppressStderr
+      #         )
+      #         # Bash trick to suppress and show error output because some commands write to stderr (for example, "python --version")
+      #         $redirectOutputArguments = If ($SuppressStderr) { "2> /dev/null" } Else { "2>&1" }
+      #         $stdout = & bash -c "${Command} ${redirectOutputArguments}"
           
-              return $stdout
-          }
+      #         return $stdout
+      #     }
 
-          function Take-Part {
-              param (
-                  [Parameter(ValueFromPipeline)]
-                  [string] $toolOutput,
-                  [string] $Delimiter = " ",
-                  [int[]] $Part
-              )
-              $parts = $toolOutput.Split($Delimiter, [System.StringSplitOptions]::RemoveEmptyEntries)
-              $selectedParts = $parts[$Part]
-              return [string]::Join($Delimiter, $selectedParts)
-          }
+      #     function Take-Part {
+      #         param (
+      #             [Parameter(ValueFromPipeline)]
+      #             [string] $toolOutput,
+      #             [string] $Delimiter = " ",
+      #             [int[]] $Part
+      #         )
+      #         $parts = $toolOutput.Split($Delimiter, [System.StringSplitOptions]::RemoveEmptyEntries)
+      #         $selectedParts = $parts[$Part]
+      #         return [string]::Join($Delimiter, $selectedParts)
+      #     }
           
-          "Run-Command composer --version"
-          Run-Command "composer --version"
+      #     "Run-Command composer --version"
+      #     Run-Command "composer --version"
           
-          "Run-Command composer --version | Take-Part -Part 2" 
-          Run-Command "composer --version" | Take-Part -Part 2
+      #     "Run-Command composer --version | Take-Part -Part 2" 
+      #     Run-Command "composer --version" | Take-Part -Part 2
           
-          "Run-Command composer --version | Select-Object -First 1 | Take-Part -Part 2" 
-          Run-Command "composer --version" | Select-Object -First 1 | Take-Part -Part 2
+      #     "Run-Command composer --version | Select-Object -First 1 | Take-Part -Part 2" 
+      #     Run-Command "composer --version" | Select-Object -First 1 | Take-Part -Part 2
