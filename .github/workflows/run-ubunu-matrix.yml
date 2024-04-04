@@ -1,4 +1,4 @@
-name: run-macos-matrix
+name: run-ubunu-matrix
 
 on:
   workflow_dispatch:
