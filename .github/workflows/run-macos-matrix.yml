@@ -8,23 +8,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-13, macos-13, macos-13, macos-13]
+        os: [macos-12, macos-13, macos-14, macos-latest]
       fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - run: |
-          xz -V
-          which xz
+          ps -ax | fgrep -i mdns
 
-      - run: |
-          brew update
-          brew upgrade xz
+      # - run: |
+      #     brew update
+      #     brew upgrade xz
 
-      - run: |
-          xz -V
-          which xz
+      # - run: |
+      #     xz -V
+      #     which xz
       # - run: npm install
       # - run: |
       #     clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
