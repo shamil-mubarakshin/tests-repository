@@ -14,8 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - run: |
-          ps -ax | fgrep -i mdns
+      - name: Print env vars
+        shell: pwsh
+        run: 
+          Get-ChildItem env:\
+      # - run: |
+      #     ps -ax | fgrep -i mdns
 
       # - run: |
       #     brew update
