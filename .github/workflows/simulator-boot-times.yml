@@ -21,10 +21,45 @@ jobs:
           sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
           sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-4"
 
+        - xcode: "15.3"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
+
+        - xcode: "15.3"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-0"
+
+        - xcode: "15.2"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-4"
+
         - xcode: "15.2"
           runs-on: "macos-14"
           sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
           sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
+
+        - xcode: "15.2"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-0"
+
+        - xcode: "15.0.1"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-4"
+          
+        - xcode: "15.0.1"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
+
+        - xcode: "15.0.1"
+          runs-on: "macos-14"
+          sim-type: "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          sim-runtime: "com.apple.CoreSimulator.SimRuntime.iOS-17-0"
 
         - xcode: "14.3.1"
           runs-on: "macos-14"
