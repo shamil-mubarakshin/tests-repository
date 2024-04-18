@@ -1,0 +1,97 @@
+name: macos-simulators-beeware-toga-rep
+on:
+  workflow_dispatch:
+
+env:
+  min_python_version: "3.8"
+  max_python_version: "3.12"
+  FORCE_COLOR: "1"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  testbed:
+    name: Testbed
+    runs-on: ${{ matrix.runs-on }}
+    permissions:
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        backend: [ "iOS-arm" ]
+        include:
+        - pre-command: ""
+          briefcase-run-prefix: ""
+          briefcase-run-args: ""
+          setup-python: true
+
+        - backend: "iOS-arm"
+          platform: "iOS"
+          runs-on: "macos-14"
+          briefcase-run-args: "--device 'iPhone SE (3rd generation)'"
+          app-user-data-path: "$(xcrun simctl get_app_container booted org.beeware.toga.testbed data)/Documents"
+
+    steps:
+    - name: Collect Workflow Telemetry
+      uses: catchpoint/workflow-telemetry-action@v2
+
+    - name: Checkout
+      uses: actions/checkout@v4.1.2
+      with:
+        repository: beeware/toga
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.1.0
+      if: matrix.setup-python
+      with:
+        # We're not using Python 3.11 yet, because:
+        # * The testbed's ProxyEventLoop has some problems with it
+        #   (https://github.com/beeware/toga/issues/1982).
+        # * It doesn't have an Android build of Pillow yet.
+        python-version: "3.10"
+
+    - run: |
+        DEVICE_TYPE_ID="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+        RUNTIME_ID="com.apple.CoreSimulator.SimRuntime.iOS-17-4"
+        SIMULATOR_NAME="my-ios17.4-sim"
+        
+        xcrun simctl bootstatus $(xcrun simctl create $SIMULATOR_NAME $DEVICE_TYPE_ID $RUNTIME_ID) -b
+        
+    - name: Install Dependencies
+      run: |
+        ${{ matrix.pre-command }}
+        # Use the development version of Briefcase
+        python -m pip install -U pip
+        python -m pip install git+https://github.com/beeware/briefcase.git
+        
+    - run: xcrun simctl list -j
+    
+    - name: Test App
+      working-directory: testbed
+      timeout-minutes: 15
+      run: |
+        ${{ matrix.briefcase-run-prefix }} \
+          briefcase run ${{ matrix.platform }} --test ${{ matrix.briefcase-run-args }}
+    - name: Upload Logs
+      uses: actions/upload-artifact@v4.3.1
+      # if: failure()
+      if: always()
+      with:
+        name: testbed-failure-logs-${{ matrix.backend }}
+        path: |
+          testbed/logs/*
+          /Users/runner/Library/Logs/CoreSimulator/*
+    - name: Copy App Generated User Data
+      if: failure() && matrix.backend != 'android'
+      run: |
+        mkdir -p testbed/app_data
+        cp -r "${{ matrix.app-user-data-path }}" testbed/app_data/testbed-app_data-${{ matrix.backend }}
+    - name: Upload App Data
+      uses: actions/upload-artifact@v4.3.1
+      if: failure() && matrix.backend != 'android'
+      with:
+        name: testbed-failure-app-data-${{ matrix.backend }}
+        path: testbed/app_data/*
