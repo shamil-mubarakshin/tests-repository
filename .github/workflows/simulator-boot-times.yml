@@ -82,3 +82,8 @@ jobs:
         SIMULATOR_NAME="my-ios-sim"
         
         xcrun simctl bootstatus $(xcrun simctl create $SIMULATOR_NAME $DEVICE_TYPE_ID $RUNTIME_ID) -b
+
+    - run: |
+        URL="https://github.com/"
+
+        xcrun simctl openurl booted $URL
