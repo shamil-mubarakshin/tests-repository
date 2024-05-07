@@ -14,12 +14,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Print env vars
-        shell: pwsh
-        run: 
-          Get-ChildItem env:\
+      # - name: Print env vars
+      #   shell: pwsh
+      #   run: 
+      #     Get-ChildItem env:\
 
-      - run: echo $PATH
+      # - run: echo $PATH
+
+      - run: |
+          nslookup keyserver.ubuntu.com
+          echo "=============="
+          dscacheutil -q host -a name keyserver.ubuntu.com
+          echo "=============="
+          ping keyserver.ubuntu.com
+
       # - run: |
       #     ps -ax | fgrep -i mdns
 
