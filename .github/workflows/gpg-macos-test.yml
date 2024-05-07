@@ -1,0 +1,40 @@
+name: gpg macOS test
+on: [workflow_dispatch]
+jobs:
+    macOS-gnupg:
+        strategy:
+            matrix:
+                os: [macos-13, macos-14]
+        runs-on: ${{ matrix.os }}
+        steps:
+          - name: gpg --version
+           # - name: Gnupg enceyption/decryption check
+           #   run: |
+           #      export GNUPGHOME="$(mktemp -d)"
+           #      cat >foo <<EOF
+           #      %echo Generating a OpenPGP key
+           #      Key-Type: RSA
+           #      Key-Length: 4096
+           #      Subkey-Type: RSA
+           #      Subkey-Length: 4096
+           #      Name-Real: Mikhail Koliada
+           #      Name-Comment: testing keyring
+           #      Name-Email: shamil-mubarakshin@github.com
+           #      Expire-Date: 0
+           #      Passphrase: abc
+           #      %commit
+           #      %echo done
+           #      EOF
+           #      gpg --batch --generate-key foo
+           #      gpg --list-secret-keys
+           #      touch /tmp/testgpg
+           #      echo "foo bar baz" > /tmp/testgpg
+           #      echo "File created, showing its content:"
+           #      cat /tmp/testgpg
+           #      echo "Encryption process.."
+           #      gpg --batch --encrypt --recipient mikhailkoliada@github.com --pinentry-mode loopback --passphrase abc /tmp/testgpg
+           #      rm /tmp/testgpg
+           #      echo "Check that encrypted file exists in /tmp"
+           #      ls /tmp
+           #      echo "Decryption process.."
+           #      gpg --passphrase abc --pinentry-mode=loopback --batch --decrypt /tmp/testgpg.gpg
