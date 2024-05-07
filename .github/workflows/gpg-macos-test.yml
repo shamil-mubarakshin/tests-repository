@@ -8,12 +8,16 @@ jobs:
         runs-on: ${{ matrix.os }}
         steps:
           - run: |
-              mkdir -p ~/.gnupg/
-              touch ~/.gnupg/dirmngr.conf
-              echo "standard-resolver" >  ~/.gnupg/dirmngr.conf
-              gpg --keyserver keyserver.ubuntu.com --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+              gpg --keyserver 185.125.188.27 --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+            continue-on-error: true
+
+          - run: |
+              gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+            continue-on-error: true
             
-            
+          - run: |
+              gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+            continue-on-error: true   
             
               
         
