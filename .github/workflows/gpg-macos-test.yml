@@ -8,7 +8,8 @@ jobs:
         runs-on: ${{ matrix.os }}
         steps:
           - run: |
-              touch -p ~/.gnupg/dirmngr.conf
+              mkdir -p ~/.gnupg/
+              touch ~/.gnupg/dirmngr.conf
               echo "standard-resolver" >  ~/.gnupg/dirmngr.conf
               gpg --keyserver keyserver.ubuntu.com --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
             
