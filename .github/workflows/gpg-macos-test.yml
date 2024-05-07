@@ -7,7 +7,7 @@ jobs:
                 os: [macos-13, macos-14]
         runs-on: ${{ matrix.os }}
         steps:
-          - name: gpg --version
+          - run: gpg --version
            # - name: Gnupg enceyption/decryption check
            #   run: |
            #      export GNUPGHOME="$(mktemp -d)"
