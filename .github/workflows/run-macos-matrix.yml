@@ -27,6 +27,7 @@ jobs:
           dscacheutil -q host -a name keyserver.ubuntu.com
           echo "=============="
           ping -c 1 keyserver.ubuntu.com
+        continue-on-error: true
 
       # - run: |
       #     ps -ax | fgrep -i mdns
