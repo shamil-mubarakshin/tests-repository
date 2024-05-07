@@ -26,7 +26,7 @@ jobs:
           echo "=============="
           dscacheutil -q host -a name keyserver.ubuntu.com
           echo "=============="
-          ping keyserver.ubuntu.com
+          ping ping -c 1 keyserver.ubuntu.com
 
       # - run: |
       #     ps -ax | fgrep -i mdns
