@@ -1,0 +1,73 @@
+name: test-vcpkg
+
+on: [workflow_dispatch]
+
+jobs:
+  reinstall-vcpkg:
+    runs-on: windows-2022
+    steps:
+    - name: Update vcpkg
+      run: |               
+        $Uri = 'https://github.com/Microsoft/vcpkg.git'
+        $InstallDir = 'C:\vcpkg'
+        $VcpkgExecPath = 'vcpkg.exe'
+        
+        # Remove
+        Invoke-Expression "$InstallDir\$VcpkgExecPath integrate remove"
+        if ($LASTEXITCODE -ne 0) {
+            throw "vcpkg integration failed with exit code $LASTEXITCODE"
+        }
+        Remove-Item -LiteralPath $InstallDir -Force -Recurse
+        Remove-Item -LiteralPath %localappdata%/vcpkg -Force -Recurse
+        
+        # Install
+        git clone $Uri $InstallDir -q
+        git -C $InstallDir checkout 11ed79186 # 20240403.1.0
+        
+        # Build and integrate vcpkg
+        Invoke-Expression "$InstallDir\bootstrap-vcpkg.bat"
+        if ($LASTEXITCODE -ne 0) {
+            throw "vcpkg bootstrap failed with exit code $LASTEXITCODE"
+        }
+        Invoke-Expression "$InstallDir\$VcpkgExecPath integrate install"
+        if ($LASTEXITCODE -ne 0) {
+            throw "vcpkg integration failed with exit code $LASTEXITCODE"
+        }
+        
+        # Add vcpkg to system environment
+        $currentPath = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
+        $newPath = $InstallDir + ';' + $currentPath
+        [Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
+        [Environment]::SetEnvironmentVariable("VCPKG_INSTALLATION_ROOT", $InstallDir, "Machine")
+        
+        # Update Environment
+        $locations = @(
+            'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+            'HKCU:\Environment'
+        )
+        
+        # Update PATH variable
+        $pathItems = $locations | ForEach-Object {
+            (Get-Item $_).GetValue('PATH').Split(';')
+        } | Select-Object -Unique
+        $env:PATH = $pathItems -join ';'
+        
+        # Update other variables
+        $locations | ForEach-Object {
+            $key = Get-Item $_
+            foreach ($name in $key.GetValueNames()) {
+                $value = $key.GetValue($name)
+                if (-not ($name -ieq 'PATH')) {
+                    Set-Item -Path Env:$name -Value $value
+                }
+            }
+        }
+      shell: pwsh
+
+    - name: Display vcpkg
+      shell: pwsh
+      run: |
+        git -C "C:\vcpkg" rev-parse --short HEAD
+        vcpkg version
+        Write-Host $env:VCPKG_INSTALLATION_ROOT
+        
