@@ -6,6 +6,12 @@ jobs:
   reinstall-vcpkg:
     runs-on: windows-2022
     steps:
+    - name: Display vcpkg
+      shell: pwsh
+      run: |
+        git -C "C:\vcpkg" rev-parse --short HEAD
+        vcpkg version
+
     - name: Update vcpkg
       run: |               
         $Uri = 'https://github.com/Microsoft/vcpkg.git'
@@ -18,7 +24,7 @@ jobs:
             throw "vcpkg integration failed with exit code $LASTEXITCODE"
         }
         Remove-Item -LiteralPath $InstallDir -Force -Recurse
-        Remove-Item -LiteralPath %localappdata%/vcpkg -Force -Recurse
+        Remove-Item -LiteralPath $env:LOCALAPPDATA/vcpkg -Force -Recurse
         
         # Install
         git clone $Uri $InstallDir -q
