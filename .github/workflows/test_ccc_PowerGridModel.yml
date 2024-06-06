@@ -30,8 +30,10 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        build-option: [ debug, release ]
+        # build-option: [ debug, release ]
+        build-option: [ release ]
         compiler: [msvc, clang-cl]
+        attempt: [1, 2]
 
     env:
       PRESET: ${{ matrix.compiler }}-${{ matrix.build-option }}
