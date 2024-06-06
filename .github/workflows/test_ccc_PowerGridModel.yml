@@ -1,0 +1,74 @@
+# Troubleshoot https://github.com/actions/runner-images/issues/10001
+name: Build and Test C++
+
+# Controls when the workflow will run
+on:
+  # run pipeline on push event of main branch
+  # push:
+  #   branches:
+  #     - main
+  # run pipeline on pull request
+  # pull_request:
+  # run pipeline on merge queue
+  # merge_group:
+  # run this workflow manually from the Actions tab
+  workflow_dispatch:
+    # inputs:
+    #   create_release:
+    #     type: boolean
+    #     description: Create a (pre-)release when CI passes
+    #     default: true
+    #     required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  build-cpp-test-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        build-option: [ debug, release ]
+        compiler: [msvc, clang-cl]
+
+    env:
+      PRESET: ${{ matrix.compiler }}-${{ matrix.build-option }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: PowerGridModel/power-grid-model
+
+      - name: Activate conda
+        uses: conda-incubator/setup-miniconda@v3  # install miniforge instead
+        with:
+          miniforge-version: latest
+      
+      - name: List conda
+        run: |
+          conda info
+          conda list
+      - name: Install conda environment
+        run: |
+          conda create --yes -p C:\conda_envs\cpp_pkgs -c conda-forge libboost-headers eigen nlohmann_json msgpack-cxx doctest
+      - name: Build and test
+        run: |
+          $vsPath = &(Join-Path ${env:ProgramFiles(x86)} '\Microsoft Visual Studio\Installer\vswhere.exe') -property installationpath
+          Import-Module (Join-Path $vsPath 'Common7\Tools\Microsoft.VisualStudio.DevShell.dll')
+          Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -DevCmdArguments '-arch=x64 -host_arch=x64'
+          # generate cmake cache
+          cmake --preset ${{ env.PRESET }} -DCMAKE_PREFIX_PATH=C:\conda_envs\cpp_pkgs\Library; if(!$?) { Exit $LASTEXITCODE }
+          # build
+          cmake --build --preset ${{ env.PRESET }} --verbose -j 1; if(!$?) { Exit $LASTEXITCODE }
+          # test
+          ctest --preset ${{ env.PRESET }} --output-on-failure; if(!$?) { Exit $LASTEXITCODE }
+          # install
+          cmake --build --preset ${{ env.PRESET }} --verbose -j 1 --target install; if(!$?) { Exit $LASTEXITCODE }
+          # build and run integration test
+          cd tests/package_tests; if(!$?) { Exit $LASTEXITCODE }
+          cmake --preset ${{ env.PRESET }}; if(!$?) { Exit $LASTEXITCODE }
+          cmake --build --preset ${{ env.PRESET }} --verbose -j 1; if(!$?) { Exit $LASTEXITCODE }
+          cmake --build --preset ${{ env.PRESET }} --verbose -j 1 --target install; if(!$?) { Exit $LASTEXITCODE }
+          install\${{ env.PRESET }}\bin\power_grid_model_package_test; if(!$?) { Exit $LASTEXITCODE }
