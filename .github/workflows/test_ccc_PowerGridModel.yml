@@ -45,7 +45,9 @@ jobs:
 
       - name: Workaround C++ clang
         run: |
+          clang --version
           $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -ne 'C:\Program Files\LLVM\bin' }) -join ';'
+          clang --version
           
       - name: Activate conda
         uses: conda-incubator/setup-miniconda@v3  # install miniforge instead
