@@ -1,0 +1,39 @@
+name: test-curl
+on:
+  workflow_dispatch:
+  # pull_request_target:
+  #   types: labeled
+
+# defaults:
+#   run:
+#     shell: pwsh
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-2019, windows-2022, ubuntu-20.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    # permissions:
+    #   contents: read
+    #   id-token: write
+    steps:
+    - name: Check out code from GitHub
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+        
+    - name: Print curl version
+      continue-on-error: true
+      run: |
+        curl --version
+        
+    - name: Test Curl Download
+      run: |
+        owner_repo="golangci/golangci-lint"
+        version="v1.57.0"
+        giturl="https://github.com/${owner_repo}/releases/${version}"
+        tmp=$(mktemp)
+        header="Accept:application/json"
+        curl -w '%{http_code}' -sL -H "$header" -o "$tmp" "$giturl"; echo "Exit code: $?"
