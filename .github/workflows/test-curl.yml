@@ -24,12 +24,19 @@ jobs:
         submodules: recursive
         fetch-depth: 0
         
-    - name: Print curl version
+    - name: Print curl version v1
       continue-on-error: true
+      run: |
+        curl --version
+
+    - name: Print curl version v1
+      continue-on-error: true
+      shell: bash
       run: |
         curl --version
         
     - name: Test Curl Download
+      shell: bash
       run: |
         owner_repo="golangci/golangci-lint"
         version="v1.57.0"
