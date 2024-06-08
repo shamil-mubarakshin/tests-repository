@@ -28,11 +28,14 @@ jobs:
       continue-on-error: true
       run: |
         curl --version
+        get-command curl
+        which curl
 
-    - name: Print curl version v1
+    - name: Print curl version v2
       continue-on-error: true
       shell: bash
       run: |
+        which curl
         curl --version
         
     - name: Test Curl Download
