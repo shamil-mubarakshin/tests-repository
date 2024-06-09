@@ -1,0 +1,61 @@
+# troubleshoot https://github.com/actions/runner-images/issues/10004 based on https://github.com/microsoft/DirectXShaderCompiler/blob/main/azure-pipelines.yml
+name: test-cpp-vcruntime-v2
+
+on:
+  # push:
+  workflow_dispatch:
+
+jobs:
+  build_test_runtime:
+    name: "build_test_runtime :: ${{ matrix.name }}"
+    # if: contains(fromJson(needs.setup.outputs.enabled-jobs), 'build_test_runtime')
+    runs-on: ${{ matrix.runs-on }}
+    # defaults:
+    #   run:
+    #     shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # - name: ubuntu-20.04
+          #   runs-on: ubuntu-20.04
+          #   container: gcr.io/iree-oss/base@sha256:dc314b4fe30fc1315742512891357bffed4d1b62ffcb46258b1e0761c737b446
+          - name: windows-2022
+            runs-on: windows-2022
+            configuration: Debug
+            platform: x64
+          - name: windows-2022
+            runs-on: windows-2022
+            configuration: Release
+            platform: x64
+            # No container, (unnecessary, and Windows https://github.com/actions/runner/issues/904).
+          # - name: arm64
+          #   runs-on:
+          #     - self-hosted # must come first
+          #     - runner-group=${{ needs.setup.outputs.runner-group }}
+          #     - environment=${{ needs.setup.outputs.runner-env }}
+          #     - arm64
+          #     - os-family=Linux
+          #   container: gcr.io/iree-oss/base-arm64@sha256:9daa1cdbbf12da8527319ece76a64d06219e04ecb99a4cff6e6364235ddf6c59
+    env:
+      HLSL_BLD_DIR: "dir-for-build"
+      HLSL_SRC_DIR: ${{ github.workspace }}
+      # platform: x64
+      BUILD_PRESET: test
+      CONTAINER: ${{ matrix.container }}
+    steps:
+      - name: "Checking out repository"
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          repository: microsoft/DirectXShaderCompiler
+          submodules: 'true'
+          
+      - run: |
+          call utils\hct\hctstart.cmd %HLSL_SRC_DIR% %HLSL_BLD_DIR%
+          call utils\hct\hctbuild.cmd -${{ matrix.platform }} -${{ matrix.configuration }} -show-cmake-log -spirvtest
+        shell: cmd
+
+      - run: |
+          call utils\hct\hctstart.cmd %HLSL_SRC_DIR% %HLSL_BLD_DIR%
+          call utils\hct\hcttest.cmd -${{ matrix.configuration }} noexec
+        shell: cmd
