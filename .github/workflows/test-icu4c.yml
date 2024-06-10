@@ -1,0 +1,138 @@
+---
+# https://github.com/jonaski/icu-msvc-test-build/blob/master/.github/workflows/icu4c.yaml
+name: test-icu4c
+
+on:
+  workflow_dispatch:
+
+env:
+  curl_options: '-f -O -L --connect-timeout 15 -m 30 --retry 15 --retry-delay 10 --retry-max-time 300 --retry-all-errors'
+  icu4c_version: '75.1'
+
+jobs:
+  icu4c:
+    name: icu4c
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+       arch: [ x86_64 ]
+       buildtype: [ release, debug ]
+    steps:
+
+      - name: Set buildtype
+        shell: bash
+        run: echo "buildtype=$(echo ${{matrix.buildtype}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Set cmake and meson buildtype
+        shell: bash
+        run: |
+          echo "cmake_buildtype=$(echo ${{env.buildtype}} | sed 's/.*/\u&/')" >> $GITHUB_ENV
+          echo "meson_buildtype=${{env.buildtype}}" >> $GITHUB_ENV
+      - name: Set prefix path
+        shell: bash
+        run: |
+          echo "prefix_path_backslash=c:\strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+          echo "prefix_path_backslash2=c:\\\\strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+          echo "prefix_path_forwardslash=c:/strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+          echo "prefix_path_unix=/c/strawberry_msvc_${{matrix.arch}}_${{env.buildtype}}" >> $GITHUB_ENV
+      - name: Set lib postfix
+        if: env.buildtype == 'debug'
+        shell: bash
+        run: echo "lib_postfix=d" >> $GITHUB_ENV
+
+      - name: Set arch variables (x86_64)
+        shell: bash
+        run: |
+          echo "openssl_platform=VC-WIN64A" >> $GITHUB_ENV
+          echo "msbuild_platform=x64" >> $GITHUB_ENV
+          echo "arch_short=x64" >> $GITHUB_ENV
+          echo "arch_win=win64" >> $GITHUB_ENV
+          echo "libdir=lib64" >> $GITHUB_ENV
+          echo "bindir=bin64" >> $GITHUB_ENV
+      - name: Set extra version variables
+        shell: bash
+        run: |
+          echo "icu4c_version_underscore=$(echo ${{env.icu4c_version}} | sed 's/\./_/g')" >> $GITHUB_ENV
+          echo "icu4c_version_dash=$(echo ${{env.icu4c_version}} | sed 's/\./\-/g')" >> $GITHUB_ENV
+      - name: Create directories
+        shell: bash
+        run: mkdir -p ${{env.prefix_path_unix}}/{bin,lib,include}
+
+      - name: Update PATH
+        shell: pwsh
+        run: echo "${{env.prefix_path_backslash}}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Copy bin files
+        shell: bash
+        run: cp /c/strawberry/c/bin/{patch.exe,strip.exe,strings.exe,objdump.exe} ${{env.prefix_path_unix}}/bin
+
+      - name: Move conflicting libraries
+        shell: bash
+        run: |
+          mv /c/msys64 /c/msys64_
+          mv /c/mingw32 /c/mingw32_
+          mv /c/mingw64 /c/mingw64_
+          mv /c/strawberry/c /c/strawberry/c_
+      #- name: Delete conflicting icu
+        #shell: bash
+        #run: |
+          #find "/c/program files (x86)/windows kits/" -iname 'icu*.lib' -delete
+          #find "/c/program files (x86)/windows kits/" -iname 'icu*.h' -delete
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+      - name: Install python dependencies
+        shell: cmd
+        run: pip install meson ninja
+
+
+      - name: Setup MSVC Environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86_64
+          sdk: 10.0.20348.0
+          vsversion: 2022
+          toolset: 14.40
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: jonaski/icu-msvc-test-build
+
+
+      - name: Create downloads directory
+        shell: cmd
+        run: mkdir downloads
+
+      - name: Create build directory
+        shell: cmd
+        run: mkdir build
+
+
+      - name: Download icu
+        shell: bash
+        working-directory: downloads
+        run: curl ${{env.curl_options}} https://github.com/unicode-org/icu/releases/download/release-${{env.icu4c_version_dash}}/icu4c-${{env.icu4c_version_underscore}}-src.zip
+
+      - name: Extract icu
+        shell: bash
+        working-directory: build
+        run: 7z x ../downloads/icu4c-${{env.icu4c_version_underscore}}-src.zip
+
+      - name: Build icu
+        shell: cmd
+        env:
+          CL: "/MP"
+        working-directory: build/icu/source/allinone
+        run: msbuild allinone.sln /property:Configuration=${{env.buildtype}} /p:platform=${{env.msbuild_platform}} /p:SkipUWP=true
+
+      - name: Install icu
+        shell: bash
+        working-directory: build/icu
+        run: |
+          cp -r include/unicode ${{env.prefix_path_unix}}/include/
+          cp ${{env.libdir}}/{*.lib,*.pdb,*.exp} ${{env.prefix_path_unix}}/lib/
+          cp ${{env.bindir}}/{*.dll,*.exe} ${{env.prefix_path_unix}}/bin/
