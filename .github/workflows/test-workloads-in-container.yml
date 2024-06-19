@@ -1,0 +1,15 @@
+name: test-workloads-in-container
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test_android_template:
+    runs-on: ubuntu-latest
+    container:
+      image: reactnativecommunity/react-native-android:latest
+      options: --sysctl net.ipv6.conf.all.disable_ipv6=1
+    steps:
+      - name: Ping localhost
+        shell: bash
+        run: ping -c 4 localhost 
