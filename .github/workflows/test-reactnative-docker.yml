@@ -140,6 +140,7 @@ jobs:
       env:
         TERM: "dumb"
         GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+      options: --sysctl net.ipv6.conf.all.disable_ipv6=1
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
@@ -201,6 +202,7 @@ jobs:
         PUBLIC_ANALYSISBOT_GITHUB_TOKEN_A: ${{ secrets.GITHUB_ANALYSISBOT_TOKEN_A }}
         PUBLIC_ANALYSISBOT_GITHUB_TOKEN_B: ${{ secrets.GITHUB_ANALYSISBOT_TOKEN_B }}
         HERMES_WS_DIR: /tmp/hermes
+      options: --sysctl net.ipv6.conf.all.disable_ipv6=1
     steps:
       - name: Add github.com to SSH known hosts
         run: |
@@ -353,6 +355,7 @@ jobs:
     needs: [prepare_hermes_workspace, build_npm_package]
     container:
       image: reactnativecommunity/react-native-android:latest
+      options: --sysctl net.ipv6.conf.all.disable_ipv6=1
     env:
       PROJECT_NAME: AndroidTemplateProject
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
