@@ -6,8 +6,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    env:
-      BUNDLE_GEMFILE: Gemfile
     strategy:
       fail-fast: false
       matrix:
@@ -45,14 +43,14 @@ jobs:
       #   shell: bash
       #   if: always()
 
-      # - name: Prepare Gemfile
-      #   if: always()
-      #   run: |
-      #     cat <<EOF > Gemfile
-      #     source 'https://rubygems.org'
+      - name: Prepare Gemfile
+        if: always()
+        run: |
+          cat <<EOF > Gemfile
+          source 'https://rubygems.org'
 
-      #     gem 'faraday'
-      #     EOF
+          gem 'faraday'
+          EOF
       
       - name: bundle install
         if: always()
