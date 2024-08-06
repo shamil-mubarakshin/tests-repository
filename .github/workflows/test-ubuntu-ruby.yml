@@ -16,41 +16,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         
-      # - name: permissions check-1
-      #   run: |
-      #     ls -la /opt/hostedtoolcache/Ruby/3.1.*/x64/lib/ruby/gems/3.1.0
-      #     ls -la /opt/hostedtoolcache/Ruby/3.2.*/x64/lib/ruby/gems/3.2.0
-      #   shell: bash
-      #   if: always()
+      - name: permissions check-1
+        run: |
+          ls -la /opt/hostedtoolcache/Ruby/3.1.*/x64/lib/ruby/gems/3.1.0/gems
+          ls -la /opt/hostedtoolcache/Ruby/3.2.*/x64/lib/ruby/gems/3.2.0/gems
+        shell: bash
+        if: always()
 
       - name: Install Ruby version ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler: ${{ matrix.bundler }}
-        # env:
-        #   BUNDLE_GEMFILE: Gemfile
+        env:
+          BUNDLE_GEMFILE: Gemfile
         if: always()
 
       # - run: chmod -R o-w /opt/hostedtoolcache/Ruby/3.2.5/x64/lib/ruby/gems/3.2.0/gems
       #   if: always()
 
-      # - name: permissions check-2
-      #   run: |
-      #     ls -la /opt/hostedtoolcache/Ruby/3.1.*/x64/lib/ruby/gems/3.1.0
-      #     ls -la /opt/hostedtoolcache/Ruby/3.2.*/x64/lib/ruby/gems/3.2.0
-      #     ls -la /opt/hostedtoolcache/Ruby/3.3.*/x64/lib/ruby/gems/3.3.0
-      #   shell: bash
-      #   if: always()
-
-      - name: Prepare Gemfile
-        if: always()
+      - name: permissions check-2
         run: |
-          cat <<EOF > Gemfile
-          source 'https://rubygems.org'
+          ls -la /opt/hostedtoolcache/Ruby/3.1.*/x64/lib/ruby/gems/3.1.0/gems
+          ls -la /opt/hostedtoolcache/Ruby/3.2.*/x64/lib/ruby/gems/3.2.0/gems
+          ls -la /opt/hostedtoolcache/Ruby/3.3.*/x64/lib/ruby/gems/3.3.0/gems
+        shell: bash
+        if: always()
 
-          gem 'faraday'
-          EOF
+      # - name: Prepare Gemfile
+      #   if: always()
+      #   run: |
+      #     cat <<EOF > Gemfile
+      #     source 'https://rubygems.org'
+
+      #     gem 'faraday'
+      #     EOF
       
       - name: bundle install
         if: always()
