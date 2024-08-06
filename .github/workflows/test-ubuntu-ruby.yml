@@ -54,4 +54,6 @@ jobs:
       
       - name: bundle install
         if: always()
-        run: bundle install
+        run: |
+          bundler --version
+          bundle install
