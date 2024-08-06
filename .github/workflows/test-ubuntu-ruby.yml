@@ -17,23 +17,23 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: test
+      - name: permissions check-1
         run: |
           ls -la /opt/hostedtoolcache/Ruby/3.1.6/x64/lib/ruby/gems/3.1.0
           ls -la /opt/hostedtoolcache/Ruby/3.2.5/x64/lib/ruby/gems/3.2.0
         shell: bash
         if: always()
 
-      - name: Install Ruby version 3.3
+      - name: Install Ruby version ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
         if: always()
 
-      - run: chmod -R o-w /opt/hostedtoolcache/Ruby/3.2.5/x64/lib/ruby/gems/3.2.0/gems
-        if: always()
+      # - run: chmod -R o-w /opt/hostedtoolcache/Ruby/3.2.5/x64/lib/ruby/gems/3.2.0/gems
+      #   if: always()
 
-      - name: test
+      - name: permissions check-2
         run: |
           ls -la /opt/hostedtoolcache/Ruby/3.1.6/x64/lib/ruby/gems/3.1.0
           ls -la /opt/hostedtoolcache/Ruby/3.2.5/x64/lib/ruby/gems/3.2.0
