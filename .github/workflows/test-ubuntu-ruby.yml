@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-20.04', 'ubuntu-22.04', 'ubuntu-24.04']
-        # try: ['0', '1', '2', '3', '4', '5']
+        ruby: ['3.1', '3.2', '3.3']
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,7 +27,7 @@ jobs:
       - name: Install Ruby version 3.3
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3
+          ruby-version: ${{ matrix.ruby }}
         if: always()
 
       - run: chmod -R o-w /opt/hostedtoolcache/Ruby/3.2.5/x64/lib/ruby/gems/3.2.0/gems
@@ -40,3 +40,16 @@ jobs:
           ls -la /opt/hostedtoolcache/Ruby/3.3.4/x64/lib/ruby/gems/3.3.0
         shell: bash
         if: always()
+
+      - name: Prepare Gemfile
+        if: always()
+        run: |
+          cat <<EOF > Gemfile
+          source 'https://rubygems.org'
+
+          gem 'faraday'
+          EOF
+      
+      - name: bundle install
+        if: always()
+        run: bundle install
