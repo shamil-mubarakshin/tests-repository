@@ -1,0 +1,24 @@
+name: test-ubuntu-ruby
+
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-20.04', 'ubuntu-22.04', 'ubuntu-24.04']
+        # try: ['0', '1', '2', '3', '4', '5']
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: test
+        run: |
+          ls -la /opt/hostedtoolcache/Ruby/3.2.4/x64/lib/ruby/gems/3.2.0
+          ls -la /opt/hostedtoolcache/Ruby/3.1.6/x64/lib/ruby/gems/3.1.0
+        shell: bash
