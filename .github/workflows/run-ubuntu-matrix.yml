@@ -22,5 +22,5 @@ jobs:
       - name: check nuget conf
         run: |
           which nuget
-          nuget help
-          ls -la .nuget/ 
+          nuget config
+          ls -la ~/.nuget/ 
