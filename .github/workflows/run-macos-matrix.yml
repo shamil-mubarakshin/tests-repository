@@ -11,13 +11,16 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04, macos-11, macos-12, macos-13, macos-14, macos-latest]
       fail-fast: false
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
 
       - run: |
-          download_path="/tmp/MonoFramework-MDK-6.12.0.188.macos10.xamarin.universal.pkg"
-          url="https://download.mono-project.com/archive/6.12.0/macos-10-universal/MonoFramework-MDK-6.12.0.188.macos10.xamarin.universal.pkg"
-          curl -4sSLo "$download_path" "$url" -w '%{http_code}'
+          cat ~/.config/NuGet/NuGet.Config
+
+      # - run: |
+      #     download_path="/tmp/MonoFramework-MDK-6.12.0.188.macos10.xamarin.universal.pkg"
+      #     url="https://download.mono-project.com/archive/6.12.0/macos-10-universal/MonoFramework-MDK-6.12.0.188.macos10.xamarin.universal.pkg"
+      #     curl -4sSLo "$download_path" "$url" -w '%{http_code}'
 
       # - run: xcode-select -p
 
