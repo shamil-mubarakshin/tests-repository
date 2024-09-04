@@ -1,0 +1,26 @@
+name: run-ubuntu-matrix
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0/5 * * * *'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+      fail-fast: false
+    steps:
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: actions/checkout
+      #     ref: main
+
+      - name: check nuget conf
+        run: |
+          which nuget
+          nuget help
+          ls -la .nuget/ 
