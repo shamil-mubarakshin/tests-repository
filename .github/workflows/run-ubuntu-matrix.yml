@@ -23,4 +23,5 @@ jobs:
         run: |
           which nuget
           nuget config
-          ls -la ~/.config
+          ls -la ~/.config/NuGet
+          cat ~/.config/NuGet/NuGet.Config
