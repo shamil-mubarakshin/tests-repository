@@ -22,6 +22,6 @@ jobs:
       - name: check nuget conf
         run: |
           which nuget
-          nuget config
+          nuget config -set maxHttpRequestsPerSource=64
           ls -la ~/.config/NuGet
           cat ~/.config/NuGet/NuGet.Config
