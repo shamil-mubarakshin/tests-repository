@@ -8,14 +8,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-11, macos-12, macos-13, macos-14, macos-latest]
+        os: [macos-11, macos-12, macos-13, macos-14, macos-latest]
       fail-fast: false
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
 
-      - run: |
-          cat ~/.config/NuGet/NuGet.Config
+     -  shell: pwsh
+        run: |
+          $guestMacosVersion = sw_vers
+          Write-Host $guestMacosVersion
+          switch -regex ($guestMacosVersion[1]) {
+              '12.\d' { $nextOSVersion = 'macOS Ventura|macOS Sonoma|macOS Sequoia' }
+              '13.\d' { $nextOSVersion = 'macOS Sonoma|macOS Sequoia' }
+              '14.\d' { $nextOSVersion = 'macOS Sequoia' }
+          }
+          Write-Host $nextOSVersion
+          $updates = /usr/sbin/softwareupdate --list
+          $updates = $updates | Where-Object { $_ -match "(Label|Title):" } | Out-String
+          Write-Host $updates
 
       # - run: |
       #     download_path="/tmp/MonoFramework-MDK-6.12.0.188.macos10.xamarin.universal.pkg"
