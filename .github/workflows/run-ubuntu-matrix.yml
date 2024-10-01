@@ -2,6 +2,10 @@ name: run-ubuntu-matrix
 
 on:
   workflow_dispatch:
+    inputs:
+      IMAGE_NAME:
+      description: 'Image name'
+      required: false
   # schedule:
   #   - cron: '0/5 * * * *'
 
@@ -27,7 +31,13 @@ jobs:
           cat ~/.config/NuGet/NuGet.Config
           
       - name: Adding markdown 1
-        run: echo '### Hello world1! :rocket:' >> $GITHUB_STEP_SUMMARY
+        shell: pwsh
+        run: |
+          "## Details" >> $env:GITHUB_STEP_SUMMARY
+          "| Source | Image Name | VM Name | VM User | Resource Group |" >> $env:GITHUB_STEP_SUMMARY
+          "| ------------ | ------------- | ------------- | ----------- | ------------------- |" >> $env:GITHUB_STEP_SUMMARY
+          "| ee | $(if("${{ inputs.IMAGE_NAME }}" -eq "qq"){"${{ inputs.IMAGE_NAME }}"}) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
+          "  " >> $env:GITHUB_STEP_SUMMARY
 
       - name: Adding markdown 2
         run: echo '### Hello world2! :rocket:<br /> from ${{ matrix.os }}' >> $GITHUB_STEP_SUMMARY
