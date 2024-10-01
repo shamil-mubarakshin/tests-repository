@@ -36,10 +36,13 @@ jobs:
       - name: Adding markdown 1
         shell: pwsh
         run: |
+          if ("${{ inputs.TYPE }}" -eq "qq" -and -not[string]::IsNullOrEmpty("${{ inputs.IMAGE_NAME }}")) {
+            $imageName = "${{ inputs.IMAGE_NAME }}"
+          }
           "## Details" >> $env:GITHUB_STEP_SUMMARY
           "| Source | Image Name | VM Name | VM User | Resource Group |" >> $env:GITHUB_STEP_SUMMARY
           "| ------------ | ------------- | ------------- | ----------- | ------------------- |" >> $env:GITHUB_STEP_SUMMARY
-          "| ee | $(if("${{ inputs.TYPE }}" -eq "qq" -and -not[string]::IsNullOrEmpty("${{ inputs.IMAGE_NAME }}")){"${{ inputs.IMAGE_NAME }}"}) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
+          "| ee | $imageName | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
           "  " >> $env:GITHUB_STEP_SUMMARY
 
       - name: Adding markdown 2
