@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       IMAGE_NAME:
-      description: 'Image name'
-      required: false
+        description: 'Image name'
+        required: false
   # schedule:
   #   - cron: '0/5 * * * *'
 
