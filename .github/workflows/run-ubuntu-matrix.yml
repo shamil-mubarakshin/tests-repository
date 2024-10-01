@@ -36,7 +36,7 @@ jobs:
       - name: Adding markdown 1
         shell: pwsh
         run: |
-          if ("${{ inputs.TYPE }}" -eq "qq" -and -not[string]::IsNullOrEmpty("${{ inputs.IMAGE_NAME }}")) {
+          if ("${{ inputs.TYPE }}" -eq "qq") {
             $imageName = "${{ inputs.IMAGE_NAME }}"
           }
           "## Details" >> $env:GITHUB_STEP_SUMMARY
