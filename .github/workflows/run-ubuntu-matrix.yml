@@ -3,6 +3,9 @@ name: run-ubuntu-matrix
 on:
   workflow_dispatch:
     inputs:
+      TYPE:
+        description: 'TYPE'
+        required: true
       IMAGE_NAME:
         description: 'Image name'
         required: false
@@ -36,7 +39,7 @@ jobs:
           "## Details" >> $env:GITHUB_STEP_SUMMARY
           "| Source | Image Name | VM Name | VM User | Resource Group |" >> $env:GITHUB_STEP_SUMMARY
           "| ------------ | ------------- | ------------- | ----------- | ------------------- |" >> $env:GITHUB_STEP_SUMMARY
-          "| ee | $(if("${{ inputs.IMAGE_NAME }}" -eq "qq"){"${{ inputs.IMAGE_NAME }}"}) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
+          "| ee | $(if("${{ inputs.TYPE }}" -eq "qq"){"${{ inputs.IMAGE_NAME }}"}) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
           "  " >> $env:GITHUB_STEP_SUMMARY
 
       - name: Adding markdown 2
