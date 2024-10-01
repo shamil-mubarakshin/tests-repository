@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
+        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
       fail-fast: false
     steps:
       # - name: Checkout repository
@@ -25,3 +25,9 @@ jobs:
           nuget config -set maxHttpRequestsPerSource=64
           ls -la ~/.config/NuGet
           cat ~/.config/NuGet/NuGet.Config
+          
+      - name: Adding markdown 1
+        run: echo '### Hello world1! :rocket:' >> $GITHUB_STEP_SUMMARY
+
+      - name: Adding markdown 2
+        run: echo '### Hello world2! :rocket:<br /> from ${{ matrix.os }}' >> $GITHUB_STEP_SUMMARY
