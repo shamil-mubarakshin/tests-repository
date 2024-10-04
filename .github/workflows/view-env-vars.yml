@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-2019, windows-2019, windows-2019, windows-2019, windows-2019, windows-2022]
+        os: [windows-2019, windows-2022, ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     permissions:
@@ -25,29 +25,29 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - run: get-item "C:\Program Files (x86)\Microsoft SDKs\Azure\AzCopy\AzCopy.exe" | fl *
-      shell: pwsh
+    # - run: get-item "C:\Program Files (x86)\Microsoft SDKs\Azure\AzCopy\AzCopy.exe" | fl *
+    #   shell: pwsh
 
     # - name: ping localhost
     #   shell: bash
     #   run: |
     #     ping localhost
 
-    # - name: Print env vars
-    #   run: 
-    #     Get-ChildItem env:\
+    - name: Print env vars
+      run: 
+        Get-ChildItem env:\
       
-    # - name: Print actions trigger
-    #   run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
+    - name: Print actions trigger
+      run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
 
-    # - name: Dump GitHub context and PATH
-    #   shell: bash
-    #   env:
-    #     GITHUB_CONTEXT: ${{ toJSON(github) }}
-    #   run: |
-    #     echo "$GITHUB_CONTEXT"
-    #     echo "========================"
-    #     echo "$PATH"
+    - name: Dump GitHub context and PATH
+      shell: bash
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
+        echo "========================"
+        echo "$PATH"
 
     # - name: Check /etc/environment
     #   if: ${{ runner.os == 'Linux' }}
