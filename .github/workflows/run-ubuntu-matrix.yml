@@ -36,6 +36,10 @@ jobs:
           ls -la /etc
           echo "====Opt===="
           ls -la /opt
+
+      - run: |
+          echo 'Hosts file:'
+          cat /etc/hosts
       # - name: check nuget conf
       #   run: |
       #     which nuget
