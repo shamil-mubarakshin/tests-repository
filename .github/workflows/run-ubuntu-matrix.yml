@@ -27,6 +27,8 @@ jobs:
       #     ref: main
 
       - run: |
+          ls -la $HOME
+          ls -la $HOME/.docker
           cat $HOME/.docker/config.json
       # - name: check nuget conf
       #   run: |
