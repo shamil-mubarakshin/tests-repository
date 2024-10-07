@@ -32,6 +32,10 @@ jobs:
           ls -la $HOME
           ls -la $HOME/.docker
           cat $HOME/.docker/config.json
+          echo "====ETC===="
+          ls -la /etc
+          echo "====Opt===="
+          ls -la /opt
       # - name: check nuget conf
       #   run: |
       #     which nuget
