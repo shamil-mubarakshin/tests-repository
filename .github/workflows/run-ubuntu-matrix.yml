@@ -27,6 +27,8 @@ jobs:
       #     ref: main
 
       - run: |
+          id -u
+          id -g
           ls -la $HOME
           ls -la $HOME/.docker
           cat $HOME/.docker/config.json
