@@ -40,6 +40,12 @@ jobs:
       - run: |
           echo 'Hosts file:'
           cat /etc/hosts
+
+      - run: |
+          sudo apt-get install build-essential
+          sudo apt-get install libsdl2-dev
+          sudo apt-get install libsdl2-net-dev
+          sudo apt-get install libglm-dev
       # - name: check nuget conf
       #   run: |
       #     which nuget
