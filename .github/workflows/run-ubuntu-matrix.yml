@@ -25,28 +25,40 @@ jobs:
       #   with:
       #     repository: actions/checkout
       #     ref: main
+      - name: PWSH as a shell
+        run: |
+          Get-Module -ListAvailable  | FT Name, Version
+        shell: pwsh
 
-      - run: |
-          id -u
-          id -g
-          ls -la $HOME
-          ls -la $HOME/.docker
-          cat $HOME/.docker/config.json
-          echo "====ETC===="
-          ls -la /etc
-          echo "====Opt===="
-          ls -la /opt
+      - name: Run Azure PowerShell script
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            Get-Module -ListAvailable  | FT Name, Version
+          azPSVersion: "latest"
 
-      - run: |
-          echo 'Hosts file:'
-          cat /etc/hosts
+      # - run: |
+      #     id -u
+      #     id -g
+      #     ls -la $HOME
+      #     ls -la $HOME/.docker
+      #     cat $HOME/.docker/config.json
+      #     echo "====ETC===="
+      #     ls -la /etc
+      #     echo "====Opt===="
+      #     ls -la /opt
 
-      - run: |
-          sudo apt-get update
-          sudo apt-get install build-essential
-          sudo apt-get install libsdl2-dev
-          sudo apt-get install libsdl2-net-dev
-          sudo apt-get install libglm-dev
+      # - run: |
+      #     echo 'Hosts file:'
+      #     cat /etc/hosts
+
+      # - run: |
+      #     sudo apt-get update
+      #     sudo apt-get install build-essential
+      #     sudo apt-get install libsdl2-dev
+      #     sudo apt-get install libsdl2-net-dev
+      #     sudo apt-get install libglm-dev
+
       # - name: check nuget conf
       #   run: |
       #     which nuget
