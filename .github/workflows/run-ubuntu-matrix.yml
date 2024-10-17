@@ -35,7 +35,12 @@ jobs:
         with:
           inlineScript: |
             Get-Module -ListAvailable  | FT Name, Version
-          azPSVersion: "12.4.0"
+          azPSVersion: "latest"
+          
+      - name: PWSH as a shell
+        run: |
+          Get-Module -ListAvailable  | FT Name, Version
+        shell: pwsh
 
       # - run: |
       #     id -u
