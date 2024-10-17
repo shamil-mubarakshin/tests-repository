@@ -39,6 +39,7 @@ jobs:
           
       - name: PWSH as a shell
         run: |
+          $env:PSModulePath += ":/usr/share/"
           Get-Module -ListAvailable  | FT Name, Version
         shell: pwsh
 
