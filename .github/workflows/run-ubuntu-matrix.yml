@@ -35,7 +35,7 @@ jobs:
         with:
           inlineScript: |
             Get-Module -ListAvailable  | FT Name, Version
-          azPSVersion: "latest"
+          azPSVersion: "12.4.0"
 
       # - run: |
       #     id -u
