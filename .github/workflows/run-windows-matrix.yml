@@ -14,4 +14,5 @@ jobs:
       - name: Run pwsh
         run: |
           Get-Content "$env:USERPROFILE/.docker/config.json"
+          docker
         shell: pwsh
