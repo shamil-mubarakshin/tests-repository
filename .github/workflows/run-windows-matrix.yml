@@ -1,0 +1,17 @@
+name: run-windows-matrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2019, windows-2022]
+      fail-fast: false
+    steps:
+      - name: Run pwsh
+        run: |
+          cat C:\Users\Default\.docker\config.json
+        shell: pwsh
