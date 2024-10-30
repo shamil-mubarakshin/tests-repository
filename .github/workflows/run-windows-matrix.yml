@@ -13,5 +13,5 @@ jobs:
     steps:
       - name: Run pwsh
         run: |
-          cat C:\Users\Default\.docker\config.json
+          cat C:\Users\runner\.docker\config.json
         shell: pwsh
