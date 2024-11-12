@@ -20,28 +20,42 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
       fail-fast: false
     steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: actions/checkout
-      #     ref: main
-      - name: PWSH as a shell
-        run: |
-          Get-Module -ListAvailable  | FT Name, Version
-        shell: pwsh
-
-      - name: Run Azure PowerShell script
-        uses: azure/powershell@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          inlineScript: |
-            Get-Module -ListAvailable  | FT Name, Version
-          azPSVersion: "9.3.0"
-          
-      - name: PWSH as a shell
+          repository: RavEngine/Samples
+          ref: main
+          submodules: true
+
+      - name: check apt sources
         run: |
-          $env:PSModulePath += ":/usr/share/"
-          Get-Module -ListAvailable  | FT Name, Version
-        shell: pwsh
+          cat config/crosscomp-sources.list
+          cat /etc/apt/sources.list
+
+      - name: setup repos
+        run: |
+          sudo mv config/crosscomp-sources.list /etc/apt/sources.list
+
+      - name: add arm64
+        run: |
+          sudo dpkg --add-architecture arm64
+
+      - name: Update Apt
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test 
+          sudo apt update 
+      # - name: Run Azure PowerShell script
+      #   uses: azure/powershell@v2
+      #   with:
+      #     inlineScript: |
+      #       Get-Module -ListAvailable  | FT Name, Version
+      #     azPSVersion: "9.3.0"
+          
+      # - name: PWSH as a shell
+      #   run: |
+      #     $env:PSModulePath += ":/usr/share/"
+      #     Get-Module -ListAvailable  | FT Name, Version
+      #   shell: pwsh
 
       # - run: |
       #     id -u
@@ -84,5 +98,5 @@ jobs:
       #     "| ee | $imageName | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
       #     "  " >> $env:GITHUB_STEP_SUMMARY
 
-      - name: Adding markdown 2
-        run: echo '### Hello world2! :rocket:<br /> from ${{ matrix.os }}' >> $GITHUB_STEP_SUMMARY
+      # - name: Adding markdown 2
+      #   run: echo '### Hello world2! :rocket:<br /> from ${{ matrix.os }}' >> $GITHUB_STEP_SUMMARY
