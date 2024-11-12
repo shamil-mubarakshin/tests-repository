@@ -32,9 +32,9 @@ jobs:
           cat config/crosscomp-sources.list
           cat /etc/apt/sources.list
 
-      - name: setup repos
-        run: |
-          sudo mv config/crosscomp-sources.list /etc/apt/sources.list
+      # - name: setup repos
+      #   run: |
+      #     sudo mv config/crosscomp-sources.list /etc/apt/sources.list
 
       - name: setup deb822 repos
         run: |
