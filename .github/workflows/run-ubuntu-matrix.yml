@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: RavEngine/Samples
-          ref: main
+          ref: master
           submodules: true
 
       - name: check apt sources
