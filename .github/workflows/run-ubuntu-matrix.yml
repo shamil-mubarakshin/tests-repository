@@ -32,13 +32,10 @@ jobs:
           cat config/crosscomp-sources.list
           cat /etc/apt/sources.list
 
-      # - name: setup repos
-      #   run: |
-      #     sudo mv config/crosscomp-sources.list /etc/apt/sources.list
-
       - name: setup deb822 repos
         run: |
-          cat <<EOF > deb822sources
+          if [[ $ImageOS == "ubuntu24" ]]; then
+            cat <<EOF > deb822sources
           Types: deb
           URIs: http://archive.ubuntu.com/ubuntu/
           Suites: noble
@@ -69,8 +66,11 @@ jobs:
           Components: main restricted multiverse universe
           Architectures: arm64
           EOF
-
-          sudo mv deb822sources /etc/apt/sources.list.d/ubuntu.sources
+  
+            sudo mv deb822sources /etc/apt/sources.list.d/ubuntu.sources
+          else
+            sudo mv config/crosscomp-sources.list /etc/apt/sources.list
+          fi
 
       - name: add arm64
         run: |
