@@ -20,7 +20,7 @@ jobs:
         shell: pwsh
         run: |
           $env:PATH
-          "$env:HOMEPATH/.local/bin" | Out-File -FilePath "$env:GITHUB_PATH" -Append
+          "c:\temp" | Out-File -FilePath "$env:GITHUB_PATH" -Append
           "show env:PATH"
           $env:PATH
           "show GHPATH"
