@@ -20,9 +20,16 @@ jobs:
         shell: pwsh
         run: |
           $env:PATH
-          echo "c:\temp" >> "$GITHUB_PATH"
+          "$env:HOMEPATH/.local/bin" | Out-File -FilePath "$env:GITHUB_PATH" -Append
+          "show env:PATH"
           $env:PATH
+          "show GHPATH"
+          $env:GITHUB_PATH
       - name: show PATH
         shell: pwsh
         run: |
+          "show env:PATH"
           $env:PATH
+          "show GHPATH"
+          $env:GITHUB_PATH
+          
