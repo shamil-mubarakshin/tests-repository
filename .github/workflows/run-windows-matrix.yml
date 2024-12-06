@@ -19,18 +19,10 @@ jobs:
       - name: append env
         shell: pwsh
         run: |
-          $currentPath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
-          Write-Host "currentPATH:"
-          $currentPath
-          $newPath = "C:\temp" + ';' + $currentPath
-          Write-Host "newPath"
-          $newPath
-          [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-          Write-host "show envPATH"
+          $env:PATH
+          echo "c:\temp" >> "$GITHUB_PATH"
           $env:PATH
       - name: show PATH
         shell: pwsh
         run: |
-          $PATH
-          Write-host "show envPATH"
           $env:PATH
