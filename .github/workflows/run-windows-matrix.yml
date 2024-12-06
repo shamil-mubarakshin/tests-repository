@@ -19,13 +19,13 @@ jobs:
       - name: append env
         shell: pwsh
         run: |
-          $currentPath = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
+          $currentPath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
           Write-Host "currentPATH:"
           $currentPath
           $newPath = "C:\temp" + ';' + $currentPath
           Write-Host "newPath"
           $newPath
-          [Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
+          [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
           Write-host "show envPATH"
           $env:PATH
       - name: show PATH
