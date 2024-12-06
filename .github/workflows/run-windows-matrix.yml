@@ -16,3 +16,14 @@ jobs:
           Get-Content "$env:USERPROFILE/.docker/config.json"
           docker
         shell: pwsh
+      - name: append env
+        shell: pwsh
+        run: |
+          $currentPath = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
+          $newPath = "C:\temp" + ';' + $currentPath
+          [Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
+      - name: show PATH
+        shell: pwsh
+        run: |
+          $PATH
+          $env:PATH
