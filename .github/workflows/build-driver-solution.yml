@@ -23,11 +23,11 @@ jobs:
           repository: 'microsoft/Windows-driver-samples'
           submodules: 'recursive'
 
-      - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v2
-
       - name: Install Nuget Packages
         run: nuget restore .\packages.config -PackagesDirectory .\packages\
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
 
       # - name: debug
       #   run: |
