@@ -1,0 +1,30 @@
+name: build-driver-solution
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        platform: [x64]
+        runson: [windows-2019, windows-2022, windows-2025]
+    runs-on: ${{ matrix.runson }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          repository: 'microsoft/Windows-driver-samples'
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build solution
+        run: |
+          msbuild "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" `
+            -p:Configuration:${{ env.Configuration }} -p:Platform:${{ env.Platform }} -p:OutputPath=$env:RUNNER_TEMP
+        env:
+          Configuration: ${{ matrix.configuration }}
+          Platform: ${{ matrix.platform }}
