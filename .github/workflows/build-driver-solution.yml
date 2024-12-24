@@ -22,24 +22,26 @@ jobs:
         with:
           repository: 'microsoft/Windows-driver-samples'
           submodules: 'recursive'
+          path: 'Windows-driver-samples'
             
-      - name: Restore dependencies
-        shell: pwsh
-        run: |
-          nuget restore "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" -Verbosity Detailed
+      # - name: Restore dependencies
+      #   shell: pwsh
+      #   run: |
+      #     nuget restore "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" -Verbosity Detailed
         
-      # - name: Install Nuget Packages
-      #   run: nuget restore .\packages.config -PackagesDirectory .\packages\
+      - name: Install Nuget Packages
+        run: nuget restore .\packages.config -PackagesDirectory .\packages\
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      # - name: debug
-      #   run: |
-      #     ls
-      #     "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
-      #     Test-Path "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+      - name: debug
+        run: |
+          ls
+          "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+          Test-Path "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
 
       - name: Build solution
+        working-directory: usb\ufxclientsample
         run: |
-          msbuild "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" "/p:Configuration=Release" "/p:Platform=x64"
+          msbuild "ufxclientsample.sln" "/p:Configuration=Release" "/p:Platform=x64"
