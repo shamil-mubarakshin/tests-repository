@@ -21,10 +21,15 @@ jobs:
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
 
+      - name: debug
+        run: |
+          ls
+          "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+
       - name: Build solution
         run: |
           msbuild "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" `
-            -p:Configuration:${{ env.Configuration }} -p:Platform:${{ env.Platform }} -p:OutputPath=$env:RUNNER_TEMP
+            "/p:Configuration:${{ env.Configuration }}" "/p:Platform:${{ env.Platform }}" "/p:OutputPath=$env:RUNNER_TEMP"
         env:
           Configuration: ${{ matrix.configuration }}
           Platform: ${{ matrix.platform }}
