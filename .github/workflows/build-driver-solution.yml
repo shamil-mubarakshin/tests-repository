@@ -22,7 +22,6 @@ jobs:
         with:
           repository: 'microsoft/Windows-driver-samples'
           submodules: 'recursive'
-          path: 'Windows-driver-samples'
             
       # - name: Restore dependencies
       #   shell: pwsh
