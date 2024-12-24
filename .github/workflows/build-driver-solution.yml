@@ -4,6 +4,11 @@ on:
   # push:
   #   branches:
   #     - main
+
+defaults:
+  run:
+    shell: pwsh
+
 jobs:
   build:
     strategy:
@@ -24,13 +29,12 @@ jobs:
       - name: Install Nuget Packages
         run: nuget restore .\packages.config -PackagesDirectory .\packages\
 
-      - name: debug
-        run: |
-          ls
-          "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
-          Test-Path "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+      # - name: debug
+      #   run: |
+      #     ls
+      #     "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+      #     Test-Path "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
 
       - name: Build solution
         run: |
-          msbuild "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" `
-            "/p:Configuration=Release" "/p:Platform=x64"
+          msbuild "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" "/p:Configuration=Release" "/p:Platform=x64"
