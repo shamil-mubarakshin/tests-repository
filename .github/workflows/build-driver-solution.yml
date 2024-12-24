@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         runson: [windows-2019, windows-2022, windows-2025]
     runs-on: ${{ matrix.runson }}
