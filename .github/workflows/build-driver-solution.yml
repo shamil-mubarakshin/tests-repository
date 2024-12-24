@@ -22,9 +22,14 @@ jobs:
         with:
           repository: 'microsoft/Windows-driver-samples'
           submodules: 'recursive'
-
-      - name: Install Nuget Packages
-        run: nuget restore .\packages.config -PackagesDirectory .\packages\
+            
+      - name: Restore dependencies
+        shell: pwsh
+        run: |
+          nuget restore "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" -Verbosity Detailed
+        
+      # - name: Install Nuget Packages
+      #   run: nuget restore .\packages.config -PackagesDirectory .\packages\
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
