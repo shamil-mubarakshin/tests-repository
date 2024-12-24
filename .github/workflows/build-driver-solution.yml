@@ -33,4 +33,4 @@ jobs:
       - name: Build solution
         run: |
           msbuild "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")" `
-            "/p:OutputPath=$env:RUNNER_TEMP" "/p:Configuration=Release" "/p:Platform=x64"
+            "/p:Configuration=Release" "/p:Platform=x64"
