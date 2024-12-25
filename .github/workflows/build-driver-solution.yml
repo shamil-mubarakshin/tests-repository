@@ -33,12 +33,14 @@ jobs:
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
 
-      - name: debug
-        run: |
-          ls
-          "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
-          Test-Path "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+      # - name: debug
+      #   run: |
+      #     ls
+      #     "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
+      #     Test-Path "$($env:GITHUB_WORKSPACE + "\usb\ufxclientsample\ufxclientsample.sln")"
 
       - name: Build solution
         working-directory: usb\ufxclientsample
