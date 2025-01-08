@@ -11,25 +11,39 @@ jobs:
         os: [windows-2019, windows-2022, windows-2025]
       fail-fast: false
     steps:
-      - name: Run pwsh
+      - name: test wmic
+        run: wmic context
+        if: always()
+
+      - name: install wmic
         run: |
-          Get-Content "$env:USERPROFILE/.docker/config.json"
-          docker
-        shell: pwsh
-      - name: append env
-        shell: pwsh
-        run: |
-          $env:PATH
-          "c:\temp" | Out-File -FilePath "$env:GITHUB_PATH" -Append
-          "show env:PATH"
-          $env:PATH
-          "show GHPATH"
-          $env:GITHUB_PATH
-      - name: show PATH
-        shell: pwsh
-        run: |
-          "show env:PATH"
-          $env:PATH
-          "show GHPATH"
-          $env:GITHUB_PATH
+          if ($env:ImageOS -eq 'win25') {
+            DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+          }
+        if: always()
+
+      - name: test wmic
+        run: wmic context
+        if: always()
+      # - name: Run pwsh
+      #   run: |
+      #     Get-Content "$env:USERPROFILE/.docker/config.json"
+      #     docker
+      #   shell: pwsh
+      # - name: append env
+      #   shell: pwsh
+      #   run: |
+      #     $env:PATH
+      #     "c:\temp" | Out-File -FilePath "$env:GITHUB_PATH" -Append
+      #     "show env:PATH"
+      #     $env:PATH
+      #     "show GHPATH"
+      #     $env:GITHUB_PATH
+      # - name: show PATH
+      #   shell: pwsh
+      #   run: |
+      #     "show env:PATH"
+      #     $env:PATH
+      #     "show GHPATH"
+      #     $env:GITHUB_PATH
           
