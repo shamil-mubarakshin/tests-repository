@@ -27,76 +27,76 @@ jobs:
           ref: master
           submodules: true
 
-      - name: check apt sources
-        run: |
-          cat config/crosscomp-sources.list
-          cat /etc/apt/sources.list
+      # - name: check apt sources
+      #   run: |
+      #     cat config/crosscomp-sources.list
+      #     cat /etc/apt/sources.list
 
-      - name: setup deb822 repos
-        run: |
-          if [[ $ImageOS == "ubuntu24" ]]; then
-            cat <<EOF > deb822sources
-          Types: deb
-          URIs: http://archive.ubuntu.com/ubuntu/
-          Suites: noble
-          Components: main restricted universe
-          Architectures: amd64
+      # - name: setup deb822 repos
+      #   run: |
+      #     if [[ $ImageOS == "ubuntu24" ]]; then
+      #       cat <<EOF > deb822sources
+      #     Types: deb
+      #     URIs: http://archive.ubuntu.com/ubuntu/
+      #     Suites: noble
+      #     Components: main restricted universe
+      #     Architectures: amd64
           
-          Types: deb
-          URIs: http://security.ubuntu.com/ubuntu/
-          Suites: noble-security
-          Components: main restricted universe
-          Architectures: amd64
+      #     Types: deb
+      #     URIs: http://security.ubuntu.com/ubuntu/
+      #     Suites: noble-security
+      #     Components: main restricted universe
+      #     Architectures: amd64
           
-          Types: deb
-          URIs: http://archive.ubuntu.com/ubuntu/
-          Suites: noble-updates
-          Components: main restricted universe
-          Architectures: amd64
+      #     Types: deb
+      #     URIs: http://archive.ubuntu.com/ubuntu/
+      #     Suites: noble-updates
+      #     Components: main restricted universe
+      #     Architectures: amd64
           
-          Types: deb
-          URIs: http://azure.ports.ubuntu.com/ubuntu-ports/
-          Suites: noble
-          Components: main restricted multiverse universe
-          Architectures: arm64
+      #     Types: deb
+      #     URIs: http://azure.ports.ubuntu.com/ubuntu-ports/
+      #     Suites: noble
+      #     Components: main restricted multiverse universe
+      #     Architectures: arm64
           
-          Types: deb
-          URIs: http://azure.ports.ubuntu.com/ubuntu-ports/
-          Suites: noble-updates
-          Components: main restricted multiverse universe
-          Architectures: arm64
-          EOF
+      #     Types: deb
+      #     URIs: http://azure.ports.ubuntu.com/ubuntu-ports/
+      #     Suites: noble-updates
+      #     Components: main restricted multiverse universe
+      #     Architectures: arm64
+      #     EOF
   
-            sudo mv deb822sources /etc/apt/sources.list.d/ubuntu.sources
-          else
-            sudo mv config/crosscomp-sources.list /etc/apt/sources.list
-          fi
+      #       sudo mv deb822sources /etc/apt/sources.list.d/ubuntu.sources
+      #     else
+      #       sudo mv config/crosscomp-sources.list /etc/apt/sources.list
+      #     fi
 
-      - name: add arm64
-        run: |
-          sudo dpkg --add-architecture arm64
+      # - name: add arm64
+      #   run: |
+      #     sudo dpkg --add-architecture arm64
 
-      - name: Update Apt
-        run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test 
-          sudo apt update
-      - name: Install Host Dependencies
-        run: sudo apt-get install cmake:amd64 fuse:amd64 libfuse2:amd64 ninja-build:amd64 libx11-dev:amd64 libgl1-mesa-dev gcc-12:amd64 g++-12:amd64 gcc-12-aarch64-linux-gnu:amd64 g++-12-aarch64-linux-gnu:amd64 -y --no-install-recommends
-      - name: Install Target Dependencies
-        run: sudo apt-get install libgl1-mesa-dev:arm64 uuid-dev:arm64 libasound2-dev:arm64 libx11-dev:arm64 libxext-dev:arm64 libxrender-dev:arm64 libxrandr-dev:arm64 libxtst-dev:arm64 libxt-dev:arm64 libegl1-mesa-dev:arm64 libx11-xcb-dev:arm64 libxcb-dri2-0-dev:arm64 libxcb-glx0-dev:arm64 libxcb-icccm4-dev:arm64 libxcb-keysyms1-dev:arm64 libxcb-randr0-dev:arm64 libxrandr-dev:arm64 libxxf86vm-dev:arm64 mesa-common-dev:arm64 libwayland-dev:arm64 -y --no-install-recommends
-      - name: Configure
-        run: | 
-              mkdir -p build
-              mkdir -p build/linuxarm
-              cd build/linuxarm
-              CC=/usr/bin/aarch64-linux-gnu-gcc-12 CXX=/usr/bin/aarch64-linux-gnu-g++-12 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_SYSTEM_NAME=Linux -DRAVENGINE_BUILD_TESTS=OFF ../.. 
-      - name: Build
-        run: cd build/linuxarm && cmake --build . --config release --target install 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name:  RavEngine_Samples_linuxARM
-          path:  build/linuxarm/Release/*.AppImage
+      # - name: Update Apt
+      #   run: |
+      #     sudo add-apt-repository ppa:ubuntu-toolchain-r/test 
+      #     sudo apt update
+      # - name: Install Host Dependencies
+      #   run: sudo apt-get install cmake:amd64 fuse:amd64 libfuse2:amd64 ninja-build:amd64 libx11-dev:amd64 libgl1-mesa-dev gcc-12:amd64 g++-12:amd64 gcc-12-aarch64-linux-gnu:amd64 g++-12-aarch64-linux-gnu:amd64 -y --no-install-recommends
+      # - name: Install Target Dependencies
+      #   run: sudo apt-get install libgl1-mesa-dev:arm64 uuid-dev:arm64 libasound2-dev:arm64 libx11-dev:arm64 libxext-dev:arm64 libxrender-dev:arm64 libxrandr-dev:arm64 libxtst-dev:arm64 libxt-dev:arm64 libegl1-mesa-dev:arm64 libx11-xcb-dev:arm64 libxcb-dri2-0-dev:arm64 libxcb-glx0-dev:arm64 libxcb-icccm4-dev:arm64 libxcb-keysyms1-dev:arm64 libxcb-randr0-dev:arm64 libxrandr-dev:arm64 libxxf86vm-dev:arm64 mesa-common-dev:arm64 libwayland-dev:arm64 -y --no-install-recommends
+      # - name: Configure
+      #   run: | 
+      #         mkdir -p build
+      #         mkdir -p build/linuxarm
+      #         cd build/linuxarm
+      #         CC=/usr/bin/aarch64-linux-gnu-gcc-12 CXX=/usr/bin/aarch64-linux-gnu-g++-12 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_SYSTEM_NAME=Linux -DRAVENGINE_BUILD_TESTS=OFF ../.. 
+      # - name: Build
+      #   run: cd build/linuxarm && cmake --build . --config release --target install 
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name:  RavEngine_Samples_linuxARM
+      #     path:  build/linuxarm/Release/*.AppImage
  
       # - name: Run Azure PowerShell script
       #   uses: azure/powershell@v2
@@ -111,16 +111,16 @@ jobs:
       #     Get-Module -ListAvailable  | FT Name, Version
       #   shell: pwsh
 
-      # - run: |
-      #     id -u
-      #     id -g
-      #     ls -la $HOME
-      #     ls -la $HOME/.docker
-      #     cat $HOME/.docker/config.json
-      #     echo "====ETC===="
-      #     ls -la /etc
-      #     echo "====Opt===="
-      #     ls -la /opt
+      - run: |
+          id -u
+          id -g
+          ls -la $HOME
+          ls -la $HOME/.docker
+          cat $HOME/.docker/config.json
+          echo "====ETC===="
+          ls -la /etc
+          echo "====Opt===="
+          ls -la /opt
 
       # - run: |
       #     echo 'Hosts file:'
