@@ -11,7 +11,7 @@ jobs:
         os: [windows-2019, windows-2022, windows-2025]
       fail-fast: false
     steps:
-      - run: get-childitem c:\postgeneration
+      - run: get-childitem c:\post-generation
       # - name: test wmic
       #   run: wmic context
       #   if: always()
