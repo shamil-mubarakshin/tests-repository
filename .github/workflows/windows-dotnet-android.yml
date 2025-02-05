@@ -24,6 +24,7 @@ jobs:
       #     java-version: 11
 
       - name: Install .NET 7.0.x
+        if: ${{ matrix.os }} == "windows-2022"
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "7.0.x"
