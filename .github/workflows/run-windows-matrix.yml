@@ -11,22 +11,45 @@ jobs:
         os: [windows-2019, windows-2022, windows-2025]
       fail-fast: false
     steps:
-      - run: get-childitem c:\post-generation
+    - run: |
+        get-process
+        dir C:\WindowsAzure\ -recurse
+      name: 'View WindowsAzure folders 1'
+    
+    - run: |
+        get-process
+        dir C:\Packages\ -recurse
+      name: 'View Packages folders 1'
 
-      - run: |
-          Write-Host "Warmup devenv.exe"
-          $vsInstallRoot = (Get-VisualStudioInstance).InstallationPath
-          $devEnvPath = "$vsInstallRoot\Common7\IDE\devenv.exe"
-          Write-Host "Initialize Visual Studio Experimental Instance"
-          & "$devEnvPath" /RootSuffix Exp /ResetSettings General.vssettings /Command File.Exit | Out-Null
-          Write-Host "Initialized"
-          Write-Host "Start Run /updateconfiguration"
-          cmd.exe /c "`"$devEnvPath`" /updateconfiguration"
-          Write-Host "/updateconfiguration completed"
-          Write-Host "warm up test project"
-          $warmup_vdproj = $(Join-Path "C:\post-generation" "warmup.vdproj")
-          & "$devEnvPath" $warmup_vdproj /build Release | Out-Null
-          Write-Host "warm up completed"
+    - run: start-sleep 600
+
+    - run: |
+        get-process
+        dir C:\WindowsAzure\ -recurse
+      name: 'View WindowsAzure folders 2'
+    
+    - run: |
+        get-process
+        dir C:\Packages\ -recurse
+      name: 'View Packages folders 2'
+      
+      # - run: get-childitem c:\post-generation
+
+      # - run: |
+      #     Write-Host "Warmup devenv.exe"
+      #     $vsInstallRoot = (Get-VisualStudioInstance).InstallationPath
+      #     $devEnvPath = "$vsInstallRoot\Common7\IDE\devenv.exe"
+      #     Write-Host "Initialize Visual Studio Experimental Instance"
+      #     & "$devEnvPath" /RootSuffix Exp /ResetSettings General.vssettings /Command File.Exit | Out-Null
+      #     Write-Host "Initialized"
+      #     Write-Host "Start Run /updateconfiguration"
+      #     cmd.exe /c "`"$devEnvPath`" /updateconfiguration"
+      #     Write-Host "/updateconfiguration completed"
+      #     Write-Host "warm up test project"
+      #     $warmup_vdproj = $(Join-Path "C:\post-generation" "warmup.vdproj")
+      #     & "$devEnvPath" $warmup_vdproj /build Release | Out-Null
+      #     Write-Host "warm up completed"
+
       # - name: test wmic
       #   run: wmic context
       #   if: always()
