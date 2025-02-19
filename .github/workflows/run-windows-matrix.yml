@@ -11,27 +11,29 @@ jobs:
         os: [windows-2019, windows-2022, windows-2025]
       fail-fast: false
     steps:
-    - run: |
-        get-process
-        dir C:\WindowsAzure\ -recurse
-      name: 'View WindowsAzure folders 1'
-    
-    - run: |
-        get-process
-        dir C:\Packages\ -recurse
-      name: 'View Packages folders 1'
 
-    - run: start-sleep 600
-
-    - run: |
-        get-process
-        dir C:\WindowsAzure\ -recurse
-      name: 'View WindowsAzure folders 2'
+    - run: docker run -i --rm mcr.microsoft.com/windows/servercore:ltsc2025 cmd /c ver
+    # - run: |
+    #     get-process
+    #     dir C:\WindowsAzure\ -recurse
+    #   name: 'View WindowsAzure folders 1'
     
-    - run: |
-        get-process
-        dir C:\Packages\ -recurse
-      name: 'View Packages folders 2'
+    # - run: |
+    #     get-process
+    #     dir C:\Packages\ -recurse
+    #   name: 'View Packages folders 1'
+
+    # - run: start-sleep 600
+
+    # - run: |
+    #     get-process
+    #     dir C:\WindowsAzure\ -recurse
+    #   name: 'View WindowsAzure folders 2'
+    
+    # - run: |
+    #     get-process
+    #     dir C:\Packages\ -recurse
+    #   name: 'View Packages folders 2'
       
       # - run: get-childitem c:\post-generation
 
