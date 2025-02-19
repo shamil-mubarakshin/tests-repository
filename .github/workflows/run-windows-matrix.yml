@@ -12,7 +12,11 @@ jobs:
       fail-fast: false
     steps:
 
-    - run: docker run -i --rm mcr.microsoft.com/windows/servercore:ltsc2025 cmd /c ver
+    - run: |
+        $Version = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+        Write-Host "Version $($Version.ReleaseId) (OS Build $ $($Version.CurrentMajorVersionNumber).$($Version.CurrentMinorVersionNumber).$($Version.CurrentBuildNumber).$($Version.UBR))"
+        
+        docker run -i --rm mcr.microsoft.com/windows/servercore:ltsc2025 cmd /c ver
     # - run: |
     #     get-process
     #     dir C:\WindowsAzure\ -recurse
