@@ -1,0 +1,29 @@
+name: test-windows-py
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        pyver: [3.9, 3.10, 3.11, 3.12, 3.13]
+      fail-fast: false
+    steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '${{ matrix.pyver }}'
+        
+    - if: always()
+      shell: cmd
+      run: |
+        py -c exit(123)
+        echo %ERRORLEVEL%
+
+    - if: always()
+      shell: cmd
+      run: |
+        py
+        exit(123)
+        echo %ERRORLEVEL%
