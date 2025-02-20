@@ -24,6 +24,4 @@ jobs:
     - if: always()
       shell: cmd
       run: |
-        py
-        exit(123)
-        echo %ERRORLEVEL%
+        py version
