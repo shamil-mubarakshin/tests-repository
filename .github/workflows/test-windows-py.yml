@@ -17,11 +17,15 @@ jobs:
         
     - if: always()
       shell: cmd
+      env:
+        PY_PYTHON: "${{ matrix.pyver }}"
       run: |
         py -c exit(123)
         echo %ERRORLEVEL%
 
     - if: always()
       shell: cmd
+      env:
+        PY_PYTHON: "${{ matrix.pyver }}"
       run: |
         py --version
