@@ -24,4 +24,4 @@ jobs:
     - if: always()
       shell: cmd
       run: |
-        py version
+        py --version
