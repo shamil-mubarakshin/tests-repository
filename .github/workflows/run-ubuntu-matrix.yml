@@ -20,12 +20,12 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
       fail-fast: false
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          repository: RavEngine/Samples
-          ref: master
-          submodules: true
+      - run: |
+          sysctl net.ipv4.ping_group_range
+      - run: |
+          pip install icmplib
+          python -c "import icmplib; icmplib.ping('google.com', privileged=False)"
+        if: always()
 
       # - name: check apt sources
       #   run: |
@@ -111,16 +111,16 @@ jobs:
       #     Get-Module -ListAvailable  | FT Name, Version
       #   shell: pwsh
 
-      - run: |
-          id -u
-          id -g
-          ls -la $HOME
-          ls -la $HOME/.docker
-          cat $HOME/.docker/config.json
-          echo "====ETC===="
-          ls -la /etc
-          echo "====Opt===="
-          ls -la /opt
+      # - run: |
+      #     id -u
+      #     id -g
+      #     ls -la $HOME
+      #     ls -la $HOME/.docker
+      #     cat $HOME/.docker/config.json
+      #     echo "====ETC===="
+      #     ls -la /etc
+      #     echo "====Opt===="
+      #     ls -la /opt
 
       # - run: |
       #     echo 'Hosts file:'
