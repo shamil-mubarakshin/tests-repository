@@ -27,6 +27,8 @@ jobs:
         ls -la /usr/share
         echo "======test /opt========"
         ls -la /opt
+        echo "======test /========"
+        ls -la /
         echo "======test /home========"
         ls -la /home/
         echo "======test /home/runner========"
