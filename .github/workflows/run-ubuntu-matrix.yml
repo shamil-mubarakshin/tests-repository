@@ -20,16 +20,28 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
       fail-fast: false
     steps:
-      - name: Enable unpriviliged ping sockets
-        shell: bash
-        run: |
-          sysctl net.ipv4.ping_group_range
-          echo 'net.ipv4.ping_group_range = 0 2147483647' | sudo tee -a /etc/sysctl.conf
-          sudo sysctl -p
-      - run: |
-          pip install icmplib
-          python -c "import icmplib; icmplib.ping('google.com', privileged=False)"
-        if: always()
+    - name: check permissions
+      shell: bash
+      run: |
+        echo "======test /usr/share========"
+        ls -la /usr/share
+        echo "======test /opt========"
+        ls -la /opt
+        echo "======test /home========"
+        ls -la /home/
+        echo "======test /home/runner========"
+        ls -la /home/runner
+        
+      # - name: Enable unpriviliged ping sockets
+      #   shell: bash
+      #   run: |
+      #     sysctl net.ipv4.ping_group_range
+      #     echo 'net.ipv4.ping_group_range = 0 2147483647' | sudo tee -a /etc/sysctl.conf
+      #     sudo sysctl -p
+      # - run: |
+      #     pip install icmplib
+      #     python -c "import icmplib; icmplib.ping('google.com', privileged=False)"
+      #   if: always()
 
       # - name: check apt sources
       #   run: |
