@@ -33,6 +33,8 @@ jobs:
         ls -la /home/
         echo "======test /home/runner========"
         ls -la /home/runner
+        echo "========view datafile dir========="
+        ls -la /imagegeneration
         
       # - name: Enable unpriviliged ping sockets
       #   shell: bash
