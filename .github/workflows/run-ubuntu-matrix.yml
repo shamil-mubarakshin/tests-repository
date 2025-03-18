@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
+        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
       fail-fast: false
     steps:
     - name: check permissions
@@ -35,6 +35,8 @@ jobs:
         ls -la /home/runner
         echo "========view datafile dir========="
         ls -la /imagegeneration
+        echo "=======view arch========"
+        uname -m
         
       # - name: Enable unpriviliged ping sockets
       #   shell: bash
