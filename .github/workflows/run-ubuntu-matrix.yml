@@ -23,7 +23,8 @@ jobs:
     - name: check permissions
       shell: bash
       run: |
-        ls -la /imagegeneration
+        ls -la /home/runner
+        ls -la /home/runner/.docker
         echo "======test /usr/share========"
         ls -la /usr/share
         echo "======test /opt========"
