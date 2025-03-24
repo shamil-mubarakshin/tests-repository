@@ -23,6 +23,7 @@ jobs:
     - name: check permissions
       shell: bash
       run: |
+        ls -la /imagegeneration
         echo "======test /usr/share========"
         ls -la /usr/share
         echo "======test /opt========"
