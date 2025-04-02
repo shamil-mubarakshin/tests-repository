@@ -20,6 +20,16 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
       fail-fast: false
     steps:
+    - name: check docker
+      shell: bash
+      run: |
+        if docker --version &> /dev/null; then
+            echo "Docker is installed."
+        else
+            echo "Docker is not installed."
+        fi
+        docker --version
+    
     - name: check permissions
       shell: bash
       run: |
