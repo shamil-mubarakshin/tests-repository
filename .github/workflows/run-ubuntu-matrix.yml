@@ -2,13 +2,15 @@ name: run-ubuntu-matrix
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   TYPE:
-    #     description: 'TYPE'
-    #     required: true
-    #   IMAGE_NAME:
-    #     description: 'Image name'
-    #     required: false
+    inputs:
+      TYPE:
+        description: 'TYPE'
+        required: true
+        default: 'Linux'
+      IMAGE_NAME:
+        description: 'Image name'
+        required: false
+        default: 'Ubuntu'
   # schedule:
   #   - cron: '0/5 * * * *'
 
@@ -174,17 +176,14 @@ jobs:
       #     ls -la ~/.config/NuGet
       #     cat ~/.config/NuGet/NuGet.Config
           
-      # - name: Adding markdown 1
-      #   shell: pwsh
-      #   run: |
-      #     if ("${{ inputs.TYPE }}" -eq "qq") {
-      #       $imageName = "${{ inputs.IMAGE_NAME }}"
-      #     }
-      #     "## Details" >> $env:GITHUB_STEP_SUMMARY
-      #     "| Source | Image Name | VM Name | VM User | Resource Group |" >> $env:GITHUB_STEP_SUMMARY
-      #     "| ------------ | ------------- | ------------- | ----------- | ------------------- |" >> $env:GITHUB_STEP_SUMMARY
-      #     "| ee | $imageName | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
-      #     "  " >> $env:GITHUB_STEP_SUMMARY
+    - name: Adding markdown 1
+      shell: pwsh
+      run: |
+        "## Details" >> $env:GITHUB_STEP_SUMMARY
+        "| Source | Image Name | VM Name | VM User | Resource Group |" >> $env:GITHUB_STEP_SUMMARY
+        "| ------------ | ------------- | ------------- | ----------- | ------------------- |" >> $env:GITHUB_STEP_SUMMARY
+        "| ee | $((${{ inputs.TYPE }}).ToLower()) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
+        "  " >> $env:GITHUB_STEP_SUMMARY
 
       # - name: Adding markdown 2
       #   run: echo '### Hello world2! :rocket:<br /> from ${{ matrix.os }}' >> $GITHUB_STEP_SUMMARY
