@@ -182,7 +182,7 @@ jobs:
         "## Details" >> $env:GITHUB_STEP_SUMMARY
         "| Source | Image Name | VM Name | VM User | Resource Group |" >> $env:GITHUB_STEP_SUMMARY
         "| ------------ | ------------- | ------------- | ----------- | ------------------- |" >> $env:GITHUB_STEP_SUMMARY
-        "| ee | $((${{ inputs.TYPE }}).ToLower()) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
+        "| ee | $("${{ inputs.TYPE }}".ToLower()) | ee | ee | ee |" >> $env:GITHUB_STEP_SUMMARY
         "  " >> $env:GITHUB_STEP_SUMMARY
 
       # - name: Adding markdown 2
