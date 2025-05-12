@@ -37,7 +37,13 @@ jobs:
       continue-on-error: true
       run: |
         ss -tuln | grep ':22'
-
+        
+    - name: view sshd
+      shell: bash
+      continue-on-error: true
+      run: |
+        cat /etc/ssh/sshd_config
+          
     - name: ssh commands
       shell: bash
       continue-on-error: true
