@@ -22,35 +22,43 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
       fail-fast: false
     steps:
-    - name: check docker
+    - name: list ports
       shell: bash
       run: |
-        if docker --version &> /dev/null; then
-            echo "Docker is installed."
-        else
-            echo "Docker is not installed."
-        fi
-        docker --version
+        echo "lsof"
+        sudo lsof -i :22
+        echo "netstat -peanut"
+        netstat -peanut
+        
+    # - name: check docker
+    #   shell: bash
+    #   run: |
+    #     if docker --version &> /dev/null; then
+    #         echo "Docker is installed."
+    #     else
+    #         echo "Docker is not installed."
+    #     fi
+    #     docker --version
     
-    - name: check permissions
-      shell: bash
-      run: |
-        ls -la /home/runner
-        ls -la /home/runner/.docker
-        echo "======test /usr/share========"
-        ls -la /usr/share
-        echo "======test /opt========"
-        ls -la /opt
-        echo "======test /========"
-        ls -la /
-        echo "======test /home========"
-        ls -la /home/
-        echo "======test /home/runner========"
-        ls -la /home/runner
-        echo "========view datafile dir========="
-        ls -la /imagegeneration
-        echo "=======view arch========"
-        uname -m
+    # - name: check permissions
+    #   shell: bash
+    #   run: |
+    #     ls -la /home/runner
+    #     ls -la /home/runner/.docker
+    #     echo "======test /usr/share========"
+    #     ls -la /usr/share
+    #     echo "======test /opt========"
+    #     ls -la /opt
+    #     echo "======test /========"
+    #     ls -la /
+    #     echo "======test /home========"
+    #     ls -la /home/
+    #     echo "======test /home/runner========"
+    #     ls -la /home/runner
+    #     echo "========view datafile dir========="
+    #     ls -la /imagegeneration
+    #     echo "=======view arch========"
+    #     uname -m
         
       # - name: Enable unpriviliged ping sockets
       #   shell: bash
