@@ -19,16 +19,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
       fail-fast: false
     steps:
     - name: list ports
+      continue-on-error: true
       shell: bash
       run: |
+        ss -tuln
         echo "lsof"
         sudo lsof -i :22
         echo "netstat -peanut"
         netstat -peanut
+    - name: check ssh listen
+      shell: bash
+      continue-on-error: true
+      run: |
+        ss -tuln | grep ':22'
         
     # - name: check docker
     #   shell: bash
