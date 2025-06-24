@@ -16,7 +16,7 @@ jobs:
       #   uses: actions/checkout@v3
     - name: view python info
       run: |
-        python version
+        python --version
         which python
     
     - name: python general info
@@ -25,12 +25,24 @@ jobs:
         import os
         print(os.environ['PATH'])
 
-    - name: python socket info
+    - name: python socket getfqdn()
       shell: python
       run: |
         import socket
         socket.getfqdn()
 
+    - name: python socket gethostbyaddr()
+      shell: python
+      run: |
+        import socket
+        socket.gethostbyaddr()
+        
+    - name: python socket gethostname()
+      shell: python
+      run: |
+        import socket
+        socket.gethostname()
+        
      # -  shell: pwsh
      #    run: |
      #      $guestMacosVersion = sw_vers
