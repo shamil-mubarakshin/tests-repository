@@ -34,23 +34,23 @@ jobs:
         out = socket.getfqdn()
         print(f"Output: {out}")
 
-    - name: python socket gethostbyaddr()
-      if: always()
-      shell: python
-      run: |
-        import socket
-        name = socket.gethostname()
-        try:
-          hostname, aliases, ipaddrs = socket.gethostbyaddr(name)
-        except error:
-          print(f"hostname: {hostname}")
-          print(f"aliases: {aliases}")
-          print(f"ipaddrs: {ipaddrs}")
+    # - name: python socket gethostbyaddr()
+    #   if: always()
+    #   shell: python
+    #   run: |
+    #     import socket
+    #     name = socket.gethostname()
+    #     try:
+    #       hostname, aliases, ipaddrs = socket.gethostbyaddr(name)
+    #     except error:
+    #       print(f"hostname: {hostname}")
+    #       print(f"aliases: {aliases}")
+    #       print(f"ipaddrs: {ipaddrs}")
 
-        print(f"hostname: {hostname}")
-        print(f"aliases: {aliases}")
-        print(f"ipaddrs: {ipaddrs}")
-        print(f"name: {name}")
+    #     print(f"hostname: {hostname}")
+    #     print(f"aliases: {aliases}")
+    #     print(f"ipaddrs: {ipaddrs}")
+    #     print(f"name: {name}")
         
     - name: python socket gethostname()
       if: always()
@@ -61,12 +61,16 @@ jobs:
         print(f"Output: {out}")
 
     - name: trace v1
+      if: always()
       run: |
-        python -m trace --trace -c "import socket; print(socket.getfqdn())"
+        echo 'import socket; socket.getfqdn()' > test_script.py
+        python -m trace --trace test_script.py
       
     - name: trace v2
+      if: always()
       run: |
-        strace -e getaddrinfo python -c "import socket; print(socket.getfqdn())"
+        echo 'import socket; socket.getfqdn()' > test_script.py
+        strace -e getaddrinfo python test_script.py
         
      # -  shell: pwsh
      #    run: |
