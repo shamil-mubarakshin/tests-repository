@@ -31,21 +31,24 @@ jobs:
       shell: python
       run: |
         import socket
-        socket.getfqdn()
+        out = socket.getfqdn()
+        print(f"Output: {out}")
 
     - name: python socket gethostbyaddr()
       if: always()
       shell: python
       run: |
         import socket
-        socket.gethostbyaddr()
+        out = socket.gethostbyaddr()
+        print(f"Output: {out}")
         
     - name: python socket gethostname()
       if: always()
       shell: python
       run: |
         import socket
-        socket.gethostname()
+        out = socket.gethostname()
+        print(f"Output: {out}")
         
      # -  shell: pwsh
      #    run: |
