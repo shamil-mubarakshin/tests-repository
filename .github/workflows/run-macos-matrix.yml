@@ -9,11 +9,16 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        os: [macos-13, macos-13-arm64, macos-14, macos-14-arm64, macos-15, macos-15-arm64]
+        os: [macos-13, macos-14, macos-15]
       fail-fast: false
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
+    - name: view python info
+      run: |
+        python version
+        which python
+    
     - name: python general info
       shell: python
       run: |
