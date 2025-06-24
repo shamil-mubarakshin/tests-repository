@@ -39,8 +39,18 @@ jobs:
       shell: python
       run: |
         import socket
-        out = socket.gethostbyaddr()
-        print(f"Output: {out}")
+        name = socket.gethostname()
+        try:
+          hostname, aliases, ipaddrs = socket.gethostbyaddr(name)
+        except error:
+          print(f"hostname: {hostname}")
+          print(f"aliases: {aliases}")
+          print(f"ipaddrs: {ipaddrs}")
+
+        print(f"hostname: {hostname}")
+        print(f"aliases: {aliases}")
+        print(f"ipaddrs: {ipaddrs}")
+        print(f"name: {name}")
         
     - name: python socket gethostname()
       if: always()
