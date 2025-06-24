@@ -20,24 +20,28 @@ jobs:
         which python
     
     - name: python general info
+      if: always()
       shell: python
       run: |
         import os
         print(os.environ['PATH'])
 
     - name: python socket getfqdn()
+      if: always()
       shell: python
       run: |
         import socket
         socket.getfqdn()
 
     - name: python socket gethostbyaddr()
+      if: always()
       shell: python
       run: |
         import socket
         socket.gethostbyaddr()
         
     - name: python socket gethostname()
+      if: always()
       shell: python
       run: |
         import socket
