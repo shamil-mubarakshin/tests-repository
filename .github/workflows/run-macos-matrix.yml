@@ -26,13 +26,18 @@ jobs:
         import os
         print(os.environ['PATH'])
 
-    - name: python socket getfqdn()
+    # - name: python socket getfqdn()
+    #   if: always()
+    #   shell: python
+    #   run: |
+    #     import socket
+    #     out = socket.getfqdn()
+    #     print(f"Output: {out}")
+
+    - name: inline python socket getfqdn()
       if: always()
-      shell: python
       run: |
-        import socket
-        out = socket.getfqdn()
-        print(f"Output: {out}")
+        python -c "import socket; socket.getfqdn()"
 
     # - name: python socket gethostbyaddr()
     #   if: always()
@@ -69,6 +74,7 @@ jobs:
     - name: trace v2
       if: always()
       run: |
+        brew install strace
         echo 'import socket; socket.getfqdn()' > test_script.py
         strace -e getaddrinfo python test_script.py
         
