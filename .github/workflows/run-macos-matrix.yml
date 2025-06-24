@@ -59,6 +59,11 @@ jobs:
         import socket
         out = socket.gethostname()
         print(f"Output: {out}")
+
+    - name: trace
+      run: |
+        python -m trace --trace "import socket; socket.getfqdn()"
+      
         
      # -  shell: pwsh
      #    run: |
