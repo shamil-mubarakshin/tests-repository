@@ -60,10 +60,13 @@ jobs:
         out = socket.gethostname()
         print(f"Output: {out}")
 
-    - name: trace
+    - name: trace v1
       run: |
-        python -m trace --trace "import socket; socket.getfqdn()"
+        python -m trace --trace -c "import socket; print(socket.getfqdn())"
       
+    - name: trace v2
+      run: |
+        strace -e getaddrinfo python -c "import socket; print(socket.getfqdn())"
         
      # -  shell: pwsh
      #    run: |
