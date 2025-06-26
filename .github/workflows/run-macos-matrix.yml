@@ -71,13 +71,12 @@ jobs:
         echo 'import socket; socket.getfqdn()' > test_script.py
         python -m trace --trace test_script.py
       
-    - name: trace v2
+    - name: run perl command
       if: always()
       run: |
-        brew install strace
-        echo 'import socket; socket.getfqdn()' > test_script.py
-        strace -e getaddrinfo python test_script.py
-        
+        ifconfig -a
+        ipconfig getifaddr
+
      # -  shell: pwsh
      #    run: |
      #      $guestMacosVersion = sw_vers
