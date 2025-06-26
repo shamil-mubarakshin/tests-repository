@@ -79,12 +79,11 @@ jobs:
         which perl
         perl -MSocket -E"say gethostbyaddr(inet_aton(\"$ip\"), AF_INET)"
 
-    - name: run perl command v2
+    - name: run trace
       if: always()
       run: |
-        ip=$(ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }')
-        echo $ip
-        perl -MSocket -lwe "print + gethostbyaddr(inet_aton(\"$ip\"), AF_INET)[0]"
+        which dtruss
+        sudo dtruss -t execve -f sh -c 'echo hi'
 
      # -  shell: pwsh
      #    run: |
