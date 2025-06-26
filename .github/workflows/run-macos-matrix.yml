@@ -83,7 +83,7 @@ jobs:
       if: always()
       run: |
         which dtruss
-        sudo dtruss -t execve -f sh -c 'echo hi'
+        sudo dtruss -t execve -f python -c "import socket; socket.getfqdn()"
 
      # -  shell: pwsh
      #    run: |
