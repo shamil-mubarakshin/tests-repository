@@ -71,15 +71,20 @@ jobs:
         echo 'import socket; socket.getfqdn()' > test_script.py
         python -m trace --trace test_script.py
       
-    - name: run perl command
+    - name: run perl command v1
       if: always()
       run: |
-        echo ifconfig2
-        ifconfig -a
-        echo ifconfig2
-        ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }'
-        echo ipconfig
-        ipconfig getifaddr
+        ip=$(ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }')
+        echo $ip
+        which perl
+        perl -MSocket -E'say gethostbyaddr(inet_aton("$ip"), AF_INET)'
+
+    - name: run perl command v2
+      if: always()
+      run: |
+        ip=$(ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }')
+        echo $ip
+        perl -MSocket -lwe 'print +(gethostbyaddr inet_aton("$ip"), AF_INET)[0]'
 
      # -  shell: pwsh
      #    run: |
