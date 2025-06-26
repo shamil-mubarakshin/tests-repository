@@ -83,7 +83,8 @@ jobs:
       if: always()
       run: |
         which dtruss
-        sudo dtruss python -c "import socket; socket.getfqdn()"
+        echo 'import socket; socket.getfqdn()' > test_script.py
+        sudo dtruss python test_script.py
 
      # -  shell: pwsh
      #    run: |
