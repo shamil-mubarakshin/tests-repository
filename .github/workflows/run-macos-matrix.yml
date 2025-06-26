@@ -37,7 +37,7 @@ jobs:
     - name: inline python socket getfqdn()
       if: always()
       run: |
-        python -c "import socket; socket.getfqdn()"
+        PYTHONVERBOSE=1 python -c "import socket; socket.getfqdn()"
 
     # - name: python socket gethostbyaddr()
     #   if: always()
