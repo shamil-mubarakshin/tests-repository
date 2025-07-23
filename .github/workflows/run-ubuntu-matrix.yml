@@ -34,7 +34,7 @@ jobs:
     - name: view dirs
       run: |
         ls -la /
-        ls -ld /usr
+        ls -la /usr
         ls -la /opt
         
     # - name: list ports
