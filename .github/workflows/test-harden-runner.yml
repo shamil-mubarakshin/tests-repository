@@ -11,11 +11,11 @@ jobs:
           echo check defender
           ps -ef | grep -i wdavdaemon
 
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          repository: PicnicSupermarket/error-prone-support
-          ref: master
+      # - name: checkout
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: PicnicSupermarket/error-prone-support
+      #     ref: master
 
       - name: Install Harden-Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -40,6 +40,8 @@ jobs:
             24.0.1
           java-distribution: temurin
           maven-version: 3.9.10
+          checkout-repository: PicnicSupermarket/error-prone-support
+          checkout-ref: master
       - name: Build project against vanilla Error Prone, compile Javadoc
         run: mvn -T1C install javadoc:jar
       - name: Build project with self-check against Error Prone fork, test using the targeted JDK
