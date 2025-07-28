@@ -1,0 +1,30 @@
+name: test-harden-runner
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install Harden-Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          disable-sudo-and-containers: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.adoptium.net:443
+            github.com:443
+            github-registry-files.githubusercontent.com:443
+            hosted-compute-watchdog-prod-*.githubapp.com:443
+            maven.pkg.github.com:443
+            objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            repo.maven.apache.org:443
+      - name: sleep
+        shell: pwsh
+        run: start-sleep 600
+
+      - name: processes
+        run: |
+          ps -ef
+          echo check defender
+          ps -ef | grep -i wdavdaemon
