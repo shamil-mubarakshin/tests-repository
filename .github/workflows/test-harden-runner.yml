@@ -5,6 +5,12 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
+      - name: processes
+        run: |
+          ps -ef
+          echo check defender
+          ps -ef | grep -i wdavdaemon
+
       - name: Install Harden-Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
