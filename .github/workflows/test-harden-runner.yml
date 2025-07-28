@@ -39,7 +39,7 @@ jobs:
             17.0.15
             24.0.1
           java-distribution: temurin
-          maven-version: 3.9.10
+          maven-version: 3.9.11
           checkout-repository: PicnicSupermarket/error-prone-support
           checkout-ref: master
       - name: Build project against vanilla Error Prone, compile Javadoc
