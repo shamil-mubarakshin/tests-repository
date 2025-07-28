@@ -37,7 +37,7 @@ jobs:
         with:
           java-version: |
             17.0.15
-            24.0.1
+            21.0.7
           java-distribution: temurin
           maven-version: 3.9.11
           checkout-repository: PicnicSupermarket/error-prone-support
