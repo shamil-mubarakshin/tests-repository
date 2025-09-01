@@ -22,8 +22,28 @@ jobs:
         os: [ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
       fail-fast: false
     steps:
-    - name: sudo apt-get update
-      run: sudo apt-get update
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Checkout remote repository
+      uses: actions/checkout@v4
+      with:
+        repository: actions/runner-images
+        ref: main
+        path: remote
+
+    - name: Preparing artifacts for uploading
+      shell: pwsh
+      run: |
+        git rev-parse HEAD
+        
+    - name: Preparing artifacts for uploading
+      shell: pwsh
+      working-directory: ./remote
+      run: |
+        git rev-parse HEAD
+    # - name: sudo apt-get update
+    #   run: sudo apt-get update
 
     # - name: twingate
     #   run: |
@@ -31,11 +51,11 @@ jobs:
     #     sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/twingate.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
     #     sudo apt install -yq twingate
 
-    - name: view dirs
-      run: |
-        ls -la /
-        ls -la /usr
-        ls -la /opt
+    # - name: view dirs
+    #   run: |
+    #     ls -la /
+    #     ls -la /usr
+    #     ls -la /opt
         
     # - name: list ports
     #   continue-on-error: true
