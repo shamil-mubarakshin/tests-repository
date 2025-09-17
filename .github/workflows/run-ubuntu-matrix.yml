@@ -24,24 +24,57 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    
-    - name: Checkout remote repository
-      uses: actions/checkout@v4
-      with:
-        repository: actions/runner-images
-        ref: main
-        path: remote
 
-    - name: Preparing artifacts for uploading
-      shell: pwsh
+    # - name: Set up Docker in GitHub Actions
+    #   uses: docker/setup-buildx-action@v2
+
+    - name: Start Docker container with mounted socket
       run: |
-        git rev-parse HEAD
+        docker run -d \
+          --name first-container \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          --privileged \
+          docker:19.03.12-dind
+
+    - name: Install Docker inside the first container
+      run: |
+        docker exec first-container apt-get update
+        docker exec first-container apt-get install -y docker.io
+
+    - name: Run second Docker container on the host
+      run: |
+        docker run -d --name second-container nginx
+
+    - name: View running containers from the first container
+      run: |
+        docker exec first-container docker ps -a
+
+    - name: Try to stop the second container from the first container
+      run: |
+        docker exec first-container docker stop second-container
+
+    - name: Verify that the second container is stopped
+      run: |
+        docker ps -a
+    
+    # - name: Checkout remote repository
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: actions/runner-images
+    #     ref: main
+    #     path: remote
+
+    # - name: Preparing artifacts for uploading
+    #   shell: pwsh
+    #   run: |
+    #     git rev-parse HEAD
         
-    - name: Preparing artifacts for uploading
-      shell: pwsh
-      working-directory: ./remote
-      run: |
-        git rev-parse HEAD
+    # - name: Preparing artifacts for uploading
+    #   shell: pwsh
+    #   working-directory: ./remote
+    #   run: |
+    #     git rev-parse HEAD
+
     # - name: sudo apt-get update
     #   run: sudo apt-get update
 
