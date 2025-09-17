@@ -59,14 +59,15 @@ jobs:
 
     - name: View running containers from the first container
       run: |
-        docker exec first-container docker ps -a
+        docker exec first-container hostname && docker ps -a
 
     - name: Try to stop the second container from the first container
       run: |
-        docker exec first-container docker stop second-container
+        docker exec first-container hostname && docker stop second-container
 
     - name: Verify that the second container is stopped
       run: |
+        hostname
         docker ps -a
     
     # - name: Checkout remote repository
