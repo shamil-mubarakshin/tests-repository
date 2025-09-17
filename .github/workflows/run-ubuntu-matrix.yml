@@ -36,10 +36,10 @@ jobs:
           --privileged \
           docker:19.03.12-dind
 
-    - name: Install Docker inside the first container
-      run: |
-        docker exec first-container apt-get update
-        docker exec first-container apt-get install -y docker.io
+    # - name: Install Docker inside the first container
+    #   run: |
+    #     docker exec first-container apt-get update
+    #     docker exec first-container apt-get install -y docker.io
 
     - name: Run second Docker container on the host
       run: |
