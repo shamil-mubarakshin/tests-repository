@@ -32,6 +32,15 @@ jobs:
           sudo du -sh /home/runner
       # - name: Add Ubuntu User
       #   run: sudo useradd --system --create-home --shell=/bin/bash coppy-tests1
+      - name: Cleanup skel foler
+        run: |
+          sudo rm -rf /etc/skel/.cargo
+          sudo rm -rf /etc/skel/.composer
+          sudo rm -rf /etc/skel/.dotnet
+          sudo rm -rf /etc/skel/.ghcup
+          sudo rm -rf /etc/skel/.nvm
+          sudo rm -rf /etc/skel/.rustup
+          sudo du -sh /etc/skel
       - name: Trace Add Ubuntu User
         run: |
           sudo strace -f -e trace=network -s 1000 useradd --system --create-home --shell=/bin/bash coppy-tests2
