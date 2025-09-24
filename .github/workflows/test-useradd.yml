@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Add Ubuntu User
-        run: useradd --system --create-home --shell=/bin/bash coppy-tests1
+        run: sudo useradd --system --create-home --shell=/bin/bash coppy-tests1
       - name: Trace Add Ubuntu User
         run: |
           sudo strace -f -e trace=network -s 1000 useradd --system --create-home --shell=/bin/bash coppy-tests2
