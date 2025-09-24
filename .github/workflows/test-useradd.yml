@@ -26,6 +26,10 @@ jobs:
           printenv | sort
           cat /etc/passwd
           ls -la /home
+          echo view skel size
+          sudo du -sh /etc/skel
+          echo view runner home size
+          sudo du -sh /home/runner
       # - name: Add Ubuntu User
       #   run: sudo useradd --system --create-home --shell=/bin/bash coppy-tests1
       - name: Trace Add Ubuntu User
@@ -36,4 +40,8 @@ jobs:
         run: |
           printenv | sort
           cat /etc/passwd
+          echo view skel size
+          sudo du -sh /etc/skel
+          echo view coppy-tests2 home size
+          sudo du -sh /home/coppy-tests2
           ls -la /home
