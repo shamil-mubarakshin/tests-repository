@@ -1,0 +1,28 @@
+name: test-useradd
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+# # Limit this workflow to a single run at a time per-branch to avoid wasting worker resources
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-22.04-arm]
+      fail-fast: false
+
+    steps:
+      - name: Add Ubuntu User
+        run: useradd --system --create-home --shell=/bin/bash coppy-tests1
+      - name: Trace Add Ubuntu User
+        run: |
+          sudo strace -f -e trace=network -s 1000 useradd --system --create-home --shell=/bin/bash coppy-tests2
