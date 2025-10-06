@@ -65,7 +65,7 @@ jobs:
       with:
         repository: commercialhaskell/stack
         # ref: 'ebaab83f52e81147cb6f7f00e6ee4aba6a567624' # fail https://github.com/commercialhaskell/stack/actions/runs/18146388346/job/51707777989
-        # ref: '' # success https://github.com/commercialhaskell/stack/actions/runs/18081292760/job/51444921991
+        ref: 'f03d53a54d1d93af1d7adc88ff9edf4169a99bae' # success https://github.com/commercialhaskell/stack/actions/runs/18081292760/job/51444921991
     - name: Cache dependencies on Unix-like OS
       if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
       uses: actions/cache@v4
