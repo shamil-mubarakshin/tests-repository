@@ -1,0 +1,278 @@
+name: test-ghc-haskell
+# Investigate https://github.com/actions/runner-images/issues/13134
+
+on:
+  # pull_request:
+  # push:
+  #   branches:
+  #   - master
+  #   - stable
+  #   - rc/**
+  #   tags:
+  #   - '**'
+  workflow_dispatch:
+
+# Stack will use the value of the GH_TOKEN environment variable to authenticate
+# its requests of the GitHub REST API, providing a higher request rate limit.
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# As of 15 March 2025, ubuntu-latest and windows-latest come with Stack 3.3.1
+# and GHC 9.12.1. However, macos-13 and macos-latest do not come with Haskell
+# tools. windows-latest comes with NSIS 3.10, for which the default value of the
+# 'Unicode' installer attribute is 'true'. However, that is not the 'large
+# strings' build of NSIS and creates installers that corrupt the PATH
+# environment variable if the default string length of 1024 characters is
+# exceeded.
+
+jobs:
+  integration-tests:
+    name: Integration tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        # - os: ubuntu-latest
+        #   release-args: "--alpine"
+        #   cache-bust: "2024-05-17"
+        # # On public preview since 16 January 2025
+        # - os: ubuntu-24.04-arm
+        #   # Stack's project-level configuration (stack.yaml) specifies the
+        #   # multi-architecture (including Linux/Aarch64) Docker image published
+        #   # by Oliver Benz (@benz0li, on GitHub). That image comes with
+        #   # Stack 3.3.1. (Note that the online documentation for
+        #   # '--docker-stack-exe image' specifies that the host Stack and image
+        #   # Stack must have the same version number.)
+        #   release-args: "--alpine --stack-args --docker-stack-exe=image"
+        #   cache-bust: "2025-02-07b"
+        - os: windows-latest
+          release-args: ""
+          cache-bust: "2025-04-06"
+        - os: windows-2022
+          release-args: ""
+          cache-bust: "2025-04-06"
+        # - os: macos-13
+        #   release-args: ""
+        #   cache-bust: "2024-05-17"
+        # # macos-latest provides macOS/AArch64 (M1)
+        # - os: macos-latest
+        #   release-args: ""
+        #   cache-bust: "2024-05-17"
+    steps:
+    - name: Clone project
+      uses: actions/checkout@v4
+      with:
+        repository: commercialhaskell/stack
+        # ref: 'ebaab83f52e81147cb6f7f00e6ee4aba6a567624' # fail https://github.com/commercialhaskell/stack/actions/runs/18146388346/job/51707777989
+        # ref: '' # success https://github.com/commercialhaskell/stack/actions/runs/18081292760/job/51444921991
+    - name: Cache dependencies on Unix-like OS
+      if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
+      uses: actions/cache@v4
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('stack.yaml') }}-${{ matrix.cache-bust }}
+    - name: Cache dependencies on Windows
+      if: startsWith(runner.os, 'Windows')
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~\AppData\Roaming\stack
+          ~\AppData\Local\Programs\stack
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('stack.yaml') }}-${{ matrix.cache-bust }}
+    - name: Install NSIS 3.10 on Windows
+      if: startsWith(runner.os, 'Windows')
+      uses: repolevedavaj/install-nsis@v1.0.3
+      with:
+        nsis-version: '3.10'
+    # Upgrades to a 'large strings' build of NSIS 3.10 tool. See
+    # https://nsis.sourceforge.io/Special_Builds.
+    - name: Upgrade NSIS 3.10 on Windows
+      if: startsWith(runner.os, 'Windows')
+      shell: bash
+      run: |
+        # wget is not available but the Stack-supplied MSYS2 will provide it
+        stack exec -- wget -O nsis-3.10-strlen_8192.zip https://downloads.sourceforge.net/nsis/NSIS%203/3.10/nsis-3.10-strlen_8192.zip
+        7z x -aoa -o"/c/Program Files (x86)/NSIS" nsis-3.10-strlen_8192.zip
+        # Clean up
+        rm nsis-3.10-strlen_8192.zip
+        makensis -VERSION && echo
+        # Should include defined symbol NSIS_MAX_STRLEN=8192
+        makensis -HDRINFO
+    - name: Install deps and run checks
+      shell: bash
+      run: |
+        set -ex
+        if [[ "${{ matrix.os }}" == "ubuntu-24.04-arm" || "${{ matrix.os }}" == "macos-13" || "${{ matrix.os }}" == "macos-latest" ]]
+        then
+          # ubuntu-24.04-arm, macos-13 and macos-latest do not include Haskell
+          # tools as at 2025-03-15.
+          curl -sSL https://get.haskellstack.org/ | sh
+        fi
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]
+        then
+          # Install a faster linker (lld) than Ubuntu's default.
+          # stack-integration-test will seek to use it as the linker on Linux.
+          sudo apt-get update
+          sudo apt-get install -y lld
+          # Set up Nix for Stack's tests that require it.
+          #
+          # Install Nix via the single-user installation...
+          #
+          # Retry installing Nix due to nondeterministic error:
+          #   Fatal error: glibc detected an invalid stdio handle
+          # See:
+          #   https://github.com/nh2/static-haskell-nix/pull/27#issuecomment-502652181
+          #   https://github.com/NixOS/nix/issues/2733
+          (for i in {1..5}; do bash <(curl -sSL https://nixos.org/nix/install) --no-daemon && exit 0; done; exit 1)
+          # Enter the Nix environment...
+          . ~/.nix-profile/etc/profile.d/nix.sh
+          # Add a channel named 'nixpkgs' to the list of subscribed channels...
+          nix-channel --add https://nixos.org/channels/nixos-23.05 nixpkgs
+          # Download the Nix expressions for all subscribed channels...
+          #
+          # As at 2023-08-21, nixos-23.05 provides GHC 9.2.8.
+          nix-channel --update
+          # The NIX_PATH environment variable sets a list of directories used to
+          # look up the location of Nix expressions using paths enclosed in
+          # angle brackets (e.g. <nixpkgs>). nix.sh no longer sets the NIX_PATH.
+          # If NIX_PATH is not set, Nix will fall back to
+          # $HOME/.nix-defexpr/channels, but only in impure and unrestricted
+          # evaluation mode. See https://github.com/NixOS/nixpkgs/issues/149791.
+          # Set NIX_PATH...
+          export NIX_PATH=${NIX_PATH:+$NIX_PATH:}$HOME/.nix-defexpr/channels
+        fi
+        if [[ "${{ matrix.release-args }}" == "--alpine" ]]
+        then
+            mkdir -p ~/.stack
+            touch ~/.stack/config.yaml
+            cat > ~/.stack/config.yaml <<EOF
+            extra-include-dirs:
+            - /usr/include
+            extra-lib-dirs:
+            - /lib
+            - /usr/lib
+        EOF
+        fi
+        # In case GHCup hooks have been created, remove them
+        if [ -d $(stack path --stack-root)/hooks ]
+        then
+            rm -Rf $(stack path --stack-root)/hooks
+        fi
+        # Report the file system disk space usage before checks, for
+        # information.
+        df -h
+        # Skip checks for Linux/AArch64, given checks for Linux/x86-64
+        if [[ "${{ matrix.os }}" != "ubuntu-24.04-arm" ]]
+        then
+          # Do this in the same step as installing deps to get relevant env var modifications
+          stack etc/scripts/release.hs check ${{ matrix.release-args }}
+        fi
+        # Report the file system disk space usage after checks, for information.
+        df -h
+        set +ex
+    - name: Build bindist
+      shell: bash
+      run: |
+        stack etc/scripts/release.hs build ${{ matrix.release-args }}
+    - name: Upload bindist
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ runner.os }}-${{ runner.arch }}
+        path: _release/stack-*
+
+  # github-release:
+  #   name: Create GitHub release
+  #   permissions:
+  #     contents: write
+  #   needs:
+  #   - integration-tests
+  #   runs-on: ubuntu-latest
+  #   if: startsWith(github.ref, 'refs/tags/')
+  #   steps:
+  #   - name: Download Linux/x86_64 artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: Linux-X64
+  #       path: _release
+  #   - name: Download macOS/x86_64 artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: macOS-X64
+  #       path: _release
+  #   - name: Download macOS/AArch64 artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: macOS-ARM64
+  #       path: _release
+  #   - name: Download Windows/x86_64 artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: Windows-X64
+  #       path: _release
+  #   - name: Download Linux/AArch64 artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: Linux-ARM64
+  #       path: _release
+  #   - name: Hash and sign assets
+  #     shell: bash
+  #     env:
+  #       RELEASE_SIGNING_KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+  #     run: |
+  #       set -e
+  #       echo "$RELEASE_SIGNING_KEY"|gpg --import
+  #       cd _release
+  #       for asset in *; do
+  #         shasum -a 256 "$asset" >"$asset.sha256"
+  #         gpg --digest-algo=sha512 --detach-sig --armor -u 0x575159689BEFB442 "$asset"
+  #       done
+  #   - name: Create GitHub release (final)
+  #     id: github_release_final
+  #     if: "!startsWith(github.ref, 'refs/tags/rc/')"
+  #     uses: ncipollo/release-action@v1.13.0
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       body: |
+  #         See https://haskellstack.org/ for installation and upgrade instructions.
+  #         **Changes since v[INSERT PREVIOUS VERSION]:**
+  #         [INSERT CHANGELOG]
+  #         **Thanks to all our contributors for this release:**
+  #         [INSERT CONTRIBUTORS]
+  #       draft: true
+  #       prerelease: false
+  #   - name: Create GitHub release (release candidate)
+  #     id: github_release_rc
+  #     if: "startsWith(github.ref, 'refs/tags/rc/')"
+  #     uses: ncipollo/release-action@v1.13.0
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       body: |
+  #         **Changes since v[INSERT PREVIOUS VERSION]:**
+  #         [INSERT CHANGELOG]
+  #       draft: true
+  #       prerelease: true
+  #   - name: Upload assets to GitHub release (final)
+  #     if: "!startsWith(github.ref, 'refs/tags/rc/')"
+  #     uses: xresloader/upload-to-github-release@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       file: "_release/*"
+  #       draft: true
+  #       prerelease: false
+  #       overwrite: true
+  #       release_id: ${{ steps.github_release_final.outputs.id }}
+  #   - name: Upload assets to GitHub release (release candidate)
+  #     if: "startsWith(github.ref, 'refs/tags/rc/')"
+  #     uses: xresloader/upload-to-github-release@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       file: "_release/*"
+  #       draft: true
+  #       prerelease: true
+  #       overwrite: true
+  #       release_id: ${{ steps.github_release_rc.outputs.id }}
