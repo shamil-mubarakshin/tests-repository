@@ -8,20 +8,30 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2019, windows-2022, windows-2025]
+        os: [windows-2022, windows-2025]
       fail-fast: false
     steps:
-    - run: |
-        if (Get-Command docker -ErrorAction SilentlyContinue) {
-            $dockerVersion = docker --version
-            if ($dockerVersion) {
-                Write-Output "Docker is installed. Version: $dockerVersion"
-            } else {
-                Write-Output "Docker is installed but the version could not be retrieved."
-            }
-        } else {
-            Write-Output "Docker is not installed."
-        }
+    - if: always()
+      shell: pwsh
+      run: |
+        ssh -V
+        ssh-keyscan github.com
+    - if: always()
+      shell: bash
+      run: |
+        ssh -V
+        ssh-keyscan github.com
+    # - run: |
+    #     if (Get-Command docker -ErrorAction SilentlyContinue) {
+    #         $dockerVersion = docker --version
+    #         if ($dockerVersion) {
+    #             Write-Output "Docker is installed. Version: $dockerVersion"
+    #         } else {
+    #             Write-Output "Docker is installed but the version could not be retrieved."
+    #         }
+    #     } else {
+    #         Write-Output "Docker is not installed."
+    #     }
 
     # - run: |
     #     $Version = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
