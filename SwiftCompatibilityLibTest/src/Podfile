@@ -1,0 +1,13 @@
+platform :ios, '17.0'
+use_frameworks!
+use_modular_headers!
+
+target 'SwiftCompatibilityLibTestApp' do
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Storage'
+  pod 'Firebase/Messaging'
+  pod 'Firebase/Crashlytics'
+  pod 'Firebase/Analytics'
+end
