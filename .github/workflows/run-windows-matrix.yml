@@ -21,6 +21,11 @@ jobs:
       run: |
         ssh -V
         ssh-keyscan github.com
+    - if: always()
+      shell: pwsh
+      run: |
+        & 'C:\Program Files\Git\usr\bin\ssh-keyscan.exe' github.com
+        
     # - run: |
     #     if (Get-Command docker -ErrorAction SilentlyContinue) {
     #         $dockerVersion = docker --version
