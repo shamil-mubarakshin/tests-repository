@@ -40,10 +40,12 @@ jobs:
         shell: ${{ matrix.shell }} {0}
     steps:
       - name: output info
+        continue-on-error: true
         run: |
           cmake --version
           echo $CMAKE_ROOT
           ls -la /opt/homebrew/Cellar/cmake/
+          ls -la /opt/homebrew/Cellar/cmake/4.1.1/share/cmake
       # - name: macOS fix CMAKE Brew
       #   if: runner.os == 'macOS'
       #   run: |
