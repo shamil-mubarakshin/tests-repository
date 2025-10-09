@@ -57,7 +57,8 @@ jobs:
       - uses: actions/checkout@v5
         with:
           repository: 'dimitre/openFrameworks'
-          ref: 'ofworks'
+          # ref: 'ofworks'
+          ref: 'c32974efa5abb74e6771eed1d853fec342edb4e2' #https://github.com/dimitre/openFrameworks/actions/runs/18353780404/job/52280402232
 
       # - name: ccache
       #   uses: hendrikmuhs/ccache-action@v1.2.19
