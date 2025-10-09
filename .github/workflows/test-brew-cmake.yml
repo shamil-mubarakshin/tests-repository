@@ -39,6 +39,8 @@ jobs:
       run:
         shell: ${{ matrix.shell }} {0}
     steps:
+      - name: output info
+        run: cmake --version
       # - name: macOS fix CMAKE Brew
       #   if: runner.os == 'macOS'
       #   run: |
