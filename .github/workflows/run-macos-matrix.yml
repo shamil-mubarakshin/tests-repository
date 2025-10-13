@@ -35,6 +35,13 @@ jobs:
 
         ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore
 
+    - name: Try metalToolchain import
+      run: |
+        xcodebuild -downloadComponent metalToolchain -exportPath /tmp/MyMetalExport/
+        ls -la /tmp/MyMetalExport/
+        sed -i '' -e 's/17A5241c/17A5241e/g' /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle/ExportMetadata.plist
+        xcodebuild -importComponent metalToolchain -importPath /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle
+
     - name: view metal path
       continue-on-error: true
       run: |
