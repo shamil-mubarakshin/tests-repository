@@ -37,10 +37,10 @@ jobs:
 
     - name: Try metalToolchain import
       run: |
-        xcodebuild -downloadComponent metalToolchain -exportPath /tmp/MyMetalExport/
+        xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/MyMetalExport/
         ls -la /tmp/MyMetalExport/
         sed -i '' -e 's/17A5241c/17A5241e/g' /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle/ExportMetadata.plist
-        xcodebuild -importComponent metalToolchain -importPath /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle
+        xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle
 
     - name: view metal path
       continue-on-error: true
