@@ -24,7 +24,7 @@ jobs:
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '26.0.1'
+        xcode-version: '16.4'
         
     # - name: Cache CocoaPods
     #   uses: actions/cache@v3
@@ -110,7 +110,7 @@ jobs:
           -workspace SwiftCompatibilityLibTestApp.xcworkspace \
           -scheme SwiftCompatibilityLibTestApp \
           -configuration Release \
-          -destination 'platform=iOS Simulator,name=iPhone 16e,OS=26.0' \
+          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
           -derivedDataPath DerivedData \
           clean build \
           CODE_SIGNING_ALLOWED=NO \
