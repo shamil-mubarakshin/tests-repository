@@ -23,14 +23,15 @@ jobs:
       run: |
         set -e
         TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
+        TOOLCHAINS="$(xcode-select -p)/Toolchains"
         SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
 
         echo "default $TOOLCHAIN"
         ls -la $TOOLCHAIN
         echo "SDK path $SDK"
         ls -la $SDK
-        echo "View other paths"
-        ls -la /Library/Developer/Toolchains
+        echo "View $TOOLCHAINS"
+        ls -la $TOOLCHAINS
 
     - name: view metal path
       continue-on-error: true
