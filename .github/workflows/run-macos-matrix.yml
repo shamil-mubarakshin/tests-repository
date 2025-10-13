@@ -33,7 +33,7 @@ jobs:
         echo "View $TOOLCHAINS"
         ls -la $TOOLCHAINS
 
-        ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData
+        ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore
 
     - name: view metal path
       continue-on-error: true
