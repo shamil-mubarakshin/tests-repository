@@ -24,7 +24,13 @@ jobs:
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '16.4'
+        xcode-version: '26.0.1'
+
+    - name: Try metalToolchain
+      run: |
+        xcodebuild -downloadComponent metalToolchain -exportPath /tmp/MyMetalExport/
+        sed -i '' -e 's/17A5241c/17A5241e/g' /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle/ExportMetadata.plist
+        xcodebuild -importComponent metalToolchain -importPath /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle
         
     # - name: Cache CocoaPods
     #   uses: actions/cache@v3
