@@ -23,14 +23,14 @@ jobs:
       run: |
         set -e
         TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
-        METAL_TOOLCHAIN="/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain*/Metal.xctoolchain/usr/lib/swift/"
+        METAL_TOOLCHAIN="/var/run/com.apple.security.cryptexd/mnt/"
         SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
 
-        echo "default toolchain"
+        echo "default $TOOLCHAIN"
         ls -la $TOOLCHAIN
-        echo "SDK path"
+        echo "SDK path $SDK"
         ls -la $SDK
-        echo "Metal path"
+        echo "Metal path $METAL_TOOLCHAIN"
         ls -la $METAL_TOOLCHAIN
 
     # - name: view python info
