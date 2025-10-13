@@ -25,7 +25,7 @@ jobs:
       run: |
         # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
         # echo $toolchain_path
-        rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
+        sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
 
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
