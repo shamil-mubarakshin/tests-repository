@@ -33,6 +33,7 @@ jobs:
         echo "Metal path $METAL_TOOLCHAIN"
         ls -la $METAL_TOOLCHAIN
 
+        xcodebuild -showComponent metalToolchain
     # - name: view python info
     #   run: |
     #     python --version
