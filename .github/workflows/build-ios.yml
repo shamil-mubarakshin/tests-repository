@@ -28,9 +28,9 @@ jobs:
 
     - name: Try metalToolchain
       run: |
-        xcodebuild -downloadComponent metalToolchain -exportPath /tmp/MyMetalExport/
-        sed -i '' -e 's/17A5241c/17A5241e/g' /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle/ExportMetadata.plist
-        xcodebuild -importComponent metalToolchain -importPath /tmp/MyMetalExport/MetalToolchain-17A5241c.exportedBundle
+        toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
+        echo $toolchain_path
+        rm -rf $toolchain_path
         
     # - name: Cache CocoaPods
     #   uses: actions/cache@v3
