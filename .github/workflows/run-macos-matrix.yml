@@ -34,15 +34,10 @@ jobs:
         ls -la $METAL_TOOLCHAIN
 
     - name: view metal path
-      shell: pwsh
       continue-on-error: true
       run: |
-        $outputs = xcodebuild -showComponent metalToolchain
-        # Extract the last Toolchain Search Path
-        $toolchainPath = ($output -split "`n" | Where-Object { $_ -match "^Toolchain Search Path:" } | Select-Object -Last 1) -replace "^Toolchain Search Path:\s*", ""
-        Write-Host "Extracted Toolchain Path: $toolchainPath"
-
-        dir $toolchainPath
+        toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
+        ls -la $toolchainPath
         
     # - name: view python info
     #   run: |
