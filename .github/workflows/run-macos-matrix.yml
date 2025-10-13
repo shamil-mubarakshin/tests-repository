@@ -23,20 +23,20 @@ jobs:
       run: |
         set -e
         TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
-        METAL_TOOLCHAIN="/var/run/com.apple.security.cryptexd/mnt/"
         SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
 
         echo "default $TOOLCHAIN"
         ls -la $TOOLCHAIN
         echo "SDK path $SDK"
         ls -la $SDK
-        echo "Metal path $METAL_TOOLCHAIN"
-        ls -la $METAL_TOOLCHAIN
+        echo "View other paths"
+        ls -la /Library/Developer/Toolchains
 
     - name: view metal path
       continue-on-error: true
       run: |
         toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
+        echo $toolchain_path
         ls -la $toolchainPath
         
     # - name: view python info
