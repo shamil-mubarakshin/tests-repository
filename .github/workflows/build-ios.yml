@@ -110,7 +110,7 @@ jobs:
           -workspace SwiftCompatibilityLibTestApp.xcworkspace \
           -scheme SwiftCompatibilityLibTestApp \
           -configuration Release \
-          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
+          -destination 'platform=iOS Simulator,name=iPhone 16,OS=26.0' \
           -derivedDataPath DerivedData \
           clean build \
           CODE_SIGNING_ALLOWED=NO \
