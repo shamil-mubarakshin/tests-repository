@@ -40,7 +40,7 @@ jobs:
         xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/MyMetalExport/
         ls -la /tmp/MyMetalExport/
         ls -la /tmp/MyMetalExport/MetalToolchain-17A324.exportedBundle
-        # cat /tmp/MyMetalExport/MetalToolchain-17A524.exportedBundle/ExportMetadata.plist
+        cat /tmp/MyMetalExport/MetalToolchain-17A324.exportedBundle
         # sed -i '' -e 's/17A5241c/17A5241e/g' /tmp/MyMetalExport/MetalToolchain-17A524.exportedBundle/ExportMetadata.plist
         # xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/MyMetalExport/MetalToolchain-17A324.exportedBundle
 
