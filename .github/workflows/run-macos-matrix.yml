@@ -9,22 +9,41 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        os: [macos-13, macos-14, macos-15]
+        os: [macos-15, macos-26]
+        xcode: [16.4, 26.0.1]
       fail-fast: false
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
-    - name: view python info
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '${{ matrix.xcode }}'
+
+    - name: view various info
       run: |
-        python --version
-        which python
+        set -e
+        TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
+        METAL_TOOLCHAIN="/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain*/Metal.xctoolchain/usr/lib/swift/"
+        SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
+
+        echo "default toolchain"
+        ls -la $TOOLCHAIN
+        echo "SDK path"
+        ls -la $SDK
+        echo "Metal path"
+        ls -la $METAL_TOOLCHAIN
+
+    # - name: view python info
+    #   run: |
+    #     python --version
+    #     which python
     
-    - name: python general info
-      if: always()
-      shell: python
-      run: |
-        import os
-        print(os.environ['PATH'])
+    # - name: python general info
+    #   if: always()
+    #   shell: python
+    #   run: |
+    #     import os
+    #     print(os.environ['PATH'])
 
     # - name: python socket getfqdn()
     #   if: always()
@@ -34,10 +53,10 @@ jobs:
     #     out = socket.getfqdn()
     #     print(f"Output: {out}")
 
-    - name: inline python socket getfqdn()
-      if: always()
-      run: |
-        PYTHONVERBOSE=1 python -c "import socket; socket.getfqdn()"
+    # - name: inline python socket getfqdn()
+    #   if: always()
+    #   run: |
+    #     PYTHONVERBOSE=1 python -c "import socket; socket.getfqdn()"
 
     # - name: python socket gethostbyaddr()
     #   if: always()
@@ -57,34 +76,34 @@ jobs:
     #     print(f"ipaddrs: {ipaddrs}")
     #     print(f"name: {name}")
         
-    - name: python socket gethostname()
-      if: always()
-      shell: python
-      run: |
-        import socket
-        out = socket.gethostname()
-        print(f"Output: {out}")
+    # - name: python socket gethostname()
+    #   if: always()
+    #   shell: python
+    #   run: |
+    #     import socket
+    #     out = socket.gethostname()
+    #     print(f"Output: {out}")
 
-    - name: trace v1
-      if: always()
-      run: |
-        echo 'import socket; socket.getfqdn()' > test_script.py
-        python -m trace --trace test_script.py
+    # - name: trace v1
+    #   if: always()
+    #   run: |
+    #     echo 'import socket; socket.getfqdn()' > test_script.py
+    #     python -m trace --trace test_script.py
       
-    - name: run perl command v1
-      if: always()
-      run: |
-        ip=$(ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }')
-        echo $ip
-        which perl
-        perl -MSocket -E"say gethostbyaddr(inet_aton(\"$ip\"), AF_INET)"
+    # - name: run perl command v1
+    #   if: always()
+    #   run: |
+    #     ip=$(ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }')
+    #     echo $ip
+    #     which perl
+    #     perl -MSocket -E"say gethostbyaddr(inet_aton(\"$ip\"), AF_INET)"
 
-    - name: run trace
-      if: always()
-      run: |
-        which dtruss
-        echo 'import socket; socket.getfqdn()' > test_script.py
-        sudo dtruss python test_script.py
+    # - name: run trace
+    #   if: always()
+    #   run: |
+    #     which dtruss
+    #     echo 'import socket; socket.getfqdn()' > test_script.py
+    #     sudo dtruss python test_script.py
 
      # -  shell: pwsh
      #    run: |
