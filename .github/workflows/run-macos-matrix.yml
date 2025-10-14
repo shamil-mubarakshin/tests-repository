@@ -28,6 +28,7 @@ jobs:
         xcode-version: '${{ matrix.xcode }}'
 
     - name: view various info
+      continue-on-error: true
       run: |
         set -e
         TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
