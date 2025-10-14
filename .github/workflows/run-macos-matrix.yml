@@ -27,15 +27,15 @@ jobs:
       with:
         xcode-version: '${{ matrix.xcode }}'
 
-    - name: Try metalToolchain import
-      run: |
-        # xcodebuild -importComponent metalToolchain
-        xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/metalToolchainDownload/
-        ls -la /tmp/metalToolchainDownload/
-        ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
-        cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
-        sed -i '' -e 's/17A324/17A324e/g' /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
-        xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/
+    # - name: Try metalToolchain import
+    #   run: |
+    #     # xcodebuild -importComponent metalToolchain
+    #     xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/metalToolchainDownload/
+    #     ls -la /tmp/metalToolchainDownload/
+    #     ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
+    #     cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
+    #     sed -i '' -e 's/17A324/17A324e/g' /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
+    #     xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/
   
     - name: view various info
       continue-on-error: true
@@ -53,6 +53,8 @@ jobs:
         ls -la $TOOLCHAINS
 
         ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore
+
+        hdiutil attach /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore/022-17211-415.dmg
         echo "====="
         ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
 
