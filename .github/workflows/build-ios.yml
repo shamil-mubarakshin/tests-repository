@@ -21,6 +21,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: printenv
+      run: printenv
     # - name: Try metalToolchain
     #   run: |
     #     # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
@@ -33,15 +35,15 @@ jobs:
       with:
         xcode-version: '26.0.1'
 
-    - name: Try metalToolchain import
-      run: |
-        # xcodebuild -importComponent metalToolchain
-        xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/metalToolchainDownload/
-        ls -la /tmp/metalToolchainDownload/
-        ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
-        cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
-        sed -i '' -e 's/17A324/17A324e/g' /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
-        xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/
+    # - name: Try metalToolchain import
+    #   run: |
+    #     # xcodebuild -importComponent metalToolchain
+    #     xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/metalToolchainDownload/
+    #     ls -la /tmp/metalToolchainDownload/
+    #     ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
+    #     cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
+    #     sed -i '' -e 's/17A324/17A324e/g' /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
+    #     xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/
 
     # - name: Cache CocoaPods
     #   uses: actions/cache@v3
@@ -119,6 +121,8 @@ jobs:
 
     #       echo ""
     #       echo "Swift compatibility library repair complete."
+    - name: printenv
+      run: printenv
 
     - name: Build iOS App
       run: |
