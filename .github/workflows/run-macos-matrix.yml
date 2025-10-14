@@ -15,13 +15,13 @@ jobs:
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
-    - name: Try cleanup
-      continue-on-error: true
-      run: |
-        # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
-        # echo $toolchain_path
-        sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
-        # sudo rm -rf /private/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.1.324.0*
+    # - name: Try cleanup
+    #   continue-on-error: true
+    #   run: |
+    #     # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
+    #     # echo $toolchain_path
+    #     sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
+    #     # sudo rm -rf /private/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.1.324.0*
         
     - uses: maxim-lobanov/setup-xcode@v1
       with:
@@ -52,7 +52,7 @@ jobs:
         ls -la /tmp/metalToolchainDownload/
         ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
         cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
-        # sed -i '' -e 's/17A5241c/17A5241e/g' /tmp/metalToolchainDownload/MetalToolchain-17A524.exportedBundle/ExportMetadata.plist
+        sed -i '' -e 's/17A324/17A524e/g' /tmp/metalToolchainDownload/MetalToolchain-17A524.exportedBundle/ExportMetadata.plist
         xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/*.exportedBundle
 
     - name: view metal path
