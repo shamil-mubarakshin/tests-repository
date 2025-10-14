@@ -21,12 +21,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Try metalToolchain
-      run: |
-        # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
-        # echo $toolchain_path
-        sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
-        sudo rm -rf /private/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.1.324.0*
+    # - name: Try metalToolchain
+    #   run: |
+    #     # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
+    #     # echo $toolchain_path
+    #     sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
+    #     sudo rm -rf /private/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.1.324.0*
 
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -112,6 +112,7 @@ jobs:
 
     - name: Build iOS App
       run: |
+        export TOOLCHAINS=com.apple.dt.toolchain.XcodeDefault
         cd SwiftCompatibilityLibTest/src
         xcodebuild \
           -workspace SwiftCompatibilityLibTestApp.xcworkspace \
