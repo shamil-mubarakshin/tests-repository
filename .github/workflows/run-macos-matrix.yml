@@ -50,10 +50,10 @@ jobs:
       run: |
         # xcodebuild -importComponent metalToolchain
         xcodebuild -verbose -downloadComponent metalToolchain -exportPath /tmp/metalToolchainDownload/
-        # ls -la /tmp/metalToolchainDownload/
-        # ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
-        # cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
-        sed -i '' -e 's/17A324/17A524e/g' /tmp/metalToolchainDownload/MetalToolchain-17A524.exportedBundle/ExportMetadata.plist
+        ls -la /tmp/metalToolchainDownload/
+        ls -la /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle
+        cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
+        # sed -i '' -e 's/17A324/17A524e/g' /tmp/metalToolchainDownload/MetalToolchain-17A524.exportedBundle/ExportMetadata.plist
         # xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A524.exportedBundle
 
     - name: view metal path
