@@ -28,6 +28,11 @@ jobs:
     #     sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
     #     sudo rm -rf /private/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.1.324.0*
 
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '26.0.1'
+
     - name: Try metalToolchain import
       run: |
         # xcodebuild -importComponent metalToolchain
@@ -37,11 +42,6 @@ jobs:
         cat /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
         sed -i '' -e 's/17A324/17A324e/g' /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
         xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/
-
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '26.0.1'
 
     # - name: Cache CocoaPods
     #   uses: actions/cache@v3
