@@ -16,7 +16,9 @@ jobs:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
 
-      - run: echo $PATH
+      - run: |
+          echo $PATH
+          which python3
     # - name: Try cleanup
     #   continue-on-error: true
     #   run: |
