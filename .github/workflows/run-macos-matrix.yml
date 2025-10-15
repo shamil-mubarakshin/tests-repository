@@ -9,12 +9,14 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        os: [macos-15, macos-26]
+        os: [macos-15, macos-15-intel, macos-26]
         xcode: [16.4, 26.0.1]
       fail-fast: false
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
+
+      - run: echo $PATH
     # - name: Try cleanup
     #   continue-on-error: true
     #   run: |
@@ -23,9 +25,9 @@ jobs:
     #     sudo rm -rf /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
     #     # sudo rm -rf /private/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.1.324.0*
         
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '${{ matrix.xcode }}'
+    # - uses: maxim-lobanov/setup-xcode@v1
+    #   with:
+    #     xcode-version: '${{ matrix.xcode }}'
 
     # - name: Try metalToolchain import
     #   run: |
@@ -37,33 +39,33 @@ jobs:
     #     sed -i '' -e 's/17A324/17A324e/g' /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/ExportMetadata.plist
     #     xcodebuild -verbose -importComponent metalToolchain -importPath /tmp/metalToolchainDownload/MetalToolchain-17A324.exportedBundle/
   
-    - name: view various info
-      continue-on-error: true
-      run: |
-        set -e
-        TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
-        TOOLCHAINS="$(xcode-select -p)/Toolchains"
-        SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
+    # - name: view various info
+    #   continue-on-error: true
+    #   run: |
+    #     set -e
+    #     TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
+    #     TOOLCHAINS="$(xcode-select -p)/Toolchains"
+    #     SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
 
-        echo "default $TOOLCHAIN"
-        ls -la $TOOLCHAIN
-        echo "SDK path $SDK"
-        ls -la $SDK
-        echo "View $TOOLCHAINS"
-        ls -la $TOOLCHAINS
+    #     echo "default $TOOLCHAIN"
+    #     ls -la $TOOLCHAIN
+    #     echo "SDK path $SDK"
+    #     ls -la $SDK
+    #     echo "View $TOOLCHAINS"
+    #     ls -la $TOOLCHAINS
 
-        ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore
+    #     ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore
 
-        hdiutil attach /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore/022-17211-415.dmg
-        echo "====="
-        ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
+    #     hdiutil attach /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain/4ab058bc1c53034b8c0a9baca6fba2d2b78bb965.asset/AssetData/Restore/022-17211-415.dmg
+    #     echo "====="
+    #     ls -la /System/Library/AssetsV2/com_apple_MobileAsset_MetalToolchain
 
-    - name: view metal path
-      continue-on-error: true
-      run: |
-        toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
-        echo $toolchain_path
-        ls -la $toolchainPath
+    # - name: view metal path
+    #   continue-on-error: true
+    #   run: |
+    #     toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
+    #     echo $toolchain_path
+    #     ls -la $toolchainPath
         
     # - name: view python info
     #   run: |
