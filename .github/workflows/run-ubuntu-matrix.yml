@@ -32,6 +32,12 @@ jobs:
         echo $XDG_CONFIG_HOME
         echo "==="
         cat /etc/environment
+
+    - name: create user
+      run: sudo useradd --create-home --shell=/bin/bash example-user
+
+    - name: view env as new user
+      run: sudo -u example-user printenv
     # - name: Set up Docker in GitHub Actions
     #   uses: docker/setup-buildx-action@v2
 
