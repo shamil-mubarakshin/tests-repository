@@ -25,6 +25,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: print various info
+      run: |
+        printenv
+        echo "==="
+        echo $XDG_CONFIG_HOME
+        echo "==="
+        cat /etc/environment
     # - name: Set up Docker in GitHub Actions
     #   uses: docker/setup-buildx-action@v2
 
@@ -36,16 +43,16 @@ jobs:
     #       --privileged \
     #       docker:19.03.12-dind
 
-    - name: Build Docker image from Dockerfile
-      run: |
-        docker build -t custom-ubuntu-docker .
+    # - name: Build Docker image from Dockerfile
+    #   run: |
+    #     docker build -t custom-ubuntu-docker .
 
-    - name: Start first Docker container with mounted socket
-      run: |
-        docker run -d \
-          --name first-container \
-          -v /var/run/docker.sock:/var/run/docker.sock \
-          custom-ubuntu-docker sleep 600
+    # - name: Start first Docker container with mounted socket
+    #   run: |
+    #     docker run -d \
+    #       --name first-container \
+    #       -v /var/run/docker.sock:/var/run/docker.sock \
+    #       custom-ubuntu-docker sleep 600
 
 
     # - name: Install Docker inside the first container
@@ -53,22 +60,22 @@ jobs:
     #     docker exec first-container apt-get update
     #     docker exec first-container apt-get install -y docker.io
 
-    - name: Run second Docker container on the host
-      run: |
-        docker run -d --name second-container nginx
+    # - name: Run second Docker container on the host
+    #   run: |
+    #     docker run -d --name second-container nginx
 
-    - name: View running containers from the first container
-      run: |
-        docker exec first-container hostname && docker ps -a
+    # - name: View running containers from the first container
+    #   run: |
+    #     docker exec first-container hostname && docker ps -a
 
-    - name: Try to stop the second container from the first container
-      run: |
-        docker exec first-container hostname && docker stop second-container
+    # - name: Try to stop the second container from the first container
+    #   run: |
+    #     docker exec first-container hostname && docker stop second-container
 
-    - name: Verify that the second container is stopped
-      run: |
-        hostname
-        docker ps -a
+    # - name: Verify that the second container is stopped
+    #   run: |
+    #     hostname
+    #     docker ps -a
     
     # - name: Checkout remote repository
     #   uses: actions/checkout@v4
