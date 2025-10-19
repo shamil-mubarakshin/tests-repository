@@ -41,7 +41,7 @@ jobs:
     - name: view env as new user
       run: |
         sudo -u example-user printenv
-        sudo -u example-user ls -la ~
+        sudo -u example-user ls -la /home/example-user
 
     - name: install uv
       run: |
