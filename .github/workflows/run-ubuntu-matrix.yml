@@ -38,6 +38,11 @@ jobs:
 
     - name: view env as new user
       run: sudo -u example-user printenv
+
+    - name: install uv
+      run: |
+        sudo useradd --create-home --shell=/bin/bash example-user
+        curl -LsSf https://astral.sh/uv/install.sh | sudo -u example-user sh
     # - name: Set up Docker in GitHub Actions
     #   uses: docker/setup-buildx-action@v2
 
