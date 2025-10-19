@@ -32,12 +32,16 @@ jobs:
         echo $XDG_CONFIG_HOME
         echo "==="
         cat /etc/environment
+        echo "ls home"
+        ls -la ~
 
     - name: create user
       run: sudo useradd --create-home --shell=/bin/bash example-user
 
     - name: view env as new user
-      run: sudo -u example-user printenv
+      run: |
+        sudo -u example-user printenv
+        sudo -u example-user ls -la ~
 
     - name: install uv
       run: |
