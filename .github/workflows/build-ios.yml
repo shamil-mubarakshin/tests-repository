@@ -37,6 +37,9 @@ jobs:
       with:
         xcode-version: '26.0.1'
 
+    - name: view metalToolchain
+      run: |
+        xcodebuild -showComponent metalToolchain
     # - name: Try metalToolchain import
     #   run: |
     #     # xcodebuild -importComponent metalToolchain
