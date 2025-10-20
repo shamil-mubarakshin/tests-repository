@@ -128,10 +128,10 @@ jobs:
     - name: do various stuff
       run: |
         printenv
-        TOOLCHAIN_PATH="$(xcode-select -p)/Toolchains/"
-        ls -la /private/var/run/com.apple.security.cryptexd/mnt/
-        cp /private/var/run/com.apple.security.cryptexd/mnt/MetalToolchainCryptex/Metal.xctoolchain $TOOLCHAIN_PATH
-        ls -la $TOOLCHAIN_PATH
+        TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos"
+        SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
+        ls -la $TOOLCHAIN
+        ls -la $SDK
 
     - name: Build iOS App
       run: |
