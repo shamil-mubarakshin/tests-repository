@@ -138,6 +138,7 @@ jobs:
         # export TOOLCHAINS=com.apple.dt.toolchain.XcodeDefault
         cd SwiftCompatibilityLibTest/src
         xcodebuild \
+          -toolchain com.apple.dt.toolchain.XcodeDefault \
           -workspace SwiftCompatibilityLibTestApp.xcworkspace \
           -scheme SwiftCompatibilityLibTestApp \
           -configuration Release \
