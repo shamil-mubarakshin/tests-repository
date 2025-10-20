@@ -32,8 +32,14 @@ jobs:
           architecture: x64
       - name: debug
         run: |
+          echo "toolcache"
           ls -la /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.0-36.0.LTS/x64
+          echo "toolcache lib"
+          ls -la /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.0-36.0.LTS/x64/lib
+          echo "apt"
           ls -la /usr/lib/jvm/temurin-25-jdk-amd64
+          echo "apt lib"
+          ls -la /usr/lib/jvm/temurin-25-jdk-amd64/lib
           
       - id: get-id
         run: |
