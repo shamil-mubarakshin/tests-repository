@@ -32,7 +32,7 @@ jobs:
           architecture: x64
       - name: debug
         run: |
-          ls -la /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.0-36.0.LTS
+          ls -la /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.0-36.0.LTS/x64
           ls -la /usr/lib/jvm/temurin-25-jdk-amd64
           
       - id: get-id
