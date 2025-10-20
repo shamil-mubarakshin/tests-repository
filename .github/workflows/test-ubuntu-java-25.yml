@@ -30,6 +30,11 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
           architecture: x64
+      - name: debug
+        run: |
+          ls -la /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.0-36.0.LTS
+          ls -la /usr/lib/jvm/temurin-25-jdk-amd64
+          
       - id: get-id
         run: |
           id=$(grep -oPm1 "(?<=<version>)[^<]+" "pom.xml")
