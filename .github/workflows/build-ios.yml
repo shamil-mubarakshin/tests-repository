@@ -24,7 +24,6 @@ jobs:
     - name: view stuff
       run: |
         printenv
-        xcodebuild -showComponent metalToolchain
     # - name: Try metalToolchain
     #   run: |
     #     # toolchain_path=$(xcodebuild -showComponent metalToolchain | grep -i "^Toolchain Search Path:" | tail -1 | sed 's/^Toolchain Search Path: *//')
