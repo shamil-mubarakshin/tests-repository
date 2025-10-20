@@ -20,6 +20,9 @@ jobs:
         run: |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
+      - name: debug
+        run: |
+          sudo rm -rf /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.0-36.0.LTS
       - name: Set up AdoptOpenJDK 25
         uses: actions/setup-java@v5
         with:
