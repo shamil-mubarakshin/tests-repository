@@ -125,6 +125,7 @@ jobs:
       run: |
         printenv
         TOOLCHAIN_PATH="$(xcode-select -p)/Toolchains/"
+        ls -la /private/var/run/com.apple.security.cryptexd/mnt/
         cp /private/var/run/com.apple.security.cryptexd/mnt/MetalToolchainCryptex/Metal.xctoolchain $TOOLCHAIN_PATH
         ls -la $TOOLCHAIN_PATH
 
