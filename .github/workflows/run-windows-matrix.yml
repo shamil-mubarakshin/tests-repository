@@ -11,20 +11,22 @@ jobs:
         os: [windows-2022, windows-2025]
       fail-fast: false
     steps:
-    - if: always()
-      shell: pwsh
-      run: |
-        ssh -V
-        ssh-keyscan github.com
-    - if: always()
-      shell: bash
-      run: |
-        ssh -V
-        ssh-keyscan github.com
-    - if: always()
-      shell: pwsh
-      run: |
-        & 'C:\Program Files\Git\usr\bin\ssh-keyscan.exe' github.com
+    - run: |
+        sqlpackage /Version
+    # - if: always()
+    #   shell: pwsh
+    #   run: |
+    #     ssh -V
+    #     ssh-keyscan github.com
+    # - if: always()
+    #   shell: bash
+    #   run: |
+    #     ssh -V
+    #     ssh-keyscan github.com
+    # - if: always()
+    #   shell: pwsh
+    #   run: |
+    #     & 'C:\Program Files\Git\usr\bin\ssh-keyscan.exe' github.com
         
     # - run: |
     #     if (Get-Command docker -ErrorAction SilentlyContinue) {
