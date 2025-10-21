@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
     steps:
     - run: |
-        sqlpackage /Version
+        & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
     # - if: always()
     #   shell: pwsh
     #   run: |
