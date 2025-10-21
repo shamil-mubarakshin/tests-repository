@@ -132,13 +132,14 @@ jobs:
         SDK="$(xcrun --sdk iphoneos --show-sdk-path)/usr/lib/swift"
         ls -la $TOOLCHAIN
         ls -la $SDK
+        xcodebuild -deleteComponent metalToolchain
 
     - name: Build iOS App
       run: |
         # export TOOLCHAINS=com.apple.dt.toolchain.XcodeDefault
         cd SwiftCompatibilityLibTest/src
+        #          -toolchain com.apple.dt.toolchain.XcodeDefault \
         xcodebuild \
-          -toolchain com.apple.dt.toolchain.XcodeDefault \
           -workspace SwiftCompatibilityLibTestApp.xcworkspace \
           -scheme SwiftCompatibilityLibTestApp \
           -configuration Release \
