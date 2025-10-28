@@ -10,7 +10,7 @@ on:
 env:
   # TODO: Transform this into a matrix
   architecture: amd64
-  base_url: https://cdimages.ubuntu.com/ubuntu-wsl/noble/daily-live/current
+  base_url: https://cdimages.ubuntu.com/ubuntu-wsl/daily-live/current
   images_dir: images
   instance: Ubuntu-${{ github.run_id }}
   profile_script: /etc/profile.d/99-quit-wsl.sh
@@ -115,7 +115,7 @@ jobs:
         env:
           image_name: ${{ needs.cache-img.outputs.cache-image-name }}
         run: |
-          Invoke-WebRequest -Uri "https://cdimages.ubuntu.com/ubuntu-wsl/daily-live/current/${image_name}" -OutFile ".\${image_name}"
+          Invoke-WebRequest -Uri "${{ env.base_url }}/${image_name}" -OutFile ".\${image_name}"
       
       - name: Debug - Output various info
         shell: bash
