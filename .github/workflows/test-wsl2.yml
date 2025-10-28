@@ -129,6 +129,8 @@ jobs:
           echo "${{ env.images_dir }}/${image_name}"
           ls -la
           ls -la ./images
+          ls -la '/c/Program Files/WindowsApps'
+          wsl --version
           
       - name: Debug - Try directly downoaded imag
         shell: powershell
@@ -154,6 +156,7 @@ jobs:
             packages: [hello]
         run: |
           # No launch so we can install the deb before running the OOBE
+          wsl --version
           wsl --install --no-launch --from-file "./${image_name}" --name "${{ env.instance }}"
           
       - name: "Set up a WSL instance from the daily image"
