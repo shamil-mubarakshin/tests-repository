@@ -14,7 +14,7 @@ jobs:
     - shell: bash
       if: always()
       run: |
-        wget https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1
+        curl -fsSL "https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1" --output uv-installer.ps1
         powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"
 
     - shell: pwsh
