@@ -111,13 +111,13 @@ jobs:
             ${{ needs.cache-img.outputs.cache-key }}
           enableCrossOsArchive: true
 
-      - name: Debug - Download image manually
-        shell: pwsh
-        env:
-          image_name: ${{ needs.cache-img.outputs.cache-image-name }}
-        run: |
-          dir
-          Invoke-WebRequest -Uri "${{ env.base_url }}/${image_name}" -OutFile "$env:image_name"
+      # - name: Debug - Download image manually
+      #   shell: pwsh
+      #   env:
+      #     image_name: ${{ needs.cache-img.outputs.cache-image-name }}
+      #   run: |
+      #     dir
+      #     Invoke-WebRequest -Uri "${{ env.base_url }}/${image_name}" -OutFile "$env:image_name"
       
       - name: Debug - Output various info
         shell: bash
@@ -231,6 +231,15 @@ jobs:
           working-dir: ${{ env.instance_working_dir }}
           exec: |
             source test/integration-test.sh
+
+      - name: Collect logs
+        if: always()
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/WSL/master/diagnostics/collect-wsl-logs.ps1" -OutFile collect-wsl-logs.ps1
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          .\collect-wsl-logs.ps1
+
       - name: "Clean up" # Probably not necessary since we're leveraging ephemeral GH's runners.
         if: always()
         shell: powershell
