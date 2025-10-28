@@ -117,7 +117,7 @@ jobs:
           image_name: ${{ needs.cache-img.outputs.cache-image-name }}
         run: |
           dir
-          Invoke-WebRequest -Uri "${{ env.base_url }}/${image_name}" -OutFile "${image_name}"
+          Invoke-WebRequest -Uri "${{ env.base_url }}/${image_name}" -OutFile "$env:image_name"
       
       - name: Debug - Output various info
         shell: bash
