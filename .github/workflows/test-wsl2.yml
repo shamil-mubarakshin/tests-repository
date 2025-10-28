@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
+        with:
+          repository: 'ubuntu/wsl-setup'
       - name: Build deb
         uses: canonical/desktop-engineering/gh-actions/common/build-debian@main
         with:
