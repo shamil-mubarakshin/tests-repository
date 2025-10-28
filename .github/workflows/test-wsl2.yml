@@ -157,7 +157,7 @@ jobs:
         run: |
           # No launch so we can install the deb before running the OOBE
           wsl --version
-          wsl --install --no-launch --from-file "./${image_name}" --name "${{ env.instance }}"
+          wsl --install --no-launch --from-file "${image_name}" --name "${{ env.instance }}"
           
       - name: "Set up a WSL instance from the daily image"
         shell: powershell
@@ -232,13 +232,13 @@ jobs:
           exec: |
             source test/integration-test.sh
 
-      - name: Collect logs
-        if: always()
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/WSL/master/diagnostics/collect-wsl-logs.ps1" -OutFile collect-wsl-logs.ps1
-          Set-ExecutionPolicy Bypass -Scope Process -Force
-          .\collect-wsl-logs.ps1
+      # - name: Collect logs
+      #   if: always()
+      #   shell: pwsh
+      #   run: |
+      #     Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/WSL/master/diagnostics/collect-wsl-logs.ps1" -OutFile collect-wsl-logs.ps1
+      #     Set-ExecutionPolicy Bypass -Scope Process -Force
+      #     .\collect-wsl-logs.ps1
 
       - name: "Clean up" # Probably not necessary since we're leveraging ephemeral GH's runners.
         if: always()
