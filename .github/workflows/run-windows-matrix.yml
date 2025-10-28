@@ -11,8 +11,25 @@ jobs:
         os: [windows-2022, windows-2025]
       fail-fast: false
     steps:
-    - run: |
-        & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
+    - shell: bash
+      if: always()
+      run: |
+        wget https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1
+        powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"
+
+    - shell: pwsh
+      if: always()
+      run: |
+        Invoke-WebRequest -Uri https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1 -OutFile .\uv-installer.ps1
+        powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"
+
+    - shell: powershell
+      if: always()
+      run: |
+        Invoke-WebRequest -Uri https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1 -OutFile .\uv-installer.ps1
+        powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"    
+    # - run: |
+    #     & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
     # - if: always()
     #   shell: pwsh
     #   run: |
