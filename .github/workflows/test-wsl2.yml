@@ -110,7 +110,14 @@ jobs:
             ${{ needs.cache-img.outputs.cache-key }}
           enableCrossOsArchive: true
 
-      - name: Output various info
+      - name: Debug - Download image manually
+        shell: pwsh
+        env:
+          image_name: ${{ needs.cache-img.outputs.cache-image-name }}
+        run: |
+          Invoke-WebRequest -Uri "https://cdimages.ubuntu.com/ubuntu-wsl/daily-live/current/${image_name}" -OutFile ".\${image_name}"
+      
+      - name: Debug - Output various info
         shell: bash
         continue-on-error: true
         env:
@@ -120,7 +127,32 @@ jobs:
           echo "${{ env.images_dir }}/${image_name}"
           ls -la
           ls -la ./images
-
+          
+      - name: Debug - Try directly downoaded imag
+        shell: powershell
+        continue-on-error: true
+        env:
+          image_name: ${{ needs.cache-img.outputs.cache-image-name }}
+          WSL_UTF8: "1" # Recommended otherwise it's hard to read wsl output on Github
+          # Just to skip the interactive session
+          cloudinit: |
+            #cloud-config
+            users:
+            - name: u
+              gecos: Ubuntu User
+              groups: [adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev]
+              sudo: ALL=(ALL) NOPASSWD:ALL
+              shell: /bin/bash
+            write_files:
+            - path: /etc/wsl.conf
+              append: true
+              content: |
+                [user]
+                default=u
+            packages: [hello]
+        run: |
+          # No launch so we can install the deb before running the OOBE
+          wsl --install --no-launch --from-file "./${{ env.images_dir }}/${image_name}" --name "${{ env.instance }}"
           
       - name: "Set up a WSL instance from the daily image"
         shell: powershell
@@ -165,6 +197,7 @@ jobs:
           [System.IO.File]::WriteAllLines($filePath, $env:cloudinit, $utf8NoBomEncoding)
           Write-Output "Testing wsl-setup with cloud-init user data at ${cloudinitdir} :"
           Get-Content "${cloudinitdir}\${{ env.instance }}.user-data"
+
       - name: Test initial setup
         timeout-minutes: 10
         shell: powershell
