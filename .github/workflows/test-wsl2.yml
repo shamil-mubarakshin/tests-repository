@@ -17,19 +17,19 @@ env:
   instance_working_dir: ~/wsl-setup-${{ github.run_id }}
 
 jobs:
-  build-deb:
-    name: Build wsl-setup debian package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-        with:
-          repository: 'ubuntu/wsl-setup'
-      - name: Build deb
-        uses: canonical/desktop-engineering/gh-actions/common/build-debian@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker-image: ubuntu:devel
+  # build-deb:
+  #   name: Build wsl-setup debian package
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out repository
+  #       uses: actions/checkout@v5
+  #       with:
+  #         repository: 'ubuntu/wsl-setup'
+  #     - name: Build deb
+  #       uses: canonical/desktop-engineering/gh-actions/common/build-debian@main
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         docker-image: ubuntu:devel
 
   cache-img:
     name: Cache the daily-live image
@@ -89,16 +89,17 @@ jobs:
             exit 1
           fi
   test-wsl-setup:
-    needs: [build-deb, cache-img]
+    # needs: [build-deb, cache-img]
+    needs: cache-img
     name: "Integration tests"
     runs-on: windows-2025 # WSL and winget are preinstalled and working
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v5
-        with:
-          path: ci-artifacts
-          # name: is left blank so that all artifacts are downloaded, thus we don't couple on
-          # whatever name was chosen in the build-debian action.
+      # - name: Download artifacts
+      #   uses: actions/download-artifact@v5
+      #   with:
+      #     path: ci-artifacts
+      #     # name: is left blank so that all artifacts are downloaded, thus we don't couple on
+      #     # whatever name was chosen in the build-debian action.
 
       - name: Fetch the image from cache
         id: cache
