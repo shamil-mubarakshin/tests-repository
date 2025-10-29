@@ -16,4 +16,3 @@ jobs:
         shell: bash
         run: |
           brew install clinfo
-          clinfo
