@@ -16,12 +16,14 @@ jobs:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
 
-      - run: |
-          xcodebuild -verbose -downloadPlatform iOS
-          echo "==="
-          xcodebuild -showsdks -json
-          echo "==="
-          xcrun simctl list --json
+      - if: always()
+        run: |
+          brew upgrade
+
+      - if: always()
+        run: |
+          brew update
+          brew upgrade
     # - name: Try cleanup
     #   continue-on-error: true
     #   run: |
