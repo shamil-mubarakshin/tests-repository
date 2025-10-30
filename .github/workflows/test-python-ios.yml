@@ -18,6 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: 'python/cpython'
           persist-credentials: false
 
       # GitHub recommends explicitly selecting the desired Xcode version:
