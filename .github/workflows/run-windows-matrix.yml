@@ -12,11 +12,26 @@ jobs:
         node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
+    - shell: pwsh
+      run: |
+        node --version
+        which node
+        npm --version
+        which npm
+        npx --version
+        which npx
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
-    - run: | 
-        npx semantic-release --verbose
+    - shell: pwsh
+      run: |
+        node --version
+        which node
+        npm --version
+        which npm
+        npx --version
+        which npx
+        npx semantic-release
     # - run: |
     #     & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
     # - if: always()
