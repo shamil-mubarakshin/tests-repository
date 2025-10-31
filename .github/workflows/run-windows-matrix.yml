@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - run: | 
-        npx semantic-release
+        npx semantic-release --verbose
     # - run: |
     #     & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
     # - if: always()
