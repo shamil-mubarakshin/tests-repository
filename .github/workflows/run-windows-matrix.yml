@@ -9,11 +9,12 @@ jobs:
     strategy:
       matrix:
         os: [windows-2022, windows-2025]
+        node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
     - uses: actions/setup-node@v4
       with:
-        node-version: "lts/*"
+        node-version: ${{ matrix.node }}
     - run: | 
         npx semantic-release
     # - run: |
