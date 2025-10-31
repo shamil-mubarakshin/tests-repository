@@ -18,12 +18,7 @@ jobs:
 
       - if: always()
         run: |
-          brew upgrade
-
-      - if: always()
-        run: |
-          brew update
-          brew upgrade
+          cat /usr/share/zoneinfo/+VERSION 
     # - name: Try cleanup
     #   continue-on-error: true
     #   run: |
