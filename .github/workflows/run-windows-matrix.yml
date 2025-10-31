@@ -11,23 +11,11 @@ jobs:
         os: [windows-2022, windows-2025]
       fail-fast: false
     steps:
-    - shell: bash
-      if: always()
-      run: |
-        curl -fsSL "https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1" --output uv-installer.ps1
-        powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"
-
-    - shell: pwsh
-      if: always()
-      run: |
-        Invoke-WebRequest -Uri https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1 -OutFile .\uv-installer.ps1
-        powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"
-
-    - shell: powershell
-      if: always()
-      run: |
-        Invoke-WebRequest -Uri https://github.com/astral-sh/uv/releases/download/0.9.5/uv-installer.ps1 -OutFile .\uv-installer.ps1
-        powershell -NoProfile -ExecutionPolicy Bypass -File "uv-installer.ps1"    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "lts/*"
+    - run: | 
+        npx semantic-release
     # - run: |
     #     & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
     # - if: always()
