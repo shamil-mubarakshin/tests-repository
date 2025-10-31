@@ -12,7 +12,7 @@ jobs:
         node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
-    - shell: pwsh
+    - shell: bash
       run: |
         node --version
         which node
@@ -20,6 +20,7 @@ jobs:
         which npm
         npx --version
         which npx
+        rm -rf /c/hostedtoolcache/windows/node/24.10.0
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
