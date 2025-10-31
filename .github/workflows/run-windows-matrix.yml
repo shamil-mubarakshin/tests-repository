@@ -36,10 +36,11 @@ jobs:
     - shell: pwsh
       if: always()
       run: |
-        ls C:\npm\cache\_logs\
+        dir C:\npm\cache\_logs\
         $logs = dir C:\npm\cache\_logs\
         foreach($log in $logs){
-          cat "$($log.FullName)
+          write-host "===="
+          cat $log.FullName
         }
     # - run: |
     #     & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
