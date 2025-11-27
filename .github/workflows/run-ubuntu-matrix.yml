@@ -10,7 +10,7 @@ on:
       IMAGE_NAME:
         description: 'Image name'
         required: false
-        default: 'Ubuntu'
+        # default: 'Ubuntu'
   # schedule:
   #   - cron: '0/5 * * * *'
 
