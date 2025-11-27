@@ -1,0 +1,162 @@
+name: test-bonjour-with-txt
+# https://github.com/actions/runner-images/issues/13230
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [ main, master ]
+  # pull_request:
+  #   branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        browser-type: [bonjour, bonjourWithTXTRecord]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        repository: 'RobertBlaauboer/bonjour-with-txt-record-repro'
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+    - name: Show Xcode version
+      run: xcodebuild -version
+
+    - name: Build app
+      env:
+        BROWSER_TYPE: ${{ matrix.browser-type }}
+      run: |
+        xcodebuild clean build \
+          -project BonjourServiceBrowser.xcodeproj \
+          -scheme BonjourServiceBrowser \
+          -destination 'generic/platform=iOS Simulator' \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO
+
+    - name: Register _test._tcp service with dns-sd
+      run: |
+        echo "Starting dns-sd service registration..."
+        dns-sd -R "TestService" _test._tcp . 8080 > dns-sd.log 2>&1 &
+        DNS_SD_PID=$!
+        echo "dns-sd started with PID: $DNS_SD_PID"
+        echo "DNS_SD_PID=$DNS_SD_PID" >> $GITHUB_ENV
+        sleep 2
+        echo "dns-sd service registered"
+
+    - name: List available simulators
+      run: xcrun simctl list devices available
+
+    - name: Boot iPhone 16 Pro simulator
+      run: |
+        DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone 16 Pro" | grep -v "Max" | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+        echo "Found device ID: $DEVICE_ID"
+        echo "DEVICE_ID=$DEVICE_ID" >> $GITHUB_ENV
+
+        # Boot the simulator if not already booted
+        xcrun simctl boot "$DEVICE_ID" || true
+        sleep 5
+
+        # Wait for device to be ready
+        xcrun simctl bootstatus "$DEVICE_ID"
+
+    - name: Install app on simulator
+      run: |
+        APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "BonjourServiceBrowser.app" -type d | head -n 1)
+        echo "Installing app from: $APP_PATH"
+        xcrun simctl install "$DEVICE_ID" "$APP_PATH"
+
+    - name: Set environment variable in simulator
+      run: |
+        echo "Setting BROWSER_TYPE=${{ matrix.browser-type }} in simulator"
+        xcrun simctl spawn "$DEVICE_ID" launchctl setenv BROWSER_TYPE "${{ matrix.browser-type }}"
+        # Restart SpringBoard to pick up the environment variable
+        xcrun simctl spawn "$DEVICE_ID" launchctl stop com.apple.SpringBoard
+        sleep 2
+
+    - name: Launch app on simulator
+      run: |
+        echo "Launching app on device: $DEVICE_ID (browser type: ${{ matrix.browser-type }})"
+        xcrun simctl launch "$DEVICE_ID" com.example.BonjourServiceBrowser
+        sleep 5
+        echo "App launched successfully"
+
+    - name: Keep dns-sd service alive and running
+      run: |
+        echo "Checking dns-sd service status..."
+        if ps -p $DNS_SD_PID > /dev/null; then
+          echo "dns-sd service is still running (PID: $DNS_SD_PID)"
+        else
+          echo "Warning: dns-sd service stopped"
+        fi
+        sleep 10
+
+    - name: Retrieve app log file
+      if: always()
+      run: |
+        echo "Retrieving app log file from simulator..."
+        APP_CONTAINER=$(xcrun simctl get_app_container "$DEVICE_ID" com.example.BonjourServiceBrowser data)
+        LOG_FILE="$APP_CONTAINER/Documents/bonjour_service_browser.log"
+
+        if [ -f "$LOG_FILE" ]; then
+          echo "Log file found at: $LOG_FILE"
+          mkdir -p logs
+          cp "$LOG_FILE" logs/bonjour_service_browser.log
+          echo "Log file copied to logs directory"
+
+          echo "=== Application Log Contents ==="
+          cat "$LOG_FILE"
+          echo "=== End of Application Log ==="
+        else
+          echo "Warning: Log file not found at $LOG_FILE"
+          echo "APP_CONTAINER: $APP_CONTAINER"
+          ls -la "$APP_CONTAINER/Documents/" || echo "Documents directory not found"
+        fi
+
+    - name: Check if services were discovered
+      run: |
+        APP_CONTAINER=$(xcrun simctl get_app_container "$DEVICE_ID" com.example.BonjourServiceBrowser data)
+        LOG_FILE="$APP_CONTAINER/Documents/bonjour_service_browser.log"
+
+        if [ ! -f "$LOG_FILE" ]; then
+          echo "ERROR: Log file not found"
+          exit 1
+        fi
+
+        if grep -q "Service added:" "$LOG_FILE"; then
+          echo "SUCCESS: Services were discovered"
+          grep "Service added:" "$LOG_FILE"
+        else
+          echo "FAILURE: No services were discovered"
+          echo "Expected to find 'Service added:' in logs but found none"
+          exit 1
+        fi
+
+    - name: Show dns-sd logs
+      if: always()
+      run: |
+        if [ -f dns-sd.log ]; then
+          echo "=== dns-sd Logs ==="
+          cat dns-sd.log
+          echo "=== End of dns-sd Logs ==="
+        fi
+
+    - name: Upload logs as artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-logs-${{ matrix.browser-type }}
+        path: |
+          logs/
+          dns-sd.log
+        if-no-files-found: warn
+
+    - name: Shutdown simulator
+      if: always()
+      run: |
+        if [ -n "$DEVICE_ID" ]; then
+          xcrun simctl shutdown "$DEVICE_ID" || true
+        fi
