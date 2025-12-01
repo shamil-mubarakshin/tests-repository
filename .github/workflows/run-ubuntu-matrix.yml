@@ -25,7 +25,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - run: which bsdtar
+    - run: |
+        sudo apt install libarchive-tools
+        echo ====
+        which bsdtar
 
     - name: print various info
       run: |
