@@ -25,6 +25,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - run: which bsdtar
+
     - name: print various info
       run: |
         printenv
