@@ -16,7 +16,10 @@ jobs:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
 
+      - run: which bsdtar
+
       - if: always()
+        continue-on-error: true
         run: |
           echo "/usr/share/zoneinfo/+VERSION"
           cat /usr/share/zoneinfo/+VERSION
