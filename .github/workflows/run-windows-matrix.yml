@@ -12,6 +12,7 @@ jobs:
         node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
+    - run: get-command tar
     - shell: bash
       run: |
         node --version
