@@ -29,6 +29,8 @@ jobs:
         sudo apt install libarchive-tools
         echo ====
         which bsdtar
+        echo ===
+        which tar
 
     - name: print various info
       run: |
