@@ -24,7 +24,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+      with:
+        lfs: true
     - run: |
         sudo apt install libarchive-tools
         echo ====
