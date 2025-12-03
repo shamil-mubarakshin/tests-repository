@@ -9,40 +9,46 @@ jobs:
     strategy:
       matrix:
         os: [windows-2022, windows-2025]
-        node: ['22.x', 'lts/*']
+        # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
     - run: get-command tar
-    - shell: bash
-      run: |
-        node --version
-        which node
-        npm --version
-        which npm
-        npx --version
-        which npx
-        rm -rf /c/hostedtoolcache/windows/node/24.10.0
-    - uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node }}
-    - shell: pwsh
-      run: |
-        node --version
-        which node
-        npm --version
-        which npm
-        npx --version
-        which npx
-        npx semantic-release
-    - shell: pwsh
-      if: always()
-      run: |
-        dir C:\npm\cache\_logs\
-        $logs = dir C:\npm\cache\_logs\
-        foreach($log in $logs){
-          write-host "===="
-          cat $log.FullName
-        }
+
+    - run: |
+        get-command python
+        get-command python3.9
+    
+    # - shell: bash
+    #   run: |
+    #     node --version
+    #     which node
+    #     npm --version
+    #     which npm
+    #     npx --version
+    #     which npx
+    #     rm -rf /c/hostedtoolcache/windows/node/24.10.0
+    # - uses: actions/setup-node@v4
+    #   with:
+    #     node-version: ${{ matrix.node }}
+    # - shell: pwsh
+    #   run: |
+    #     node --version
+    #     which node
+    #     npm --version
+    #     which npm
+    #     npx --version
+    #     which npx
+    #     npx semantic-release
+    # - shell: pwsh
+    #   if: always()
+    #   run: |
+    #     dir C:\npm\cache\_logs\
+    #     $logs = dir C:\npm\cache\_logs\
+    #     foreach($log in $logs){
+    #       write-host "===="
+    #       cat $log.FullName
+    #     }
+    
     # - run: |
     #     & "$env:ProgramFiles\Microsoft SQL Server\170\DAC\bin\sqlpackage.exe" /version
     # - if: always()
