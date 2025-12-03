@@ -31,9 +31,9 @@ jobs:
       run: |
         ls -la /usr/bin | grep -i python
         echo ====
-        which python3.10
+        which python3.11
         echo ===
-        python3.10 -c "print('qq')"
+        python3.11 -c "print('qq')"
         
     # - run: |
     #     sudo apt install libarchive-tools
