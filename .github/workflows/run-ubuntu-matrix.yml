@@ -24,24 +24,33 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        lfs: true
-    - run: |
-        sudo apt install libarchive-tools
-        echo ====
-        which bsdtar
-        echo ===
-        which tar
+      # with:
+      #   lfs: true
 
-    - name: print various info
+    - name: run python
       run: |
-        printenv
-        echo "==="
-        echo $XDG_CONFIG_HOME
-        echo "==="
-        cat /etc/environment
-        echo "ls home"
-        ls -la ~
+        ls -la /usr/bin | grep -i python
+        echo ====
+        which python3.10
+        echo ===
+        python3.10 -c "print('qq')"
+        
+    # - run: |
+    #     sudo apt install libarchive-tools
+    #     echo ====
+    #     which bsdtar
+    #     echo ===
+    #     which tar
+
+    # - name: print various info
+    #   run: |
+    #     printenv
+    #     echo "==="
+    #     echo $XDG_CONFIG_HOME
+    #     echo "==="
+    #     cat /etc/environment
+    #     echo "ls home"
+    #     ls -la ~
 
     # - name: create user
     #   run: sudo useradd --create-home --shell=/bin/bash example-user
