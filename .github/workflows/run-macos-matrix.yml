@@ -19,8 +19,8 @@ jobs:
       - run: |
           which bsdtar
           which tar
-          ls -la /usr/bin
-          /Applications/Xcode.app/Contents/Developer/usr/bin/iTMSTransporter -help
+          ls -la /usr/local
+
 
       - if: always()
         continue-on-error: true
