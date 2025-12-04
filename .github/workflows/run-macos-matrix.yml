@@ -20,6 +20,7 @@ jobs:
           curl -fsSL "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/resources/download/public/Transporter__OSX/bin/" -o "/tmp/itmstransporter.pkg"
           sudo installer -pkg "/tmp/itmstransporter.pkg" -target /
           ls -la /usr/local
+          /usr/local/itms/bin/iTMSTransporter -help
 
       - if: always()
         continue-on-error: true
