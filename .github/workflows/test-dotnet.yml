@@ -1,0 +1,46 @@
+name: test-dotnet
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    # env:
+    #   BUILD_CONFIG: Release
+    #   RUNTIME_ID: win-x64
+    #   PUBLISH_DIR: publish_output
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'dotnet/maui-samples'
+
+      - run: |
+          dotnet --version
+          dotnet workload list
+      # - name: Setup .NET SDK
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: 8.0.x
+
+      # - name: Build ASP.NET Core backend
+      #   run: dotnet build FilmsSaver.Server\FilmsSaver.Server.csproj --configuration ${{ env.BUILD_CONFIG }}
+
+      - name: Publish .NET Core app
+        run: dotnet publish 9.0/Apps/Calculator/src/Calculator/Calculator.csproj -f net9.0-android
+
+      # - name: Archive published app
+      #   run: |
+      #     dir
+      #     Compress-Archive -Path "${{ env.PUBLISH_DIR }}\*" -DestinationPath publish.zip
+      #     remove-item -recurse -force ${{ env.PUBLISH_DIR }} -verbose
+      #     dir
+
+      # - name: Upload build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: published-app
+      #     path: publish.zip
