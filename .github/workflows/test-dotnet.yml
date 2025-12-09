@@ -30,7 +30,9 @@ jobs:
       #   run: dotnet build FilmsSaver.Server\FilmsSaver.Server.csproj --configuration ${{ env.BUILD_CONFIG }}
 
       - name: Publish .NET Core app
-        run: dotnet publish 9.0/Apps/Calculator/src/Calculator/Calculator.csproj -f net9.0-android
+        run: |
+          # dotnet publish 9.0/Apps/Calculator/src/Calculator/Calculator.csproj -f net9.0-android
+          dotnet publish 10.0/Apps/Calculator/src/Calculator/Calculator.csproj -f net9.0-android
 
       # - name: Archive published app
       #   run: |
