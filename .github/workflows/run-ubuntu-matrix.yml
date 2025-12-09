@@ -27,13 +27,13 @@ jobs:
       # with:
       #   lfs: true
 
-    - name: run python
-      run: |
-        ls -la /usr/bin | grep -i python
-        echo ====
-        which python3.11
-        echo ===
-        python3.11 -c "print('qq')"
+    # - name: run python
+    #   run: |
+    #     ls -la /usr/bin | grep -i python
+    #     echo ====
+    #     which python3.11
+    #     echo ===
+    #     python3.11 -c "print('qq')"
         
     # - run: |
     #     sudo apt install libarchive-tools
@@ -42,15 +42,15 @@ jobs:
     #     echo ===
     #     which tar
 
-    # - name: print various info
-    #   run: |
-    #     printenv
-    #     echo "==="
-    #     echo $XDG_CONFIG_HOME
-    #     echo "==="
-    #     cat /etc/environment
-    #     echo "ls home"
-    #     ls -la ~
+    - name: print various info
+      run: |
+        printenv
+        echo "==="
+        echo $XDG_CONFIG_HOME
+        echo "==="
+        cat /etc/environment
+        echo "ls home"
+        ls -la ~
 
     # - name: create user
     #   run: sudo useradd --create-home --shell=/bin/bash example-user
@@ -60,10 +60,12 @@ jobs:
     #     sudo -u example-user printenv
     #     sudo -u example-user ls -la /home/example-user
 
-    # - name: install uv
-    #   continue-on-error: true
-    #   run: |
-    #     curl -LsSf https://astral.sh/uv/install.sh | sudo -u example-user sh
+    - name: install uv
+      continue-on-error: true
+      run: |
+        sudo useradd --create-home --shell=/bin/bash example-user
+        # curl -LsSf https://astral.sh/uv/install.sh | sudo -i -u example-user env -u XDG_CONFIG_HOME sh
+        sudo -i -u example-user printenv
 
     # - name: view info
     #   run: |
