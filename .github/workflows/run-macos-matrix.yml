@@ -17,7 +17,9 @@ jobs:
       #   uses: actions/checkout@v3
 
       - run: |
-          gem update --system
+          gem update some-random-gem
+          echo $?
+          gem fetch some-random-gem && echo 'success!' || echo 'failed!'
 
       # - run: |
       #     url="https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/resources/download/public/Transporter__OSX/bin/"
