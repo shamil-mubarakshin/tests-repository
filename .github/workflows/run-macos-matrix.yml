@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        os: [macos-14, macos-15, macos-15-intel, macos-26]
+        os: [macos-15, macos-15-intel, macos-26]
         # xcode: [16.4, 26.0.1]
       fail-fast: false
     steps:
@@ -17,23 +17,27 @@ jobs:
       #   uses: actions/checkout@v3
 
       - run: |
-          url="https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/resources/download/public/Transporter__OSX/bin/"
-          curl -fsSL $url -o "/tmp/itmstransporter.pkg"
-          sudo installer -pkg "/tmp/itmstransporter.pkg" -target /
-          ls -la /usr/local
-          /usr/local/itms/bin/iTMSTransporter -help
+          gem update --system
 
-      - if: always()
-        continue-on-error: true
-        run: |
-          echo "/usr/share/zoneinfo/+VERSION"
-          cat /usr/share/zoneinfo/+VERSION
-          echo "/usr/share/zoneinfo"
-          ls -la /usr/share/zoneinfo
-          echo "/var/db/timezone"
-          ls -la /var/db/timezone
-          echo "/var/db/timezone/tz"
-          ls -la /var/db/timezone/tz
+      # - run: |
+      #     url="https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/resources/download/public/Transporter__OSX/bin/"
+      #     curl -fsSL $url -o "/tmp/itmstransporter.pkg"
+      #     sudo installer -pkg "/tmp/itmstransporter.pkg" -target /
+      #     ls -la /usr/local
+      #     /usr/local/itms/bin/iTMSTransporter -help
+
+      # - if: always()
+      #   continue-on-error: true
+      #   run: |
+      #     echo "/usr/share/zoneinfo/+VERSION"
+      #     cat /usr/share/zoneinfo/+VERSION
+      #     echo "/usr/share/zoneinfo"
+      #     ls -la /usr/share/zoneinfo
+      #     echo "/var/db/timezone"
+      #     ls -la /var/db/timezone
+      #     echo "/var/db/timezone/tz"
+      #     ls -la /var/db/timezone/tz
+          
     # - name: Try cleanup
     #   continue-on-error: true
     #   run: |
