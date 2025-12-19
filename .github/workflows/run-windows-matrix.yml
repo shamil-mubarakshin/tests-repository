@@ -12,12 +12,10 @@ jobs:
         # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
-    - run: get-command tar
-
-    - run: |
-        get-command python
-        get-command python3.9
-    
+    - shell: pwsh
+      run: Invoke-WebRequest -Uri "https://google.com" -Method Get
+    - shell: powershell
+      run: Invoke-WebRequest -Uri "https://google.com" -Method Get    
     # - shell: bash
     #   run: |
     #     node --version
