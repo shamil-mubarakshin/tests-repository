@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        os: [macos-15, macos-15-intel, macos-26]
+        os: [macos-14, macos-15, macos-15-intel, macos-26]
         # xcode: [16.4, 26.0.1]
       fail-fast: false
     steps:
