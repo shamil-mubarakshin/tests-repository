@@ -16,7 +16,7 @@ jobs:
       run: Invoke-WebRequest -Uri "https://google.com" -Method Get
     - uses: actions/setup-python@v6
       with:
-        python-version: '3.12.11'
+        python-version: '3.12.10'
     # - shell: bash
     #   run: |
     #     node --version
