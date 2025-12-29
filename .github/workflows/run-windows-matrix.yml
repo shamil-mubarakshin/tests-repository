@@ -14,8 +14,7 @@ jobs:
     steps:
     - shell: pwsh
       run: Invoke-WebRequest -Uri "https://google.com" -Method Get
-    - shell: powershell
-      run: Invoke-WebRequest -Uri "https://google.com" -Method Get    
+    - uses: actions/setup-python@v6
     # - shell: bash
     #   run: |
     #     node --version
