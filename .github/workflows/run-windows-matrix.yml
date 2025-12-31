@@ -22,7 +22,11 @@ jobs:
           | ?{$_.DisplayName -match "software development kit"} `
           | Sort-Object DisplayVersion -Descending | select -First 1
         $bundleCachePath = $installerEntry.BundleCachePath
-        Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
+        $process = Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
+        $exitCode = $process.ExitCode
+        if ($exitCode -eq 0) {
+            Write-Host "Installation successful"
+        }
     - shell: pwsh
       continue-on-error: true
       run: |
