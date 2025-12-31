@@ -25,7 +25,9 @@ jobs:
         Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
     - shell: pwsh
       continue-on-error: true
-      run: dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"        
+      run: |
+        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
+        which cdb
     # - shell: bash
     #   run: |
     #     node --version
