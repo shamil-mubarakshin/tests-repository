@@ -19,7 +19,7 @@ jobs:
       continue-on-error: true
       run: |
         $installerEntry = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* `
-          | ?{$_.DisplayName -match "software development kit"} `
+          | ?{$_.DisplayName -match "Windows Software Development Kit"} `
           | Sort-Object DisplayVersion -Descending | select -First 1
         $bundleCachePath = $installerEntry.BundleCachePath
         $process = Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
