@@ -13,10 +13,12 @@ jobs:
       fail-fast: false
     steps:
     - shell: pwsh
-      run: Invoke-WebRequest -Uri "https://google.com" -Method Get
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.12.10'
+      continue-on-error: true
+      run: dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
+    - shell: pwsh
+      continue-on-error: true
+      run: |
+        Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -match "software development kit"}
     # - shell: bash
     #   run: |
     #     node --version
