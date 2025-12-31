@@ -31,7 +31,8 @@ jobs:
       continue-on-error: true
       run: |
         dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
-        which cdb
+        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
+
     # - shell: bash
     #   run: |
     #     node --version
