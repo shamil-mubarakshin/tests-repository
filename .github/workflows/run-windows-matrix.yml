@@ -18,7 +18,9 @@ jobs:
     - shell: pwsh
       continue-on-error: true
       run: |
-        Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -match "software development kit"}
+        $installerEntry = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* `
+          | ?{$_.DisplayName -match "software development kit"} `
+          | Sort-Object DisplayVersion -Descending | select -First 1
     # - shell: bash
     #   run: |
     #     node --version
