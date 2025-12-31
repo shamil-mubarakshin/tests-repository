@@ -22,7 +22,7 @@ jobs:
           | ?{$_.DisplayName -match "software development kit"} `
           | Sort-Object DisplayVersion -Descending | select -First 1
         $bundleCachePath = $installerEntry.BundleCachePath
-        Start-Process -FilePath $bundleCachePath -ArgumentList $bootstrapperArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers' '/q') -Wait -PassThru
+        Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
     - shell: pwsh
       continue-on-error: true
       run: dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"        
