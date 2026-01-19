@@ -24,12 +24,12 @@ jobs:
             - run: |
                 dotnet --list-runtimes
                 dotnet --list-sdks
-            -   name: Setup .NET SDKs
-                uses: actions/setup-dotnet@v5
-                with:
-                    dotnet-version: |
-                        8.0.x
-                        10.0.x
+            # -   name: Setup .NET SDKs
+            #     uses: actions/setup-dotnet@v5
+            #     with:
+            #         dotnet-version: |
+            #             8.0.x
+            #             10.0.x
             - run: |
                 dotnet --list-runtimes
                 dotnet --list-sdks
