@@ -18,6 +18,7 @@ jobs:
             -   uses: actions/checkout@v6
                 with:
                     repository: 'aweXpect/Mockolate'
+                    ref: '602f10428e960f2bf915e1381b26bf4245c6dd48' # before https://github.com/aweXpect/Mockolate/pull/372
                     fetch-depth: 0
             -   name: Setup .NET SDKs
                 uses: actions/setup-dotnet@v5
