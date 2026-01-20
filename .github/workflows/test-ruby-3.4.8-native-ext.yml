@@ -1,0 +1,237 @@
+# https://github.com/actions/runner-images/issues/13552
+# GitHub Actions Workflow to troubleshoot Ruby native extension compilation issues
+# Issue: stdckdint.h error when compiling native extensions on macos-14 with Ruby 3.4
+#
+# This workflow reproduces the issue where native gems fail to compile due to
+# missing or incompatible stdckdint.h header when using setup-ruby action.
+
+name: Ruby Native Extension Troubleshoot
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #     - 'feature/*'
+  #   paths:
+  #     - 'Gemfile'
+  #     - '.github/workflows/ruby-native-ext-troubleshoot.yml'
+  # pull_request:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+env:
+  RUBY_VERSION: '3.4'
+
+jobs:
+  troubleshoot-native-extensions:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [macos-14, macos-15]
+    runs-on: ${{ matrix.runs-on }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby ${{ env.RUBY_VERSION }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: false  # Disable cache to see full compilation output
+
+      - name: Display Ruby environment info
+        run: |
+          echo "=== Ruby Environment Info ==="
+          echo "Ruby version:"
+          ruby --version
+          echo ""
+          echo "Gem version:"
+          gem --version
+          echo ""
+          echo "Bundler version:"
+          bundle --version
+          echo ""
+          echo "Ruby configuration:"
+          ruby -e "puts RbConfig::CONFIG.select { |k,v| k =~ /CC|CXX|CFLAGS|LDFLAGS|arch|host/ }.map { |k,v| \"#{k}: #{v}\" }"
+          echo ""
+          echo "Which ruby:"
+          which ruby
+          echo ""
+          echo "Ruby prefix:"
+          ruby -e "puts RbConfig::CONFIG['prefix']"
+
+      - name: Display compiler and SDK info
+        run: |
+          echo "=== System Compiler Info ==="
+          echo "Xcode version:"
+          xcodebuild -version
+          echo ""
+          echo "clang version:"
+          clang --version
+          echo ""
+          echo "SDK path:"
+          xcrun --show-sdk-path
+          echo ""
+          echo "Checking for stdckdint.h in SDK:"
+          find $(xcrun --show-sdk-path)/usr/include -name "stdckdint.h" 2>/dev/null || echo "stdckdint.h not found in SDK"
+          echo ""
+          echo "Checking for stdckdint.h in Xcode toolchain:"
+          find /Applications/Xcode*.app -name "stdckdint.h" 2>/dev/null | head -5 || echo "stdckdint.h not found in Xcode"
+
+      - name: Check Ruby header configuration
+        run: |
+          echo "=== Checking Ruby header configuration ==="
+          ruby -e "puts RbConfig::CONFIG['rubyhdrdir']"
+          ruby -e "puts RbConfig::CONFIG['rubyarchhdrdir']"
+          echo ""
+          echo "Ruby include directory contents:"
+          ls -la $(ruby -e "puts RbConfig::CONFIG['rubyhdrdir']") 2>/dev/null || echo "Ruby header dir not accessible"
+          echo ""
+          echo "Checking if Ruby was compiled with stdckdint.h support:"
+          ruby -e "puts RbConfig::CONFIG['CFLAGS']"
+
+      - name: Install Bundler
+        run: |
+          echo "=== Installing bundler ==="
+          gem install bundler --no-document
+          bundle --version
+
+      - name: Run bundle install (expected to fail)
+        continue-on-error: true
+        run: |
+          echo "=== Running bundle install (this may fail with stdckdint.h error) ==="
+          echo "Setting verbose mode for detailed error output..."
+          bundle config set --local path 'vendor/bundle'
+          bundle config set --local jobs 4
+          
+          # Attempt bundle install with verbose output
+          bundle install --verbose 2>&1 || true
+          
+          echo ""
+          echo "=== If the above failed, check the logs for stdckdint.h errors ==="
+
+      - name: Debug native extension compilation
+        continue-on-error: true
+        run: |
+          echo "=== Attempting to manually compile a native gem to capture full error ==="
+          
+          # Try to install json gem separately to get detailed error
+          echo "Installing json gem (has native extensions):"
+          gem install json --verbose 2>&1 || true
+          
+          echo ""
+          echo "=== Checking mkmf.log for compilation errors ==="
+          find . -name "mkmf.log" -exec echo "--- {} ---" \; -exec cat {} \; 2>/dev/null || echo "No mkmf.log found in current directory"
+          find ~/. -name "mkmf.log" -exec echo "--- {} ---" \; -exec cat {} \; 2>/dev/null | head -100 || echo "No mkmf.log found in home directory"
+
+      - name: Display potential workarounds
+        run: |
+          echo "=== Potential Workarounds ==="
+          echo ""
+          echo "Workaround 1: Set compiler flags to use system headers"
+          export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+          export CPPFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+          echo "CFLAGS: $CFLAGS"
+          echo "CPPFLAGS: $CPPFLAGS"
+          
+          echo ""
+          echo "Workaround 2: Check if using a different Xcode version helps"
+          ls -la /Applications/ | grep Xcode
+          
+          echo ""
+          echo "Workaround 3: Try installing with specific compiler"
+          echo "CC=$(which clang)"
+          echo "CXX=$(which clang++)"
+
+      - name: Try bundle install with SDK flags
+        continue-on-error: true
+        run: |
+          echo "=== Attempting bundle install with compiler flags workaround ==="
+          
+          # Clean previous attempt
+          rm -rf vendor/bundle
+          
+          # Set environment variables that might help
+          export SDKROOT=$(xcrun --show-sdk-path)
+          export CFLAGS="-I${SDKROOT}/usr/include -isysroot ${SDKROOT}"
+          export CPPFLAGS="-I${SDKROOT}/usr/include -isysroot ${SDKROOT}"
+          export LDFLAGS="-L${SDKROOT}/usr/lib"
+          
+          echo "SDKROOT: $SDKROOT"
+          echo "CFLAGS: $CFLAGS"
+          echo "CPPFLAGS: $CPPFLAGS"
+          echo "LDFLAGS: $LDFLAGS"
+          
+          bundle install --verbose 2>&1 || echo "Bundle install still failed with workaround"
+
+      - name: Display troubleshooting summary
+        run: |
+          echo "=== Summary ==="
+          echo ""
+          echo "The stdckdint.h error typically occurs when:"
+          echo "1. Ruby 3.4 was compiled with a different SDK version than what's available"
+          echo "2. The ruby/setup-ruby action provides a Ruby build that expects headers not present in macOS 14"
+          echo "3. There's a mismatch between the Xcode/Command Line Tools version and Ruby's expected headers"
+          echo ""
+          echo "Recommended solutions:"
+          echo "1. Use a different Ruby version (e.g., 3.3.x) that's compatible with macOS 14"
+          echo "2. Install Ruby via Homebrew instead of setup-ruby action"
+          echo "3. Report the issue to ruby/setup-ruby GitHub repository"
+          echo ""
+          echo "To use Homebrew Ruby instead, replace setup-ruby with:"
+          echo "  - run: brew install ruby@3.4"
+          echo "  - run: echo 'export PATH=\"/opt/homebrew/opt/ruby@3.4/bin:\$PATH\"' >> \$GITHUB_ENV"
+
+  # Alternative job using Homebrew Ruby as a workaround
+  homebrew-ruby-workaround:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [macos-14, macos-15]
+    runs-on: ${{ matrix.runs-on }}  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Ruby via Homebrew
+        run: |
+          echo "=== Installing Ruby via Homebrew (workaround) ==="
+          brew install ruby@3.4
+          
+          # Add to PATH
+          echo "/opt/homebrew/opt/ruby@3.4/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/lib/ruby/gems/3.4.0/bin" >> $GITHUB_PATH
+
+      - name: Verify Homebrew Ruby
+        run: |
+          echo "Ruby version:"
+          ruby --version
+          echo ""
+          echo "Ruby path:"
+          which ruby
+          echo ""
+          echo "Gem version:"
+          gem --version
+
+      - name: Install Bundler
+        run: gem install bundler --no-document
+
+      - name: Run bundle install with Homebrew Ruby
+        run: |
+          echo "=== Running bundle install with Homebrew Ruby ==="
+          bundle config set --local path 'vendor/bundle'
+          bundle install --verbose
+        continue-on-error: true
+
+      - name: Report Homebrew workaround result
+        run: |
+          echo "=== Homebrew Ruby Workaround Result ==="
+          if [ -d "vendor/bundle" ] && [ "$(ls -A vendor/bundle)" ]; then
+            echo "SUCCESS: Bundle install completed with Homebrew Ruby!"
+            echo "Installed gems:"
+            bundle list
+          else
+            echo "FAILED: Bundle install also failed with Homebrew Ruby"
+          fi
