@@ -1,0 +1,58 @@
+name: macos-platform-test
+on: workflow_dispatch
+
+jobs:
+  reproduce-bug:
+    runs-on: macos-15
+    
+    steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
+      
+      - name: Show SDKs (confirms iOS 18.2 is listed)
+        run: xcodebuild -showsdks
+      
+      - name: Create minimal storyboard
+        run: |
+          mkdir -p test
+          cat > test/Test.storyboard << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J">
+              <device id="retina4_7" orientation="portrait" appearance="light"/>
+              <dependencies>
+                  <deployment identifier="iOS"/>
+                  <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
+                  <capability name="System colors in document resources" minToolsVersion="11.0"/>
+                  <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+              </dependencies>
+              <scenes>
+                  <scene sceneID="EHf">
+                      <objects>
+                          <viewController id="01J" sceneMemberID="viewController">
+                              <view key="view" contentMode="scaleToFill" id="Ze5">
+                                  <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                  <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                  <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                              </view>
+                          </viewController>
+                          <placeholder placeholderIdentifier="IBFirstResponder" id="iYj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                      </objects>
+                  </scene>
+              </scenes>
+              <resources>
+                  <systemColor name="systemBackgroundColor">
+                      <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                  </systemColor>
+              </resources>
+          </document>
+          EOF
+      
+      - name: Attempt to compile storyboard (will fail)
+        run: |
+          ibtool --errors --warnings --notices \
+            --minimum-deployment-target 15.6 \
+            --target-device iphone --target-device ipad \
+            --output-format human-readable-text \
+            --compile ./output.storyboardc \
+            test/Test.storyboard
