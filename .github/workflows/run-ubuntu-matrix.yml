@@ -25,6 +25,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
+        echo "8.5.0" >> .bazelversion
         bazel --version
         bazelisk --version
     - run: df -h
