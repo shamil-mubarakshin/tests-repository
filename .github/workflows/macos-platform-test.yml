@@ -13,7 +13,9 @@ jobs:
       - name: Show SDKs (confirms iOS 18.2 is listed)
         run: xcodebuild -showsdks
       - name: download platforms
-        run: xcodebuild -downloadPlatform iOS -buildVersion 18.2
+        run: |
+          xcrun simctl list
+          xcodebuild -downloadPlatform iOS
       - name: Create minimal storyboard
         run: |
           mkdir -p test
