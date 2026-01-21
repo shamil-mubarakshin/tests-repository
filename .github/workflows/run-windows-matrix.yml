@@ -14,8 +14,8 @@ jobs:
     steps:
     - shell: bash
       run: |
-        # echo "8.5.0" >> .bazelversion
-        # cat .bazelversion
+        echo "8.5.0" >> .bazelversion
+        cat .bazelversion
         bazel --version
         bazelisk --version
     # - shell: pwsh
