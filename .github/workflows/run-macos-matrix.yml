@@ -15,11 +15,17 @@ jobs:
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
-      - run: df -h
-      - run: |
-          gem update some-random-gem
-          echo $?
-          gem fetch some-random-gem && echo 'success!' || echo 'failed!'
+    - shell: bash
+      run: |
+        # echo "8.5.0" >> .bazelversion
+        # cat .bazelversion
+        bazel --version
+        bazelisk --version
+      # - run: df -h
+      # - run: |
+      #     gem update some-random-gem
+      #     echo $?
+      #     gem fetch some-random-gem && echo 'success!' || echo 'failed!'
 
       # - run: |
       #     url="https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/resources/download/public/Transporter__OSX/bin/"
