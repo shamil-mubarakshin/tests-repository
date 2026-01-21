@@ -12,26 +12,32 @@ jobs:
         # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
-    - shell: pwsh
-      continue-on-error: true
-      run: dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
-    - shell: pwsh
-      continue-on-error: true
+    - shell: bash
       run: |
-        $installerEntry = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* `
-          | ?{$_.DisplayName -match "Windows Software Development Kit"} `
-          | Sort-Object DisplayVersion -Descending | select -First 1
-        $bundleCachePath = $installerEntry.BundleCachePath
-        $process = Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
-        $exitCode = $process.ExitCode
-        if ($exitCode -eq 0) {
-            Write-Host "Installation successful"
-        }
-    - shell: pwsh
-      continue-on-error: true
-      run: |
-        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
-        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
+        # echo "8.5.0" >> .bazelversion
+        # cat .bazelversion
+        bazel --version
+        bazelisk --version
+    # - shell: pwsh
+    #   continue-on-error: true
+    #   run: dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
+    # - shell: pwsh
+    #   continue-on-error: true
+    #   run: |
+    #     $installerEntry = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* `
+    #       | ?{$_.DisplayName -match "Windows Software Development Kit"} `
+    #       | Sort-Object DisplayVersion -Descending | select -First 1
+    #     $bundleCachePath = $installerEntry.BundleCachePath
+    #     $process = Start-Process -FilePath $bundleCachePath -ArgumentList ('/features', 'OptionId.WindowsDesktopDebuggers', '/q') -Wait -PassThru
+    #     $exitCode = $process.ExitCode
+    #     if ($exitCode -eq 0) {
+    #         Write-Host "Installation successful"
+    #     }
+    # - shell: pwsh
+    #   continue-on-error: true
+    #   run: |
+    #     dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
+    #     dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
 
     # - shell: bash
     #   run: |
