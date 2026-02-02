@@ -19,7 +19,8 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: ${{ matrix.xcode }}
-      - run: |
+      - shell: pwsh
+        run: |
           xcrun simctl list > /dev/null
           $archSuffix = ""
           if ("${{ matrix.xcode }}" -match '^(\d+)\.' -and [int]$matches[1] -ge 26) {
