@@ -10,17 +10,24 @@ jobs:
     strategy:
       matrix:
         os: [macos-14, macos-15, macos-15-intel, macos-26]
-        # xcode: [16.4, 26.0.1]
+        xcode: [16.4, 26.0]
       fail-fast: false
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
-    - shell: bash
-      run: |
-        echo "8.5.0" >> .bazelversion
-        cat .bazelversion
-        bazel --version
-        bazelisk --version
+      - name: Set default Xcode as ${{ matrix.xcode }}
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.xcode }}
+      - run: |
+          xcrun simctl list > /dev/null
+          xcodebuild -downloadPlatform iOS -architectureVariant universal
+    # - shell: bash
+    #   run: |
+    #     echo "8.5.0" >> .bazelversion
+    #     cat .bazelversion
+    #     bazel --version
+    #     bazelisk --version
       # - run: df -h
       # - run: |
       #     gem update some-random-gem
