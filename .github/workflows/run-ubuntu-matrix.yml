@@ -25,10 +25,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
-        echo "8.5.0" >> .bazelversion
-        cat .bazelversion
-        bazel --version
-        bazelisk --version
+        uname -a
+        lsmod
+    # - run: |
+    #     echo "8.5.0" >> .bazelversion
+    #     cat .bazelversion
+    #     bazel --version
+    #     bazelisk --version
     - run: df -h
 
     - run: pwsh --version
