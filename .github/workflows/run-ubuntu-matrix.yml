@@ -27,7 +27,8 @@ jobs:
     - run: |
         uname -a
         lsmod
-    - run: |
+    - continue-on-error: true
+      run: |
         sudo apt-get update
         sudo apt install linux-image-generic
         sudo apt install linux-modules-extra-$(uname -r)
