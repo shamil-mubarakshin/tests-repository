@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-14, macos-15, macos-15-intel, macos-26]
-        xcode: [16.4, 26.0, 26.0.1]
+        xcode: [26.0.1]
       fail-fast: false
     steps:
       # - name: Checkout repository
@@ -21,7 +21,12 @@ jobs:
           xcode-version: ${{ matrix.xcode }}
       - run: |
           xcrun simctl list > /dev/null
-          xcodebuild -downloadPlatform iOS -architectureVariant universal
+          $archSuffix = ""
+          if ("${{ matrix.xcode }}" -match '^(\d+)\.' -and [int]$matches[1] -ge 26) {
+                $archSuffix = "-architectureVariant universal"
+          }
+          Write-Host "Downloading iOS platform for Xcode version ${{ matrix.xcode }} '$archSuffix'"
+          xcodebuild -downloadPlatform iOS $archSuffix
     # - shell: bash
     #   run: |
     #     echo "8.5.0" >> .bazelversion
