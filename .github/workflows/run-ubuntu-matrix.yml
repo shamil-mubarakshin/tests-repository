@@ -25,6 +25,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
+        sudo apt-get update
+        sudo apt-get install alsa-base alsa-utils
+        sudo modprobe snd-seq
+        ls -l /dev/snd/seq
+
+    - run: |
         uname -a
         lsmod
     # - run: |
