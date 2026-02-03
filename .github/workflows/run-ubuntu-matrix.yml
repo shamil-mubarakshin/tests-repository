@@ -30,8 +30,8 @@ jobs:
         ls -l /dev
     - run: |
         sudo apt-get update
-        # sudo apt install linux-image-generic
-        sudo apt install linux-modules-extra-5.15.0-100-generic
+        sudo apt install linux-image-generic
+        # sudo apt install linux-modules-extra-5.15.0-100-generic
         # sudo apt install linux-modules-extra-$(uname -r)
         sudo depmod -a
         sudo apt-get install alsa-base alsa-utils
