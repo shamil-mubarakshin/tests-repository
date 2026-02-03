@@ -31,7 +31,7 @@ jobs:
     - run: |
         sudo apt-get update
         sudo apt install linux-image-generic
-        linux-modules-extra-5.15.0-1003-azure
+        sudo apt install linux-modules-extra-5.15.0-1003-azure
         sudo apt install linux-modules-extra-$(uname -r)
         sudo apt-get install alsa-base alsa-utils
         sudo modprobe snd-seq
