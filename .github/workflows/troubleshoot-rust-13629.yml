@@ -1,0 +1,35 @@
+# https://github.com/actions/runner-images/issues/13629
+name: troubleshoot-rust-13629
+on:
+  # push:
+  #   branches: main
+  # pull_request:
+  #   branches: main
+  workflow_dispatch: 
+
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+#   cancel-in-progress: true
+
+
+jobs:
+  test-windows:
+    # Note: GitHub's Windows runners have a Rust toolchain installed
+    # https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          repository: 'topiary/topiary'
+
+      - name: Init rust-cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Prefetch grammars
+        run: cargo run --all-features -- prefetch
+
+      - name: Run test suite
+        run: cargo test --all-features
