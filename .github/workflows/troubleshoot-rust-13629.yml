@@ -25,6 +25,12 @@ jobs:
         with:
           repository: 'topiary/topiary'
 
+      - name: modify rust
+        run: |
+          rustup install 1.92.0
+          rustup default 1.92.0
+          rustc --version
+
       - name: Init rust-cache
         uses: Swatinem/rust-cache@v2
 
