@@ -33,11 +33,11 @@ jobs:
     #     if ($exitCode -eq 0) {
     #         Write-Host "Installation successful"
     #     }
-    # - shell: pwsh
-    #   continue-on-error: true
-    #   run: |
-    #     dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
-    #     dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
+    - shell: pwsh
+      continue-on-error: true
+      run: |
+        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
+        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
 
     # - shell: bash
     #   run: |
