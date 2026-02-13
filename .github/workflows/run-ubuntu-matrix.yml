@@ -38,6 +38,10 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.1'
+    - run: |
+        ls -la /opt/hostedtoolcache
+        echo "====="
+        ls -la /opt/hostedtoolcache/Ruby
     # - run: |
     #     echo "8.5.0" >> .bazelversion
     #     cat .bazelversion
