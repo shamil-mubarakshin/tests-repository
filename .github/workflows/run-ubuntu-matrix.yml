@@ -25,22 +25,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
-        uname -a
-        lsmod
-        ls -l /dev
+        ls -la /opt/hostedtoolcache/Ruby
+        find /opt/hostedtoolcache/Ruby -type d -exec sudo chmod +t {} +
+
     - run: |
-        sudo apt-get update
-        sudo apt install linux-image-generic
-        # sudo apt install linux-modules-extra-5.15.0-100-generic
-        # sudo apt install linux-modules-extra-$(uname -r)
-        sudo depmod -a
-        sudo apt-get install alsa-base alsa-utils
-        ls -l /dev
-        sudo modprobe snd-seq
-        ls -l /dev/snd/seq
-    - run: |
-        uname -a
-        lsmod
+        ls -la /opt/hostedtoolcache/Ruby
     # - run: |
     #     echo "8.5.0" >> .bazelversion
     #     cat .bazelversion
@@ -85,12 +74,12 @@ jobs:
     #     sudo -u example-user printenv
     #     sudo -u example-user ls -la /home/example-user
 
-    - name: install uv
-      continue-on-error: true
-      run: |
-        sudo useradd --create-home --shell=/bin/bash example-user
-        # curl -LsSf https://astral.sh/uv/install.sh | sudo -i -u example-user env -u XDG_CONFIG_HOME sh
-        sudo -i -u example-user printenv
+    # - name: install uv
+    #   continue-on-error: true
+    #   run: |
+    #     sudo useradd --create-home --shell=/bin/bash example-user
+    #     # curl -LsSf https://astral.sh/uv/install.sh | sudo -i -u example-user env -u XDG_CONFIG_HOME sh
+    #     sudo -i -u example-user printenv
 
     # - name: view info
     #   run: |
@@ -99,10 +88,10 @@ jobs:
     #     echo runner
     #     sudo ls -la /home/runner/.config
 
-    - name: view jsonschema
-      run: |
-        pip3 install jsonschema
-        jsonschema --version
+    # - name: view jsonschema
+    #   run: |
+    #     pip3 install jsonschema
+    #     jsonschema --version
 
     # - name: Set up Docker in GitHub Actions
     #   uses: docker/setup-buildx-action@v2
