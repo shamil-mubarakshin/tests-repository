@@ -25,11 +25,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
+        ls -la /opt/hostedtoolcache
+        echo "====="
         ls -la /opt/hostedtoolcache/Ruby
         find /opt/hostedtoolcache/Ruby -type d -exec sudo chmod +t {} +
 
     - run: |
+        ls -la /opt/hostedtoolcache
+        echo "====="
         ls -la /opt/hostedtoolcache/Ruby
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
     # - run: |
     #     echo "8.5.0" >> .bazelversion
     #     cat .bazelversion
