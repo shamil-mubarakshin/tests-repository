@@ -12,12 +12,14 @@ jobs:
         # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
-    - shell: bash
-      run: |
-        echo "8.5.0" >> .bazelversion
-        cat .bazelversion
-        bazel --version
-        bazelisk --version
+    - run: |
+        winget install --id Microsoft.Azure.TrustedSigningClientTools -e --silent --accept-source-agreements --accept-package-agreements
+    # - shell: bash
+    #   run: |
+    #     echo "8.5.0" >> .bazelversion
+    #     cat .bazelversion
+    #     bazel --version
+    #     bazelisk --version
     # - shell: pwsh
     #   continue-on-error: true
     #   run: dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
@@ -33,11 +35,11 @@ jobs:
     #     if ($exitCode -eq 0) {
     #         Write-Host "Installation successful"
     #     }
-    - shell: pwsh
-      continue-on-error: true
-      run: |
-        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
-        dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
+    # - shell: pwsh
+    #   continue-on-error: true
+    #   run: |
+    #     dir "C:\Program Files (x86)\Windows Kits\10\Debuggers"
+    #     dir "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"
 
     # - shell: bash
     #   run: |
