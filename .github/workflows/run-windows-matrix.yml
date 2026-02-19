@@ -13,7 +13,9 @@ jobs:
       fail-fast: false
     steps:
     - run: |
-        winget install --id Microsoft.Azure.TrustedSigningClientTools -e --silent --accept-source-agreements --accept-package-agreements
+        npm install --loglevel verbose -g -f azure-streamanalytics-cicd
+    # - run: |
+    #     winget install --id Microsoft.Azure.TrustedSigningClientTools -e --silent --accept-source-agreements --accept-package-agreements
     # - shell: bash
     #   run: |
     #     echo "8.5.0" >> .bazelversion
