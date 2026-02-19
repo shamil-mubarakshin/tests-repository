@@ -17,6 +17,8 @@ jobs:
         dotnet-version: '6.0.x'
     - run: |
         npm install --loglevel verbose -g -f azure-streamanalytics-cicd
+    - run: |
+        dir "C:\npm\prefix\node_modules\azure-streamanalytics-cicd"
     # - run: |
     #     winget install --id Microsoft.Azure.TrustedSigningClientTools -e --silent --accept-source-agreements --accept-package-agreements
     # - shell: bash
