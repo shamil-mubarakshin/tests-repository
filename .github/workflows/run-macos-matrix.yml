@@ -15,19 +15,25 @@ jobs:
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
-      - name: Set default Xcode as ${{ matrix.xcode }}
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: ${{ matrix.xcode }}
-      - shell: pwsh
-        run: |
-          xcrun simctl list > /dev/null
-          $archSuffix = ""
-          if ("${{ matrix.xcode }}" -match '^(\d+)\.' -and [int]$matches[1] -ge 26) {
-                $archSuffix = "-architectureVariant universal"
-          }
-          Write-Host "Downloading iOS platform for Xcode version ${{ matrix.xcode }} '$archSuffix'"
-          xcodebuild -downloadPlatform iOS $archSuffix
+      - name: Check Xcode version
+        run: xcodebuild -version  
+      - name: Select Xcode version
+        run: sudo xcode-select --switch /Applications/Xcode_26.0.app/Contents/Developer
+      - name: Check Xcode version
+        run: xcodebuild -version  
+      # - name: Set default Xcode as ${{ matrix.xcode }}
+      #   uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: ${{ matrix.xcode }}
+      # - shell: pwsh
+      #   run: |
+      #     xcrun simctl list > /dev/null
+      #     $archSuffix = ""
+      #     if ("${{ matrix.xcode }}" -match '^(\d+)\.' -and [int]$matches[1] -ge 26) {
+      #           $archSuffix = "-architectureVariant universal"
+      #     }
+      #     Write-Host "Downloading iOS platform for Xcode version ${{ matrix.xcode }} '$archSuffix'"
+      #     xcodebuild -downloadPlatform iOS $archSuffix
     # - shell: bash
     #   run: |
     #     echo "8.5.0" >> .bazelversion
