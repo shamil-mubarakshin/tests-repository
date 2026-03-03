@@ -16,9 +16,13 @@ jobs:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
       - name: Check Xcode version
-        run: xcodebuild -version  
-      - name: Select Xcode version
-        run: sudo xcode-select --switch /Applications/Xcode_26.0.app/Contents/Developer
+        run: xcodebuild -version
+      - name: Set default Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.0'
+      # - name: Select Xcode version
+      #   run: sudo xcode-select --switch /Applications/Xcode_26.0.app/Contents/Developer
       - name: Check Xcode version
         run: xcodebuild -version  
       # - name: Set default Xcode as ${{ matrix.xcode }}
