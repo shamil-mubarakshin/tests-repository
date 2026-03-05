@@ -1,0 +1,75 @@
+name: (Reusable) Test
+run-name: Testing environments
+
+on:
+  workflow_call:
+    inputs:
+      arg1:
+        required: true
+        type: string
+      arg2:
+        required: true
+        type: string
+      arg3:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      arg1:
+        required: true
+        type: string
+      arg2:
+        required: true
+        type: string
+      arg3:
+        required: true
+        type: string
+
+concurrency:
+  group: Test - ${{ inputs.arg1 }} - ${{ inputs.arg2 }} - ${{ inputs.arg3 }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  prepare:
+    name: prepare test
+    runs-on: ubuntu-slim
+    environment: deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+  update:
+    name: Update Image
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        arg: ['${{ inputs.arg1 }}', '${{ inputs.arg2 }}', '${{ inputs.arg3 }}']
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - id: check-status
+        run: |
+          echo "arg=${{ matrix.arg }}" >> $GITHUB_OUTPUT
+
+  wait:
+    name: Check Image Update Status
+    runs-on: ubuntu-latest
+    needs: [prepare, update]
+    strategy:
+      matrix:
+        arg: ['${{ inputs.arg1 }}', '${{ inputs.arg2 }}', '${{ inputs.arg3 }}']
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - id: check-status
+        run: |
+          echo "arg=${{ matrix.arg }}" >> $GITHUB_OUTPUT
