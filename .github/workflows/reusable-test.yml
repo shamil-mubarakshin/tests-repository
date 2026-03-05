@@ -13,6 +13,10 @@ on:
       arg3:
         required: true
         type: string
+      environment:
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       arg1:
@@ -24,6 +28,10 @@ on:
       arg3:
         required: true
         type: string
+      environment:
+        required: false
+        type: string
+        default: ''
 
 concurrency:
   group: Test - ${{ inputs.arg1 }} - ${{ inputs.arg2 }} - ${{ inputs.arg3 }}
@@ -33,7 +41,7 @@ jobs:
   prepare:
     name: prepare test
     runs-on: ubuntu-slim
-    environment: deploy
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
