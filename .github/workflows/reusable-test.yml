@@ -29,10 +29,6 @@ concurrency:
   group: Test - ${{ inputs.arg1 }} - ${{ inputs.arg2 }} - ${{ inputs.arg3 }}
   cancel-in-progress: false
 
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
   prepare:
     name: prepare test
