@@ -8,13 +8,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022, windows-2025, windows-2025-vs2026, windows-2025, windows-2025, windows-2025, windows-2025, windows-2025, windows-2025, windows-2025 ]
+        os: [windows-2022, windows-2025, windows-2025-vs2026]
         # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
-    # - uses: actions/setup-dotnet@v5
-    #   with:
-    #     dotnet-version: '6.0.x'
+    - run: Get-HotFix
     - run: |
         npm install --loglevel verbose -g -f azure-streamanalytics-cicd
     - run: |
