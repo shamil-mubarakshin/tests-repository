@@ -12,7 +12,9 @@ jobs:
         # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
-    - run: Get-HotFix
+    - run: |
+        Get-HotFix
+        wmic qfe list
     - run: |
         npm install --loglevel verbose -g -f azure-streamanalytics-cicd
     - run: |
