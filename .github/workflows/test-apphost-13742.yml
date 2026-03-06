@@ -122,7 +122,16 @@ jobs:
         run: |
           $work = Join-Path $env:TEMP "issue-13742-repro"
           Push-Location $work
-          & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1'
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsPath = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          if (-not $vsPath) {
+            throw "Visual Studio installation path was not found via vswhere"
+          }
+          $devShell = Join-Path $vsPath "Common7\Tools\Launch-VsDevShell.ps1"
+          if (-not (Test-Path $devShell)) {
+            throw "Launch-VsDevShell.ps1 not found at $devShell"
+          }
+          & $devShell
           msbuild -m -t:Restore Repro.sln -p:RestoreUseSkipNonexistentTargets=false -v:minimal
           $code = $LASTEXITCODE
           Write-Host "Baseline restore exit code: $code"
