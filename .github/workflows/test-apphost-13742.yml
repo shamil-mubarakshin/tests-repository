@@ -114,7 +114,7 @@ jobs:
           Write-Host "Project created at $work"
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.103'
+          dotnet-version: '10.0.10x'
     
       - name: Baseline restore (expected to fail on impacted images)
         shell: pwsh
