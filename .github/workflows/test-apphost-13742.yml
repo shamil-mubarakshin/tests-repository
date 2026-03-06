@@ -1,0 +1,165 @@
+name: "Debug: .NET apphost pack mismatch - Issue #13742"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # dotnet-inventory:
+  #   name: Dotnet inventory (${{ matrix.os }})
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [windows-2022, windows-2025, ]
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - name: Runner image info
+  #       shell: pwsh
+  #       run: |
+  #         Write-Host "Runner: ${{ matrix.os }}"
+  #         Write-Host "ImageOS: $env:ImageOS"
+  #         Write-Host "ImageVersion: $env:ImageVersion"
+  #     - name: Dotnet SDK/runtime inventory
+  #       shell: pwsh
+  #       run: |
+  #         dotnet --info
+  #         Write-Host "=== dotnet --list-sdks ==="
+  #         dotnet --list-sdks
+  #         Write-Host "=== dotnet --list-runtimes ==="
+  #         dotnet --list-runtimes
+  #     - name: Apphost pack inventory (Windows)
+  #       if: runner.os == 'Windows'
+  #       shell: pwsh
+  #       run: |
+  #         $packRoot = "C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64"
+  #         Write-Host "=== Checking apphost pack root: $packRoot ==="
+  #         if (Test-Path $packRoot) {
+  #           Get-ChildItem $packRoot -Directory | Sort-Object Name | ForEach-Object {
+  #             Write-Host "Pack version: $($_.Name)"
+  #           }
+  #           $latest = Get-ChildItem $packRoot -Directory | Sort-Object Name | Select-Object -Last 1
+  #           if ($latest) {
+  #             Write-Host "Latest folder: $($latest.FullName)"
+  #             Get-ChildItem "$($latest.FullName)\runtimes\win-x64\native" -ErrorAction SilentlyContinue | Select-Object -First 10 | ForEach-Object {
+  #               Write-Host "  file: $($_.Name)"
+  #             }
+  #           }
+  #         } else {
+  #           Write-Host "Pack root not found"
+  #         }
+  windows-cppcli-repro:
+    name: C++/CLI restore repro (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, windows-2025, windows-2025-vs2026]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Runner image info
+        shell: pwsh
+        run: |
+          Write-Host "Runner: ${{ matrix.os }}"
+          Write-Host "ImageOS: $env:ImageOS"
+          Write-Host "ImageVersion: $env:ImageVersion"
+      - name: Create minimal C++/CLI project targeting net8.0
+        shell: pwsh
+        run: |
+          $work = Join-Path $env:TEMP "issue-13742-repro"
+          New-Item -Path $work -ItemType Directory -Force | Out-Null
+          @'
+          <?xml version="1.0" encoding="utf-8"?>
+          <Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+            <ItemGroup Label="ProjectConfigurations">
+              <ProjectConfiguration Include="Debug|x64">
+                <Configuration>Debug</Configuration>
+                <Platform>x64</Platform>
+              </ProjectConfiguration>
+            </ItemGroup>
+            <PropertyGroup Label="Globals">
+              <VCProjectVersion>17.0</VCProjectVersion>
+              <ProjectGuid>{84F25E09-2E6B-46BF-A9C9-BC779812ED87}</ProjectGuid>
+              <Keyword>ManagedCProj</Keyword>
+              <TargetFramework>net8.0</TargetFramework>
+            </PropertyGroup>
+            <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+            <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+              <ConfigurationType>DynamicLibrary</ConfigurationType>
+              <PlatformToolset>v143</PlatformToolset>
+              <CLRSupport>NetCore</CLRSupport>
+              <CharacterSet>Unicode</CharacterSet>
+            </PropertyGroup>
+            <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+            <ItemGroup>
+              <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
+            </ItemGroup>
+            <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+          </Project>
+          '@ | Set-Content -Path (Join-Path $work "Repro.vcxproj") -Encoding UTF8
+          @'
+          Microsoft Visual Studio Solution File, Format Version 12.00
+          # Visual Studio Version 17
+          VisualStudioVersion = 17.0.31903.59
+          MinimumVisualStudioVersion = 10.0.40219.1
+          Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Repro", "Repro.vcxproj", "{84F25E09-2E6B-46BF-A9C9-BC779812ED87}"
+          EndProject
+          Global
+            GlobalSection(SolutionConfigurationPlatforms) = preSolution
+              Debug|x64 = Debug|x64
+            EndGlobalSection
+            GlobalSection(ProjectConfigurationPlatforms) = postSolution
+              {84F25E09-2E6B-46BF-A9C9-BC779812ED87}.Debug|x64.ActiveCfg = Debug|x64
+              {84F25E09-2E6B-46BF-A9C9-BC779812ED87}.Debug|x64.Build.0 = Debug|x64
+            EndGlobalSection
+          EndGlobal
+          '@ | Set-Content -Path (Join-Path $work "Repro.sln") -Encoding UTF8
+          Write-Host "Project created at $work"
+      # - uses: actions/setup-dotnet@v5
+      #   with:
+      #     dotnet-version: '10.0.103'
+    
+      - name: Baseline restore (expected to fail on impacted images)
+        shell: pwsh
+        # continue-on-error: true
+        run: |
+          $work = Join-Path $env:TEMP "issue-13742-repro"
+          Push-Location $work
+          & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1'
+          msbuild -m -t:Restore Repro.sln -p:RestoreUseSkipNonexistentTargets=false -v:minimal
+          $code = $LASTEXITCODE
+          Write-Host "Baseline restore exit code: $code"
+          if ($code -ne 0) {
+            Write-Host "Baseline restore failed. This is expected on impacted images."
+          }
+          Pop-Location
+      # - name: Apply known workaround and re-run restore
+      #   shell: pwsh
+      #   continue-on-error: true
+      #   run: |
+      #     $work = Join-Path $env:TEMP "issue-13742-repro"
+      #     $projPath = Join-Path $work "Repro.vcxproj"
+      #     [xml]$proj = Get-Content $projPath
+      #     $ns = New-Object System.Xml.XmlNamespaceManager($proj.NameTable)
+      #     $ns.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003")
+      #     $projectNode = $proj.SelectSingleNode("/msb:Project", $ns)
+      #     $itemGroup = $proj.CreateElement("ItemGroup", "http://schemas.microsoft.com/developer/msbuild/2003")
+      #     $knownAppHostPack = $proj.CreateElement("KnownAppHostPack", "http://schemas.microsoft.com/developer/msbuild/2003")
+      #     $knownAppHostPack.SetAttribute("Update", "@(KnownAppHostPack)")
+      #     $appHostPackVersion = $proj.CreateElement("AppHostPackVersion", "http://schemas.microsoft.com/developer/msbuild/2003")
+      #     $appHostPackVersion.SetAttribute("Condition", "'%(TargetFramework)' == 'net8.0'")
+      #     $appHostPackVersion.InnerText = "8.0.24"
+      #     $knownAppHostPack.AppendChild($appHostPackVersion) | Out-Null
+      #     $knownFrameworkReference = $proj.CreateElement("KnownFrameworkReference", "http://schemas.microsoft.com/developer/msbuild/2003")
+      #     $knownFrameworkReference.SetAttribute("Update", "@(KnownFrameworkReference)")
+      #     $targetingPackVersion = $proj.CreateElement("TargetingPackVersion", "http://schemas.microsoft.com/developer/msbuild/2003")
+      #     $targetingPackVersion.SetAttribute("Condition", "'%(TargetFramework)' == 'net8.0'")
+      #     $targetingPackVersion.InnerText = "8.0.24"
+      #     $knownFrameworkReference.AppendChild($targetingPackVersion) | Out-Null
+      #     $itemGroup.AppendChild($knownAppHostPack) | Out-Null
+      #     $itemGroup.AppendChild($knownFrameworkReference) | Out-Null
+      #     $projectNode.AppendChild($itemGroup) | Out-Null
+      #     $proj.Save($projPath)
+      #     Push-Location $work
+      #     & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1'
+      #     msbuild -m -t:Restore Repro.sln -p:RestoreUseSkipNonexistentTargets=false -v:minimal
+      #     $code = $LASTEXITCODE
+      #     Write-Host "Workaround restore exit code: $code"
+      #     Pop-Location
