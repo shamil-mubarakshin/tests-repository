@@ -112,9 +112,9 @@ jobs:
           EndGlobal
           '@ | Set-Content -Path (Join-Path $work "Repro.sln") -Encoding UTF8
           Write-Host "Project created at $work"
-      # - uses: actions/setup-dotnet@v5
-      #   with:
-      #     dotnet-version: '10.0.103'
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.103'
     
       - name: Baseline restore (expected to fail on impacted images)
         shell: pwsh
