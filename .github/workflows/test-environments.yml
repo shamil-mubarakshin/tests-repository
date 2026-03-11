@@ -13,6 +13,15 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
+  deploy2:
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a one-line script
+        run: echo Hello, world!
+
   update-1:
     name: Test 1
     needs: [deploy]
