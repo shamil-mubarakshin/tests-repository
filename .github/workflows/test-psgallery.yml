@@ -24,7 +24,7 @@ jobs:
           Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Force
 
       - name: output info
-        # if: failure()
+        if: failure()
         shell: pwsh
         run: |
           Write-Host 'Get-PSRepository (before install)'
