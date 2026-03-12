@@ -22,3 +22,17 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Force
+
+      - name: output info
+        # if: failure()
+        shell: pwsh
+        run: |
+          Write-Host 'Get-PSRepository (before install)'
+          Get-PSRepository -ErrorAction SilentlyContinue | Format-List *
+          Write-Host 'Get-PackageSource (before install)'
+          Get-PackageSource -ErrorAction SilentlyContinue | Format-Table -AutoSize
+          Write-Host "Installed PowerShell modules/providers"
+          Get-Module -ListAvailable PowerShellGet, PackageManagement -ErrorAction SilentlyContinue | Sort-Object Name, Version | Format-Table Name, Version, Path -AutoSize
+          Get-PackageProvider -ErrorAction SilentlyContinue | Format-Table Name, Version, ProviderPath -AutoSize
+          Write-Host "Install-Module (expected to fail when PSGallery missing)"
+          Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Force -ErrorAction SilentlyContinue
