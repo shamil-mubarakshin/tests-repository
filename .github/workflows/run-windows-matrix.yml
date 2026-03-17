@@ -23,8 +23,8 @@ jobs:
         $installDir = "C:\Temp\LLVM"
         $downloadUrl = Resolve-GithubReleaseAssetUrl `
             -Repository "llvm/llvm-project" `
-            -Version $llvmVersion `
-            -UrlMatchPattern "clang%2Bllvm-*-aarch64-pc-windows-msvc.tar.xz"
+            -Version "20.1.6" `
+            -UrlMatchPattern "clang*llvm-*-aarch64-pc-windows-msvc.tar.xz"
     
         Write-Host "Download LLVM $llvmVersion ARM64 archive"
         $archivePath = Invoke-DownloadWithRetry $downloadUrl
