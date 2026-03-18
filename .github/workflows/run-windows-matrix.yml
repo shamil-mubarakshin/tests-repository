@@ -16,6 +16,7 @@ jobs:
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
         (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
     - run: |
+        get-command Rscript | fl *
         function Test-IsArm64 {
             (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture -match "ARM 64-bit"
         }
