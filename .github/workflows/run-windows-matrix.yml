@@ -14,6 +14,12 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: |
+        $sidStr = (New-Object Security.Principal.NTAccount("runner")).Translate([Security.Principal.SecurityIdentifier]).Value
+        $tmpFile = [IO.Path]::GetTempFileName()
+        secedit /export /cfg $tmpFile /areas USER_RIGHTS /quiet
+        $policy = Get-Content $tmpFile -Raw
+        $policy
+    - run: |
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
         (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
     - run: |
