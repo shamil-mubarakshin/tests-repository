@@ -30,8 +30,6 @@ jobs:
         Set-Content $tmpFile $policy
         write-host "setting"
         secedit /configure /db "$env:TEMP\secedit.sdb" /cfg $tmpFile /areas USER_RIGHTS /quiet
-        write-host "removing"
-        Remove-Item $tmpFile
     - run: |
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
         (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
