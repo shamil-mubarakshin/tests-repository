@@ -14,7 +14,7 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: |
-        # $sidStr = (New-Object Security.Principal.NTAccount("runner")).Translate([Security.Principal.SecurityIdentifier]).Value
+        $sidStr = (New-Object Security.Principal.NTAccount("installer")).Translate([Security.Principal.SecurityIdentifier]).Value
         $tmpFile = [IO.Path]::GetTempFileName()
         secedit /export /cfg $tmpFile /areas USER_RIGHTS /quiet
         $policy = Get-Content $tmpFile -Raw
