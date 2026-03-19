@@ -12,6 +12,7 @@ jobs:
         # node: ['22.x', 'lts/*']
       fail-fast: false
     steps:
+    - run: bcdedit.exe
     - run: |
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
         (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
