@@ -13,8 +13,10 @@ jobs:
       fail-fast: false
     steps:
     - run: bcdedit.exe
+    - run: Get-LocalUser | Select-Object Name, SID
     - run: |
         $sidStr = (New-Object Security.Principal.NTAccount("installer")).Translate([Security.Principal.SecurityIdentifier]).Value
+        $sidStr
         $tmpFile = [IO.Path]::GetTempFileName()
         secedit /export /cfg $tmpFile /areas USER_RIGHTS /quiet
         $policy = Get-Content $tmpFile -Raw
