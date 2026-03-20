@@ -15,7 +15,10 @@ jobs:
     steps:
       # - name: Checkout repository
       #   uses: actions/checkout@v3
-      - run: clang --version
+      - run: |
+          which clang
+          clang --version
+      - run: /usr/bin/clang --version
       # - name: Check Xcode version
       #   run: xcodebuild -version
       # - name: Set default Xcode
