@@ -14,19 +14,10 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
-    - shell: powershell
+    - shell: pwsh
       run: |
-        if ((Test-IsWin22) -or (Test-IsWin11)) {
-            write-host "installing"
-            $cargoArgs = if (Test-IsWin22) { @("--locked") } else { @() }
-            cargo install @cargoArgs bindgen-cli cbindgen cargo-audit cargo-outdated
-            write-host "installed"
-            if ($LASTEXITCODE -ne 0) {
-                throw "Rust tools installation failed with exit code $LASTEXITCODE"
-            }
-            # Cleanup Cargo crates cache
-            Remove-Item "${env:CARGO_HOME}\registry\*" -Recurse -Force
-        }
+        rustup target add aarch64-pc-windows-msvc
+        cargo install aws-lc-sys
     - run: |
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
         (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
