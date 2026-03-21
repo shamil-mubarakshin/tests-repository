@@ -17,6 +17,10 @@ jobs:
     - shell: pwsh
       run: |
         rustup target add aarch64-pc-windows-msvc
+        cargo uninstall cargo-audit
+    - shell: pwsh
+      run: |
+        rustup target add aarch64-pc-windows-msvc
         cargo install cargo-audit
     - run: |
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
