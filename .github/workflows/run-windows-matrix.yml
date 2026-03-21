@@ -17,7 +17,7 @@ jobs:
     - shell: pwsh
       run: |
         rustup target add aarch64-pc-windows-msvc
-        cargo uninstall cargo-audit
+        cargo uninstall cargo-audit aws-lc-sys
     - shell: pwsh
       run: |
         rustup target add aarch64-pc-windows-msvc
