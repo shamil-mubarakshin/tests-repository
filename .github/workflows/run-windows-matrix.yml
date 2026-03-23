@@ -14,7 +14,24 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
-    - run: |
+    - run: |       
+        $filter = @{
+            LogName      = "System"
+            Id           = 19, 20, 43
+            ProviderName = "Microsoft-Windows-WindowsUpdateClient"
+        }
+        $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
+        $events | sort TimeCreated | fl *
+        Get-AppxPackage -AllUsers
+    - run: start-sleep 10000
+    - run: |       
+        $filter = @{
+            LogName      = "System"
+            Id           = 19, 20, 43
+            ProviderName = "Microsoft-Windows-WindowsUpdateClient"
+        }
+        $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
+        $events | sort TimeCreated | fl *
         Get-AppxPackage -AllUsers
     # - shell: pwsh
     #   run: |
