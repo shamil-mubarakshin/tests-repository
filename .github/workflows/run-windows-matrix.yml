@@ -15,7 +15,7 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: |
-        Get-WUHistory
+        winget list
     # - shell: pwsh
     #   run: |
     #     rustup target add aarch64-pc-windows-msvc
