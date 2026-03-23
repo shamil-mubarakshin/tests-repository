@@ -15,7 +15,7 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: |
-        winget list
+        winget list --disable-interactivity
     # - shell: pwsh
     #   run: |
     #     rustup target add aarch64-pc-windows-msvc
