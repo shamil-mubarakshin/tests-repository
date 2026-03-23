@@ -14,31 +14,44 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
-    - shell: pwsh
-      run: |
-        rustup target add aarch64-pc-windows-msvc
-        cargo uninstall cargo-audit aws-lc-sys
-    - shell: pwsh
-      run: |
-        rustup target add aarch64-pc-windows-msvc
-        cargo install cargo-audit
+    # - shell: pwsh
+    #   run: |
+    #     rustup target add aarch64-pc-windows-msvc
+    #     cargo uninstall cargo-audit aws-lc-sys
+    # - shell: pwsh
+    #   run: |
+    #     rustup target add aarch64-pc-windows-msvc
+    #     cargo install cargo-audit
     - run: |
         Get-CimInstance -ClassName Win32_OperatingSystem | fl *
         (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture
     - run: |
-        get-command Rscript | fl *
-        function Test-IsArm64 {
-            (Get-CimInstance -ClassName Win32_OperatingSystem).OSArchitecture -match "ARM 64-bit"
-        }
+        gcm clang
+        clang --version
+        $env:TEMP_DIR = "C:\Temp"
+        $installDir = "C:\Temp\LLVM"
+        $downloadUrl = Resolve-GithubReleaseAssetUrl `
+            -Repository "llvm/llvm-project" `
+            -Version "20.1.6" `
+            -UrlMatchPattern "clang*llvm-*-aarch64-pc-windows-msvc.tar.xz"
+    
+        Write-Host "Download LLVM $llvmVersion ARM64 archive"
+        $archivePath = Invoke-DownloadWithRetry $downloadUrl
+    
+        Write-Host "Extract LLVM archive"
+        $tarPath = $archivePath -replace '\.xz$'
+        Expand-7ZipArchive -Path $archivePath -DestinationPath (Split-Path $archivePath)
+        Expand-7ZipArchive -Path $tarPath -DestinationPath $env:TEMP_DIR
+        dir "C:\Temp"
+    
+        Write-Host "Install LLVM to $installDir"
+        $extractedDir = Get-ChildItem -Path $env:TEMP_DIR -Directory -Filter "clang+llvm-*" | Select-Object -First 1
+        Move-Item -Path $extractedDir.FullName -Destination $installDir -Force
 
-        if (Test-IsArm64) {
-            $rscriptPathPattern = "C:\Program Files (x86)\R\*\bin\x64"
-        } else {
-            $rscriptPathPattern = "C:\Program Files\R\*\bin\x64"
-        }
+        Write-Host "view folders"
+        dir "C:\Temp"
+        dir $installDir
         
-        $rscriptPath = Resolve-Path $rscriptPathPattern
-        $rscriptPath
 
     # - run: |
     #     npm install --loglevel verbose -g -f azure-streamanalytics-cicd
