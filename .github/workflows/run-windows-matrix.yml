@@ -15,13 +15,7 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: |
-        $filter = @{
-            LogName      = "System"
-            Id           = 19, 20, 43
-            ProviderName = "Microsoft-Windows-WindowsUpdateClient"
-        }
-        $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
-        $events | sort TimeCreated | fl *
+        Get-WUHistory
     # - shell: pwsh
     #   run: |
     #     rustup target add aarch64-pc-windows-msvc
