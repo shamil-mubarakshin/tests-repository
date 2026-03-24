@@ -23,7 +23,7 @@ jobs:
         $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
         $events | sort TimeCreated | fl *
         Get-AppxPackage -AllUsers
-    - run: start-sleep 10000
+    - run: start-sleep 16000
     - run: |       
         $filter = @{
             LogName      = "System"
