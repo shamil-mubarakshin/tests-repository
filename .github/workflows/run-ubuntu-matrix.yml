@@ -24,7 +24,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - run: getenv
+    - run: printenv
     - run: |
         docker --version
         containerd --version
