@@ -6,7 +6,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: deploy
+    strategy:
+      matrix:
+        environment: ["deploy", "deploy2"]
+    environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
 
