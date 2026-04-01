@@ -21,7 +21,7 @@ jobs:
         get-content "c:\programdata\docker\config\daemon.json"
     - if: always()
       run: |
-        dir "c:\programdata\microsoft\windows\hns"
+        get-netadapter | fl *
 
     # - run: |       
     #     $filter = @{
