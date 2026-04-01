@@ -15,25 +15,22 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
-    - run: |       
-        $filter = @{
-            LogName      = "System"
-            Id           = 19, 20, 43
-            ProviderName = "Microsoft-Windows-WindowsUpdateClient"
-        }
-        $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
-        $events | sort TimeCreated | fl *
-        Get-AppxPackage -AllUsers
+    - run: |
+        docker ps
+        dir "c:\programdata\docker\config"
+        get-content "c:\programdata\docker\config\daemon.json"
+    # - run: |       
+    #     $filter = @{
+    #         LogName      = "System"
+    #         Id           = 19, 20, 43
+    #         ProviderName = "Microsoft-Windows-WindowsUpdateClient"
+    #     }
+    #     $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
+    #     $events | sort TimeCreated | fl *
+    #     Get-AppxPackage -AllUsers
+    
     # - run: start-sleep 16000
-    - run: |       
-        $filter = @{
-            LogName      = "System"
-            Id           = 19, 20, 43
-            ProviderName = "Microsoft-Windows-WindowsUpdateClient"
-        }
-        $events = Get-WinEvent -FilterHashtable $filter -ErrorAction SilentlyContinue | Sort-Object Id
-        $events | sort TimeCreated | fl *
-        Get-AppxPackage -AllUsers
+
     # - shell: pwsh
     #   run: |
     #     rustup target add aarch64-pc-windows-msvc
