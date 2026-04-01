@@ -14,7 +14,10 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
-    - run: Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
+    - continue-on-error: true
+      run: |
+        Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
+        Get-ItemProperty "C:\Windows\System32\symcryptk.dll" | fl *
     - run: |
         docker ps
         dir "c:\programdata\docker\config"
