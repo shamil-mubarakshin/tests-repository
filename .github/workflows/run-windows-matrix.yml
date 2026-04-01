@@ -17,7 +17,7 @@ jobs:
     - continue-on-error: true
       run: |
         Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
-        Get-ItemProperty "C:\Windows\System32\symcryptk.dll" | fl *
+        # Get-ItemProperty "C:\Windows\System32\symcryptk.dll" | fl *
     - run: |
         docker ps
         dir "c:\programdata\docker\config"
