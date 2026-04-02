@@ -15,10 +15,10 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: |
-        $srvManagerTask = Get-ScheduledTask -TaskName ServerManager
+        $srvManagerTask = Get-ScheduledTask -TaskName "ServerManager"
         $srvManagerTask
         if ($srvManagerTask) {
-            Disable-ScheduledTask -TaskName ServerManager
+            Disable-ScheduledTask -TaskName "ServerManager"
         }
     - continue-on-error: true
       run: |
