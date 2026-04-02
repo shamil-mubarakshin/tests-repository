@@ -14,6 +14,12 @@ jobs:
     steps:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
+    - run: |
+        $srvManagerTask = Get-ScheduledTask -TaskName ServerManager
+        $srvManagerTask
+        if ($srvManagerTask) {
+            Disable-ScheduledTask -TaskName ServerManager
+        }
     - continue-on-error: true
       run: |
         Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
