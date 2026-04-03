@@ -25,11 +25,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
-        NETHOST_PATH=$(find /usr/share/dotnet/packs/Microsoft.NETCore.App.Host.linux-x64 -name "libnethost.so" -type f | head -n 1)
-        NETHOST_DIR=$(dirname "$NETHOST_PATH")
-        echo "Found libnethost.so at: $NETHOST_DIR"
-        sudo ldconfig
-        cat /etc/ld.so.conf.d/dotnet-nethost.conf
+        sudo apt-cache policy sudo
+        sudo apt-cache policy util-linux
+    # - run: |
+    #     NETHOST_PATH=$(find /usr/share/dotnet/packs/Microsoft.NETCore.App.Host.linux-x64 -name "libnethost.so" -type f | head -n 1)
+    #     NETHOST_DIR=$(dirname "$NETHOST_PATH")
+    #     echo "Found libnethost.so at: $NETHOST_DIR"
+    #     sudo ldconfig
+    #     cat /etc/ld.so.conf.d/dotnet-nethost.conf
         
     - run: |
         docker --version
