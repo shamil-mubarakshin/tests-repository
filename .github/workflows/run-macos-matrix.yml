@@ -19,6 +19,9 @@ jobs:
           which clang
           clang --version
       - run: /usr/bin/clang --version
+      - run: |
+          simList=$(xcrun xctrace list devices 2>&1)
+          echo "$simList"
       # - name: Check Xcode version
       #   run: xcodebuild -version
       # - name: Set default Xcode
