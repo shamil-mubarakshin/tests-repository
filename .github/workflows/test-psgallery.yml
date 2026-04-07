@@ -3,7 +3,7 @@ name: Repro PSGallery missing on windows-2025
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/30 * * * *'
 
 permissions:
   contents: read
