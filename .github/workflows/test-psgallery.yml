@@ -35,4 +35,13 @@ jobs:
           Get-Module -ListAvailable PowerShellGet, PackageManagement -ErrorAction SilentlyContinue | Sort-Object Name, Version | Format-Table Name, Version, Path -AutoSize
           Get-PackageProvider -ErrorAction SilentlyContinue | Format-Table Name, Version, ProviderPath -AutoSize
           Write-Host "Install-Module (expected to fail when PSGallery missing)"
-          Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Force -ErrorAction SilentlyContinue
+          Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Force
+
+      - name: output info
+        if: failure()
+        shell: pwsh
+        run: |
+          if (-not (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+              Register-PSRepository -Default
+              Install-Module -Name Microsoft.WinGet.Client -Repository PSGallery -Force
+          }
