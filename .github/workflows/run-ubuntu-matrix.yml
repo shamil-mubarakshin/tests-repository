@@ -24,6 +24,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - run: cat /sys/block/sd*/queue/read_ahead_kb
     - run: |
         sudo apt-cache policy sudo
         sudo apt-cache policy util-linux
