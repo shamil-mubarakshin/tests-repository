@@ -15,8 +15,7 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: |
-        # New-Item -Path $env:windir -Name WindowsUpdateDone.txt -ItemType File
-        Remove-Item "$env:windir\WindowsUpdateDone.txt"
+        Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\Spynet"
     - run: |
         $srvManagerTask = Get-ScheduledTask -TaskName "ServerManager"
         $srvManagerTask
