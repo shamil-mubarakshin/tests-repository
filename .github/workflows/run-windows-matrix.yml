@@ -15,19 +15,22 @@ jobs:
     - run: bcdedit.exe
     - run: Get-LocalUser | Select-Object Name, SID
     - run: |
+        New-Item -Path $env:windir -Name WindowsUpdateDone.txt -ItemType File
+        Remove-Item "$env:windir\WindowsUpdateDone.txt"
+    - run: |
         $srvManagerTask = Get-ScheduledTask -TaskName "ServerManager"
         $srvManagerTask
         if ($srvManagerTask) {
             Disable-ScheduledTask -TaskName "ServerManager"
         }
-    - continue-on-error: true
-      run: |
-        Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
-        # Get-ItemProperty "C:\Windows\System32\symcryptk.dll" | fl *
-    - run: |
-        docker ps
-        dir "c:\programdata\docker\config"
-        get-content "c:\programdata\docker\config\daemon.json"
+    # - continue-on-error: true
+    #   run: |
+    #     Get-ItemProperty "C:\Windows\System32\symcrypt.dll" | fl *
+    #     # Get-ItemProperty "C:\Windows\System32\symcryptk.dll" | fl *
+    # - run: |
+    #     docker ps
+    #     dir "c:\programdata\docker\config"
+    #     get-content "c:\programdata\docker\config\daemon.json"
     - if: always()
       run: |
         get-netadapter | fl *
