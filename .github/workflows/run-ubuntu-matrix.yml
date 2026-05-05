@@ -28,6 +28,12 @@ jobs:
     - run: |
         dpkg -l kmod
         grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
+        sudo apt update && sudo apt upgrade
+        # sudo apt-cache policy sudo
+        # sudo apt-cache policy util-linux
+    - run: |
+        dpkg -l kmod
+        grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
         # sudo apt-cache policy sudo
         # sudo apt-cache policy util-linux
     # - run: |
