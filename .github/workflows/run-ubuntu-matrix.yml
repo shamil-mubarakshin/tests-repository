@@ -26,8 +26,9 @@ jobs:
       uses: actions/checkout@v4
     - run: cat /sys/block/sd*/queue/read_ahead_kb
     - run: |
-        sudo apt-cache policy sudo
-        sudo apt-cache policy util-linux
+        dpkg -l kmod
+        # sudo apt-cache policy sudo
+        # sudo apt-cache policy util-linux
     # - run: |
     #     NETHOST_PATH=$(find /usr/share/dotnet/packs/Microsoft.NETCore.App.Host.linux-x64 -name "libnethost.so" -type f | head -n 1)
     #     NETHOST_DIR=$(dirname "$NETHOST_PATH")
