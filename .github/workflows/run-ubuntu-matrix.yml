@@ -24,7 +24,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - run: cat /sys/block/sd*/queue/read_ahead_kb
+    - run: |
+        cat /sys/block/sd*/queue/read_ahead_kb
+        uname -m
     - run: |
         dpkg -l kmod
         grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
