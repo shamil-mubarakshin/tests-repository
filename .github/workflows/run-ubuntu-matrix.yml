@@ -27,7 +27,9 @@ jobs:
     - run: |
         cat /sys/block/sd*/queue/read_ahead_kb
         uname -m
-        sudo apt search --names-only powershell
+        ls -la /etc/apt/sources.list.d
+        echo ====
+        ls -la /etc/cron.daily
     - run: |
         dpkg -l kmod
         grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
