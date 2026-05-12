@@ -24,6 +24,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '4.0' 
     - run: |
         # cat /sys/block/sd*/queue/read_ahead_kb
         uname -m
