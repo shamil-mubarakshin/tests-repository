@@ -28,13 +28,17 @@ jobs:
       with:
         ruby-version: '4.0' 
     - run: |
+        ls -la /opt/hostedtoolcache/Ruby
+        ls -la /opt/hostedtoolcache/Ruby/4.0.4
+        ls -la /opt/hostedtoolcache/Ruby/4.0.4/*/bin
+    - run: |
         # cat /sys/block/sd*/queue/read_ahead_kb
         uname -m
         ls -la /etc/apt/sources.list.d
         echo ====
         ls -la /etc/cron.daily
-        echo ====
-        cat /opt/microsoft/msedge/cron/microsoft-edge
+        # echo ====
+        # cat /opt/microsoft/msedge/cron/microsoft-edge
     - run: |
         dpkg -l kmod
         grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
