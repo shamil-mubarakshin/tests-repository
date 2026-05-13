@@ -29,6 +29,7 @@ jobs:
         ruby-version: '4.0' 
     - run: |
         ls -la /usr/bin | grep -i google
+        ls -la /usr/lib/google-cloud-sdk/bin
     - run: |
         ls -la /opt/hostedtoolcache/Ruby
         ls -la /opt/hostedtoolcache/Ruby/4.0.4
