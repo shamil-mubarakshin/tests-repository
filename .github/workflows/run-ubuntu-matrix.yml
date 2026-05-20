@@ -24,35 +24,43 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '4.0' 
     - run: |
-        ls -la /usr/bin | grep -i google
-        ls -la /usr/lib/google-cloud-sdk/bin
+        helm version
+        helm version --short
     - run: |
-        ls -la /opt/hostedtoolcache/Ruby
-        ls -la /opt/hostedtoolcache/Ruby/4.0.4
-        ls -la /opt/hostedtoolcache/Ruby/4.0.4/*/bin
+        curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-4 | bash
     - run: |
-        # cat /sys/block/sd*/queue/read_ahead_kb
-        uname -m
-        ls -la /etc/apt/sources.list.d
-        echo ====
-        ls -la /etc/cron.daily
-        # echo ====
-        # cat /opt/microsoft/msedge/cron/microsoft-edge
-    - run: |
-        dpkg -l kmod
-        grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
-        sudo apt update && sudo apt upgrade
-        # sudo apt-cache policy sudo
-        # sudo apt-cache policy util-linux
-    - run: |
-        dpkg -l kmod
-        grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
-        # sudo apt-cache policy sudo
-        # sudo apt-cache policy util-linux
+        helm version
+        helm version --short
+    # - uses: ruby/setup-ruby@v1
+    #   with:
+    #     ruby-version: '4.0' 
+    # - run: |
+    #     ls -la /usr/bin | grep -i google
+    #     ls -la /usr/lib/google-cloud-sdk/bin
+    # - run: |
+    #     ls -la /opt/hostedtoolcache/Ruby
+    #     ls -la /opt/hostedtoolcache/Ruby/4.0.4
+    #     ls -la /opt/hostedtoolcache/Ruby/4.0.4/*/bin
+    # - run: |
+    #     # cat /sys/block/sd*/queue/read_ahead_kb
+    #     uname -m
+    #     ls -la /etc/apt/sources.list.d
+    #     echo ====
+    #     ls -la /etc/cron.daily
+    #     # echo ====
+    #     # cat /opt/microsoft/msedge/cron/microsoft-edge
+    # - run: |
+    #     dpkg -l kmod
+    #     grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
+    #     sudo apt update && sudo apt upgrade
+    #     # sudo apt-cache policy sudo
+    #     # sudo apt-cache policy util-linux
+    # - run: |
+    #     dpkg -l kmod
+    #     grep -qE '^algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
+    #     # sudo apt-cache policy sudo
+    #     # sudo apt-cache policy util-linux
     # - run: |
     #     NETHOST_PATH=$(find /usr/share/dotnet/packs/Microsoft.NETCore.App.Host.linux-x64 -name "libnethost.so" -type f | head -n 1)
     #     NETHOST_DIR=$(dirname "$NETHOST_PATH")
