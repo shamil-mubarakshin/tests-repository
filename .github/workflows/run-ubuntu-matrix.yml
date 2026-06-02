@@ -25,13 +25,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
-        helm version
-        helm version --short
-    - run: |
-        curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-4 | bash
-    - run: |
-        helm version
-        helm version --short
+        sudo apt-get install -y mokutil
+        mokutil --sb-state
+    # - run: |
+    #     helm version
+    #     helm version --short
+    # - run: |
+    #     curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-4 | bash
+    # - run: |
+    #     helm version
+    #     helm version --short
     # - uses: ruby/setup-ruby@v1
     #   with:
     #     ruby-version: '4.0' 
