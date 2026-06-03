@@ -24,9 +24,16 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - run: |
-        sudo apt-get install -y mokutil
-        mokutil --sb-state
+    - name: Julia
+      run: |
+        curl -fsSL https://install.julialang.org | sh -s -- -y
+        # Depending on which shell you are using, run one of the following
+        # commands to reload the PATH environment variable:
+        . /Users/runner/.bashrc
+        . /Users/runner/.bash_profile
+        . /Users/runner/.zshrc
+        julia --version
+        juliaup --version
     # - run: |
     #     helm version
     #     helm version --short
