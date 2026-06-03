@@ -31,7 +31,7 @@ jobs:
         # commands to reload the PATH environment variable:
         # . /Users/runner/.bashrc
         . /Users/runner/.bash_profile
-        . /Users/runner/.zshrc
+        # . /Users/runner/.zshrc
         julia --version
         juliaup --version
     # - run: |
