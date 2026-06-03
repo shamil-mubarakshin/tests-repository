@@ -30,8 +30,9 @@ jobs:
         # Depending on which shell you are using, run one of the following
         # commands to reload the PATH environment variable:
         # . /Users/runner/.bashrc
-        . /Users/runner/.bash_profile
+        # . /Users/runner/.bash_profile
         # . /Users/runner/.zshrc
+        ls -la /Users/runner
         julia --version
         juliaup --version
     # - run: |
