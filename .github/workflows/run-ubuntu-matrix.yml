@@ -29,7 +29,7 @@ jobs:
         curl -fsSL https://install.julialang.org | sh -s -- -y
         # Depending on which shell you are using, run one of the following
         # commands to reload the PATH environment variable:
-        . /Users/runner/.bashrc
+        # . /Users/runner/.bashrc
         . /Users/runner/.bash_profile
         . /Users/runner/.zshrc
         julia --version
