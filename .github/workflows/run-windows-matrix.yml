@@ -34,6 +34,7 @@ jobs:
             Where-Object Message -Match 'WidgetsPlatformRuntime' | Format-List TimeCreated, Id, Message
 
         Write-Host "full appx logs"
+        New-Item -Path "C:\temp\appxlog.txt" -ItemType File -Force
         Get-AppxLog -All | Out-File C:\temp\appxlog.txt
         get-content C:\temp\appxlog.txt
     # - run: |
