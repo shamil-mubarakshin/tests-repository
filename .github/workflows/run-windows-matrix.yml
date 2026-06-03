@@ -20,7 +20,7 @@ jobs:
         Write-Host "Raw events with error codes / messages"
         Get-WinEvent -FilterHashtable @{
             LogName='System'; ProviderName='Microsoft-Windows-WindowsUpdateClient'; Id=19,20,43
-        } | Where-Object Message -Match 'WidgetsPlatformRuntime' |
+        } -erroraction silentlycontinue | Where-Object Message -Match 'WidgetsPlatformRuntime' |
             Select-Object TimeCreated, Id, Message | Format-List
         
         Write-Host "Current package state for the Widgets runtime"
