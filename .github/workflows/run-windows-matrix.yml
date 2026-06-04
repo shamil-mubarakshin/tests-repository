@@ -13,6 +13,8 @@ jobs:
       fail-fast: false
     steps:
     - run: |
+        [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
+    - run: |
         Write-Host "Get-WindowsUpdateStates"
         Import-Module "$env:windir\..\image-generation\helpers\ImageHelpers.psm1" -ErrorAction SilentlyContinue
         Get-WindowsUpdateStates | Where-Object Title -Match 'WidgetsPlatformRuntime'
