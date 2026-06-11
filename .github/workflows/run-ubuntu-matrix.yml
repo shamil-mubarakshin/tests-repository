@@ -24,6 +24,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - uses: pulumi/actions@v7
     - name: Julia
       run: |
         curl -fsSL https://install.julialang.org | sh -s -- -y
