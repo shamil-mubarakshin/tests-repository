@@ -13,7 +13,8 @@ jobs:
           fetch-depth: 0
 
       - name: TruffleHog scan
-        uses: trufflesecurity/trufflehog@main
+        # uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@afbdaa87d92085e0755bd00122d8e14ad0007692
         with:
           path: ./
           base: ${{ github.event.pull_request.base.ref }}
