@@ -1,0 +1,33 @@
+name: TruffleHog
+
+on:
+  pull_request:
+
+jobs:
+  trufflehog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.pull_request.base.ref }}
+          head: HEAD
+          extra_args: --debug --no-verification --filter-entropy=3 --exclude-paths .truffleignore
+
+      # - name: Comment on PR if secrets detected
+      #   if: failure()
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       github.rest.issues.createComment({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: '⚠️ TruffleHog detected potential secrets in this PR. Please review the workflow logs and remove any sensitive data.'
+      #       })
