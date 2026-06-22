@@ -24,18 +24,20 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - uses: pulumi/actions@v7
-    - name: Julia
-      run: |
-        curl -fsSL https://install.julialang.org | sh -s -- -y
-        # Depending on which shell you are using, run one of the following
-        # commands to reload the PATH environment variable:
-        ls -la /home/runner
-        . /home/runner/.bashrc
-        . /home/runner/.profile
-        . /home/runner/.bash_profile
-        julia --version
-        juliaup --version
+    - run: |
+        ps -ef
+    # - uses: pulumi/actions@v7
+    # - name: Julia
+    #   run: |
+    #     curl -fsSL https://install.julialang.org | sh -s -- -y
+    #     # Depending on which shell you are using, run one of the following
+    #     # commands to reload the PATH environment variable:
+    #     ls -la /home/runner
+    #     . /home/runner/.bashrc
+    #     . /home/runner/.profile
+    #     . /home/runner/.bash_profile
+    #     julia --version
+    #     juliaup --version
     # - run: |
     #     helm version
     #     helm version --short
