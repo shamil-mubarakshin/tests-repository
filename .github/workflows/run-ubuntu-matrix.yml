@@ -25,7 +25,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
-        ps -ef
+        nslookup fedoraproject-updates-archive.fedoraproject.org
     # - uses: pulumi/actions@v7
     # - name: Julia
     #   run: |
