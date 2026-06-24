@@ -19,7 +19,7 @@ jobs:
           path: ./
           base: ${{ github.event.pull_request.base.ref }}
           head: HEAD
-          extra_args: --debug --no-verification --filter-entropy=3 --exclude-paths .truffleignore
+          extra_args: --debug --no-verification --filter-entropy=3 --exclude-paths .trufflehogignore
 
       # - name: Comment on PR if secrets detected
       #   if: failure()
