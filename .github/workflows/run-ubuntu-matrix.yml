@@ -25,13 +25,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - run: |
-        podman info --format '{{ "{{" }} .Host.NetworkBackend {{ "}}" }}'
-        echo "Defaults"
-        grep -R firewall_driver /usr/share/containers/containers.conf 2>/dev/null
-        echo "System override"
-        grep -R firewall_driver /etc/containers/containers.conf 2>/dev/null
-        echo "Drop-ins"
-        grep -R firewall_driver /etc/containers/containers.conf.d/ 2>/dev/null
+        podman info
+        # echo "Defaults"
+        # grep -R firewall_driver /usr/share/containers/containers.conf 2>/dev/null
+        # echo "System override"
+        # grep -R firewall_driver /etc/containers/containers.conf 2>/dev/null
+        # echo "Drop-ins"
+        # grep -R firewall_driver /etc/containers/containers.conf.d/ 2>/dev/null
 
         netavark --version
         podman run --rm -d --name nettest alpine sleep 300
