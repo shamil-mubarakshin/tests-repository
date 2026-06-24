@@ -33,7 +33,7 @@ jobs:
         # echo "Drop-ins"
         # grep -R firewall_driver /etc/containers/containers.conf.d/ 2>/dev/null
 
-        netavark --version
+        /usr/lib/podman/netavark --version
         podman run --rm -d --name nettest alpine sleep 300
         echo nft
         sudo nft list table inet netavark
